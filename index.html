@@ -3,49 +3,199 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>RIA Intelligence Platform</title>
+<title>RIA Intelligence</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.9/babel.min.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-:root{--bg:#0c1117;--surface:#151b24;--surface2:#1c2430;--border:#2a3441;--text:#e2e8f0;--text2:#94a3b8;--text3:#64748b;--accent:#3b82f6;--accent2:#2563eb;--green:#10b981;--green2:#065f46;--red:#ef4444;--amber:#f59e0b;--purple:#8b5cf6}
-body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
-::-webkit-scrollbar{width:6px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
-.mono{font-family:'JetBrains Mono',monospace}
-input,select,textarea{font-family:'DM Sans',sans-serif;background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:8px 12px;border-radius:6px;outline:none;transition:border-color .2s;font-size:13px}
-input:focus,select:focus,textarea:focus{border-color:var(--accent)}
-button{font-family:'DM Sans',sans-serif;cursor:pointer;border:none;border-radius:6px;padding:8px 16px;font-weight:600;transition:all .15s}
-.btn-p{background:var(--accent);color:#fff}.btn-p:hover{background:var(--accent2)}
-.btn-g{background:transparent;color:var(--text2);border:1px solid var(--border)}.btn-g:hover{background:var(--surface2);color:var(--text)}
-.btn-s{padding:5px 10px;font-size:12px}
-.tag{display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:500;margin:2px}
-.tag-b{background:#1e3a5f;color:#60a5fa}.tag-g{background:var(--green2);color:#6ee7b7}.tag-a{background:#78350f;color:#fcd34d}.tag-v{background:#3b1f6e;color:#c4b5fd}
+:root{
+  --bg:#0e0f11;
+  --surface:#16181c;
+  --surface2:#1e2128;
+  --surface3:#252830;
+  --border:#2c3038;
+  --border2:#363b44;
+  --text:#f0f1f3;
+  --text2:#9aa0ad;
+  --text3:#5c6270;
+  --accent:#c8a96e;
+  --accent2:#b8955a;
+  --green:#4ade80;
+  --green-dim:#1a3326;
+  --red:#f87171;
+  --blue:#60a5fa;
+  --blue-dim:#1a2540;
+}
+html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:10px}
+.serif{font-family:'Instrument Serif',serif}
+.mono{font-family:'DM Mono',monospace;font-size:12px}
+
+/* Inputs */
+input,select,textarea{
+  font-family:'DM Sans',sans-serif;font-size:13px;
+  background:var(--surface2);border:1px solid var(--border);
+  color:var(--text);padding:9px 13px;border-radius:8px;
+  outline:none;transition:border-color .2s,box-shadow .2s;width:100%
+}
+input:focus,select:focus,textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(200,169,110,.12)}
+select option{background:var(--surface2)}
+
+/* Buttons */
+button{font-family:'DM Sans',sans-serif;cursor:pointer;border:none;border-radius:8px;padding:9px 18px;font-size:13px;font-weight:500;transition:all .18s;letter-spacing:.01em}
+.btn-gold{background:var(--accent);color:#0e0f11;font-weight:600}
+.btn-gold:hover{background:var(--accent2);transform:translateY(-1px);box-shadow:0 4px 16px rgba(200,169,110,.3)}
+.btn-ghost{background:transparent;color:var(--text2);border:1px solid var(--border)}
+.btn-ghost:hover{background:var(--surface2);color:var(--text);border-color:var(--border2)}
+.btn-sm{padding:6px 12px;font-size:12px;border-radius:6px}
+.btn-icon{padding:7px 10px;font-size:15px;border-radius:7px}
+
+/* Tags */
+.tag{display:inline-flex;align-items:center;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:500;letter-spacing:.02em}
+.tag-state{background:var(--blue-dim);color:var(--blue)}
+.tag-green{background:var(--green-dim);color:var(--green)}
+.tag-gold{background:rgba(200,169,110,.15);color:var(--accent)}
+.tag-dim{background:var(--surface3);color:var(--text2)}
+
+/* Cards */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:14px;overflow:hidden}
+.card-hover{transition:border-color .2s,transform .2s,box-shadow .2s}
+.card-hover:hover{border-color:var(--border2);transform:translateY(-2px);box-shadow:0 8px 32px rgba(0,0,0,.4)}
+
+/* Tables */
 table{width:100%;border-collapse:collapse}
-th{text-align:left;padding:10px 12px;font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:var(--text3);border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--surface);z-index:2;white-space:nowrap;cursor:pointer;user-select:none}
+th{text-align:left;padding:11px 14px;font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--text3);border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--surface);z-index:2;white-space:nowrap;cursor:pointer;user-select:none;font-weight:500}
 th:hover{color:var(--text2)}
-td{padding:8px 12px;font-size:13px;border-bottom:1px solid var(--border);white-space:nowrap}
+td{padding:11px 14px;font-size:13px;border-bottom:1px solid var(--border);white-space:nowrap}
 tr:hover td{background:var(--surface2)}
-.panel{background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden}
-.fade{animation:fi .3s ease}@keyframes fi{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-.sc{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:16px}
-.leaflet-container{background:#e8e8e8!important;border-radius:8px}
-.mp .leaflet-popup-content-wrapper{background:#1a2332;color:#e2e8f0;border:1px solid #2a3441;border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.4)}
-.mp .leaflet-popup-tip{background:#1a2332}
-.mp .leaflet-popup-content{margin:12px;font-family:'DM Sans',sans-serif;font-size:12px;line-height:1.5}
-.pvb{display:inline-block;margin-top:8px;padding:4px 12px;background:#3b82f6;color:#fff;border-radius:4px;font-size:11px;font-weight:600;cursor:pointer}
-.pvb:hover{background:#2563eb}
-.copied{animation:flash .6s}@keyframes flash{0%{background:#059669}100%{background:var(--accent)}}
+tr:last-child td{border-bottom:none}
+
+/* Stat cards */
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px 20px}
+.stat-label{font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--text3);font-weight:500}
+.stat-value{font-family:'Instrument Serif',serif;font-size:28px;margin-top:4px;line-height:1.1}
+.stat-sub{font-size:11px;color:var(--text3);margin-top:3px}
+
+/* Animations */
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes slideRight{from{opacity:0;transform:translateX(-8px)}to{opacity:1;transform:translateX(0)}}
+@keyframes shimmer{from{background-position:-200% 0}to{background-position:200% 0}}
+.fade-up{animation:fadeUp .35s cubic-bezier(.22,.68,0,1.2) both}
+.fade-in{animation:fadeIn .25s ease both}
+.slide-right{animation:slideRight .3s ease both}
+
+/* Divider */
+.divider{border:none;border-top:1px solid var(--border);margin:0}
+
+/* Nav active indicator */
+.nav-pill{position:relative;transition:all .2s}
+.nav-pill.active{color:var(--text)!important}
+.nav-pill.active::after{content:'';position:absolute;bottom:-2px;left:0;right:0;height:2px;background:var(--accent);border-radius:2px}
+
+/* Map */
+.leaflet-container{background:#1a1c20!important;border-radius:10px}
+.mp .leaflet-popup-content-wrapper{background:var(--surface);color:var(--text);border:1px solid var(--border2);border-radius:10px;box-shadow:0 12px 40px rgba(0,0,0,.6)}
+.mp .leaflet-popup-tip{background:var(--surface)}
+.mp .leaflet-popup-content{margin:14px;font-family:'DM Sans',sans-serif;font-size:12px;line-height:1.6}
+.pvb{display:inline-block;margin-top:10px;padding:6px 14px;background:var(--accent);color:#0e0f11;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer;transition:background .15s}
+.pvb:hover{background:var(--accent2)}
+
+/* Firm detail row */
+.detail-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid rgba(44,48,56,.6)}
+.detail-row:last-child{border-bottom:none}
+.detail-label{font-size:12px;color:var(--text3)}
+.detail-value{font-family:'DM Mono',monospace;font-size:12px;color:var(--text)}
+
+/* Section header */
+.section-head{font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--accent);font-weight:600;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border)}
+
+/* Highlight row */
+.highlight-row{background:rgba(74,222,128,.05)}
+.highlight-row td{border-bottom-color:rgba(44,48,56,.4)!important}
+
+/* Number badge */
+.rank-badge{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0}
+
+/* Pulse dot */
+.pulse{width:7px;height:7px;border-radius:50%;background:var(--green);animation:pulse-anim 2s infinite}
+@keyframes pulse-anim{0%,100%{box-shadow:0 0 0 0 rgba(74,222,128,.4)}50%{box-shadow:0 0 0 5px rgba(74,222,128,0)}}
+
+/* Filter bar */
+.filter-bar{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end}
+.filter-group label{display:block;font-size:10px;text-transform:uppercase;letter-spacing:.07em;color:var(--text3);margin-bottom:5px;font-weight:500}
+
+/* Sweet spot row hover */
+.ss-row{cursor:pointer;transition:background .15s}
+.ss-row:hover td{background:rgba(200,169,110,.06)!important}
+
+/* Letter prompt */
+pre.prompt-box{white-space:pre-wrap;font-family:'DM Mono',monospace;font-size:12px;line-height:1.7;color:var(--text2);margin:0}
+
+/* Scrollable table container */
+.table-scroll{overflow:auto;border-radius:14px}
+
+/* Header logo */
+.logo-mark{width:34px;height:34px;background:linear-gradient(135deg,var(--accent),#7c5c2e);border-radius:9px;display:flex;align-items:center;justify-content:center;font-family:'Instrument Serif',serif;font-size:16px;color:#0e0f11;font-weight:normal;letter-spacing:-.02em;flex-shrink:0}
+
+/* Top nav */
+.top-nav{background:rgba(14,15,17,.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);padding:0 28px;display:flex;align-items:center;gap:32px;height:58px;flex-shrink:0;position:sticky;top:0;z-index:100}
+.nav-brand{display:flex;align-items:center;gap:11px;margin-right:8px}
+.nav-brand-name{font-family:'Instrument Serif',serif;font-size:19px;letter-spacing:-.02em}
+.nav-link{font-size:13px;color:var(--text3);cursor:pointer;padding:4px 0;transition:color .15s;font-weight:400;white-space:nowrap;position:relative;bottom:0}
+.nav-link:hover{color:var(--text2)}
+.nav-link.active{color:var(--text)}
+.nav-link.active::after{content:'';position:absolute;bottom:-3px;left:0;right:0;height:1px;background:var(--accent);border-radius:1px}
+.nav-right{margin-left:auto;display:flex;align-items:center;gap:10px}
+
+/* Page wrapper */
+.page{padding:28px 28px 48px;max-width:1400px;margin:0 auto}
+.page-title{font-family:'Instrument Serif',serif;font-size:30px;letter-spacing:-.02em;margin-bottom:4px}
+.page-sub{font-size:12px;color:var(--text3)}
+
+/* Bar chart */
+.bar-fill{height:100%;border-radius:4px;transition:width .5s cubic-bezier(.22,.68,0,1.2),background .2s}
+
+/* Saved card */
+.saved-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px 20px;transition:border-color .2s}
+.saved-card:hover{border-color:var(--border2)}
+
+/* Firm detail panel */
+.detail-panel{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:22px}
+
+/* Metric highlight */
+.metric-big{font-family:'Instrument Serif',serif;font-size:32px;line-height:1;letter-spacing:-.02em}
+.metric-accent{color:var(--accent)}
+.metric-green{color:var(--green)}
+
+/* Star button */
+.star-btn{background:none;border:none;cursor:pointer;font-size:17px;padding:3px 5px;transition:transform .15s,color .15s;border-radius:5px}
+.star-btn:hover{transform:scale(1.2)}
+.star-btn.starred{color:#f59e0b}
+.star-btn:not(.starred){color:var(--text3)}
+.star-btn:not(.starred):hover{color:var(--accent)}
+
+/* Copy flash */
+@keyframes copyFlash{0%{background:var(--green);color:#0e0f11}100%{background:var(--accent);color:#0e0f11}}
+.copy-flash{animation:copyFlash .8s ease forwards}
+
+/* Tooltip */
+.tooltip{position:relative}
+.tooltip::after{content:attr(data-tip);position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);background:var(--surface3);border:1px solid var(--border2);color:var(--text2);font-size:11px;padding:4px 8px;border-radius:5px;white-space:nowrap;pointer-events:none;opacity:0;transition:opacity .15s}
+.tooltip:hover::after{opacity:1}
 </style>
 </head>
 <body>
 <div id="root"></div>
 <script src="ria-data.js"></script>
 <script type="text/babel">
-const {useState,useMemo,useRef,useEffect} = React;
+const {useState,useMemo,useRef,useEffect,useCallback} = React;
 
 const FIRMS = FR.map(f=>({
   name:f.n,legal:f.l,crd:f.crd,addr1:f.a1,addr2:f.a2,city:f.ci,state:f.st,zip:f.z,
@@ -68,18 +218,33 @@ const fmtN=(v)=>v!=null?v.toLocaleString():'-';
 const wu=(r)=>{if(!r)return null;const u=r.trim();if(!u)return null;return/^https?:\/\//i.test(u)?u:'https://'+u};
 window.__rvf=null;
 
-function Header({view,setView,savedCount}){
-  return(<div style={{background:'var(--surface)',borderBottom:'1px solid var(--border)',padding:'12px 24px',display:'flex',alignItems:'center',justifyContent:'space-between',flexShrink:0}}>
-    <div style={{display:'flex',alignItems:'center',gap:12}}>
-      <div style={{width:32,height:32,background:'linear-gradient(135deg,var(--accent),var(--purple))',borderRadius:8,display:'flex',alignItems:'center',justifyContent:'center',fontWeight:700,fontSize:14}}>RI</div>
-      <div><div style={{fontWeight:700,fontSize:15}}>RIA Intelligence</div><div style={{fontSize:10,color:'var(--text3)'}}>NH / VT / MA / ME &middot; {FIRMS.length} Firms &middot; SEC Form ADV</div></div>
-    </div>
-    <div style={{display:'flex',gap:4}}>
-      {[['dashboard','Dashboard'],['explorer','Explorer'],['detail','Firm Lookup'],['saved','Saved'+(savedCount?' ('+savedCount+')':'')],['letter','Letter Writer']].map(([v,l])=>
-        <button key={v} onClick={()=>setView(v)} className={view===v?'btn-p':'btn-g'} style={{fontSize:12}}>{l}</button>
-      )}
-    </div>
-  </div>);
+function Nav({view,setView,savedCount}){
+  const links=[['dashboard','Overview'],['explorer','Explorer'],['detail','Firm Lookup'],['saved','Targets'+(savedCount?' ('+savedCount+')':'')],['letter','Letter Writer']];
+  return(
+    <nav className="top-nav">
+      <div className="nav-brand">
+        <div className="logo-mark">RI</div>
+        <span className="nav-brand-name">RIA Intelligence</span>
+      </div>
+      {links.map(([v,l])=>(
+        <span key={v} className={'nav-link'+(view===v?' active':'')} onClick={()=>setView(v)}>{l}</span>
+      ))}
+      <div className="nav-right">
+        <span style={{fontSize:11,color:'var(--text3)',background:'var(--surface)',border:'1px solid var(--border)',borderRadius:20,padding:'4px 12px'}}>
+          NH · VT · MA · ME · <span style={{color:'var(--text2)'}}>{FIRMS.length.toLocaleString()} firms</span>
+        </span>
+      </div>
+    </nav>
+  );
+}
+
+function StarBtn({crd,saved,toggleSave}){
+  return(
+    <button className={'star-btn'+(saved.has(crd)?' starred':'')} onClick={e=>{e.stopPropagation();toggleSave(crd)}}
+      title={saved.has(crd)?'Remove from targets':'Save as target'}>
+      {saved.has(crd)?'★':'☆'}
+    </button>
+  );
 }
 
 function FirmMap({firms,roa,rMin,rMax,onSelect,onBounds}){
@@ -87,7 +252,7 @@ function FirmMap({firms,roa,rMin,rMax,onSelect,onBounds}){
   useEffect(()=>{
     if(!ref.current||mRef.current)return;
     const m=L.map(ref.current,{center:[42.8,-71.4],zoom:7,attributionControl:false});
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19}).addTo(m);
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{maxZoom:19}).addTo(m);
     mRef.current=m;lRef.current=L.layerGroup().addTo(m);
     const em=()=>{const b=m.getBounds();onBounds({n:b.getNorth(),s:b.getSouth(),e:b.getEast(),w:b.getWest()})};
     m.on('moveend',em);m.on('zoomend',em);setTimeout(em,300);
@@ -99,253 +264,37 @@ function FirmMap({firms,roa,rMin,rMax,onSelect,onBounds}){
     firms.forEach(f=>{
       const co=COORDS[f.crd];if(!co)return;
       const rev=(f.aum||0)*roa,hit=rev>=rMin&&rev<=rMax;
-      const br=Math.max(3,Math.min(9,Math.sqrt((f.aum||0)/1e8)*2.5)),r=hit?br+6:br;
-      const c=L.circleMarker([co.lat,co.lng],{radius:r,fillColor:hit?'#059669':'#2563eb',color:hit?'#047857':'#1d4ed8',weight:hit?2.5:1.5,opacity:hit?.9:.5,fillOpacity:hit?.65:.35});
-      c.bindPopup('<div style="min-width:190px"><div style="font-weight:700;font-size:13px;margin-bottom:3px">'+f.name+'</div><div style="color:#94a3b8;font-size:11px">'+f.city+', '+f.state+'</div><div style="margin-top:5px;font-family:monospace;font-size:12px">RAUM: '+fmtM(f.aum)+'<br/>Est Rev: <b style="color:'+(hit?'#10b981':'inherit')+'">'+fmtM(rev)+'</b></div>'+(hit?'<div style="margin-top:3px;color:#10b981;font-weight:600;font-size:11px">IN TARGET RANGE</div>':'')+'<div onclick="window.__rvf(\''+f.crd+'\')" class="pvb">View Details &rarr;</div></div>',{className:'mp'});
+      const br=Math.max(4,Math.min(11,Math.sqrt((f.aum||0)/1e8)*2.5)),r=hit?br+5:br;
+      const c=L.circleMarker([co.lat,co.lng],{
+        radius:r,
+        fillColor:hit?'#4ade80':'#60a5fa',
+        color:hit?'#166534':'#1d4ed8',
+        weight:hit?2:1,opacity:hit?.9:.5,fillOpacity:hit?.6:.3
+      });
+      c.bindPopup(
+        '<div style="min-width:200px">'+
+        '<div style="font-family:Instrument Serif,serif;font-size:14px;font-weight:normal;margin-bottom:2px">'+f.name+'</div>'+
+        '<div style="color:#9aa0ad;font-size:11px;margin-bottom:8px">'+f.city+', '+f.state+'</div>'+
+        '<div style="font-family:DM Mono,monospace;font-size:11px;color:#f0f1f3">'+
+        'RAUM&nbsp;&nbsp;<b>'+fmtM(f.aum)+'</b><br/>'+
+        'Est Rev&nbsp;<b style="color:'+(hit?'#4ade80':'#f0f1f3')+'">'+fmtM(rev)+'</b>'+
+        '</div>'+
+        (hit?'<div style="margin-top:6px;font-size:10px;color:#4ade80;font-weight:600;letter-spacing:.05em;text-transform:uppercase">In target range</div>':'')+
+        '<div onclick="window.__rvf(\''+f.crd+'\')" class="pvb">View details →</div></div>',
+        {className:'mp'}
+      );
       lRef.current.addLayer(c);
     });
   },[firms,roa,rMin,rMax]);
-  return <div ref={ref} style={{width:'100%',height:'100%',borderRadius:8}}/>;
-}
-
-function Explorer({roa,setRoa,onSelect,saved,toggleSave}){
-  const[search,setSearch]=useState('');const[stF,setStF]=useState('ALL');
-  const[rMin,setRMin]=useState(1000000);const[rMax,setRMax]=useState(2000000);
-  const[sCol,setSCol]=useState('aum');const[sDir,setSDir]=useState('desc');
-  const[tOnly,setTOnly]=useState(false);const[showMap,setShowMap]=useState(true);
-  const[bounds,setBounds]=useState(null);const[fByMap,setFByMap]=useState(false);
-
-  const base=useMemo(()=>FIRMS.filter(f=>{
-    if(stF!=='ALL'&&f.state!==stF)return false;
-    if(search&&!f.name.toLowerCase().includes(search.toLowerCase())&&!f.city.toLowerCase().includes(search.toLowerCase()))return false;
-    if(tOnly){const r=(f.aum||0)*roa;if(r<rMin||r>rMax)return false}return true;
-  }),[search,stF,roa,rMin,rMax,tOnly]);
-
-  const filtered=useMemo(()=>{
-    let fl=base;
-    if(fByMap&&bounds)fl=fl.filter(f=>{const co=COORDS[f.crd];if(!co)return false;return co.lat>=bounds.s&&co.lat<=bounds.n&&co.lng>=bounds.w&&co.lng<=bounds.e});
-    return[...fl].sort((a,b)=>{let va=a[sCol],vb=b[sCol];if(sCol==='estRev'){va=(a.aum||0)*roa;vb=(b.aum||0)*roa}if(va==null)va=sDir==='desc'?-Infinity:Infinity;if(vb==null)vb=sDir==='desc'?-Infinity:Infinity;if(typeof va==='string')return sDir==='desc'?vb.localeCompare(va):va.localeCompare(vb);return sDir==='desc'?vb-va:va-vb});
-  },[base,fByMap,bounds,sCol,sDir,roa]);
-
-  const stats=useMemo(()=>{
-    const t=filtered.reduce((s,f)=>s+(f.aum||0),0);const hit=filtered.filter(f=>{const r=(f.aum||0)*roa;return r>=rMin&&r<=rMax}).length;
-    const s=[...filtered].filter(f=>f.aum).sort((a,b)=>a.aum-b.aum);return{total:filtered.length,aum:t,hit,med:s.length?s[Math.floor(s.length/2)].aum:0};
-  },[filtered,roa,rMin,rMax]);
-  const tog=c=>{if(sCol===c)setSDir(d=>d==='desc'?'asc':'desc');else{setSCol(c);setSDir('desc')}};
-  const arr=c=>sCol===c?(sDir==='desc'?' \u25BE':' \u25B4'):'';
-
-  return(<div className="fade" style={{padding:20}}>
-    <div style={{display:'flex',gap:12,flexWrap:'wrap',marginBottom:16,alignItems:'flex-end'}}>
-      <div><label style={{fontSize:11,color:'var(--text3)',display:'block',marginBottom:4}}>SEARCH</label><input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Firm or city..." style={{width:200}}/></div>
-      <div><label style={{fontSize:11,color:'var(--text3)',display:'block',marginBottom:4}}>STATE</label><select value={stF} onChange={e=>setStF(e.target.value)} style={{width:80}}><option value="ALL">All</option><option>NH</option><option>VT</option><option>MA</option><option>ME</option></select></div>
-      <div><label style={{fontSize:11,color:'var(--text3)',display:'block',marginBottom:4}}>ROA %</label><input type="number" value={(roa*100).toFixed(2)} onChange={e=>setRoa(parseFloat(e.target.value)/100||.0065)} step="0.05" style={{width:90,textAlign:'center'}}/></div>
-      <div><label style={{fontSize:11,color:'var(--text3)',display:'block',marginBottom:4}}>REV MIN</label><input type="number" value={rMin} onChange={e=>setRMin(+e.target.value)} step={100000} style={{width:120}}/></div>
-      <div><label style={{fontSize:11,color:'var(--text3)',display:'block',marginBottom:4}}>REV MAX</label><input type="number" value={rMax} onChange={e=>setRMax(+e.target.value)} step={100000} style={{width:120}}/></div>
-      <button onClick={()=>setTOnly(!tOnly)} className={tOnly?'btn-p':'btn-g'} style={{fontSize:12,height:36}}>{tOnly?'Show All Firms':'Show Target Only'}</button>
-      <button onClick={()=>setShowMap(!showMap)} className={showMap?'btn-p':'btn-g'} style={{fontSize:12,height:36}}>{showMap?'Hide Map':'Show Map'}</button>
-    </div>
-    <div style={{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:12,marginBottom:16}}>
-      <div className="sc"><div style={{fontSize:10,color:'var(--text3)',textTransform:'uppercase',letterSpacing:'.5px'}}>Firms</div><div style={{fontSize:24,fontWeight:700,marginTop:4}}>{stats.total}</div></div>
-      <div className="sc"><div style={{fontSize:10,color:'var(--text3)',textTransform:'uppercase',letterSpacing:'.5px'}}>Total RAUM</div><div style={{fontSize:24,fontWeight:700,marginTop:4}}>{fmtM(stats.aum)}</div></div>
-      <div className="sc"><div style={{fontSize:10,color:'var(--text3)',textTransform:'uppercase',letterSpacing:'.5px'}}>Median RAUM</div><div style={{fontSize:24,fontWeight:700,marginTop:4}}>{fmtM(stats.med)}</div></div>
-      <div className="sc" style={{borderColor:'var(--green)'}}><div style={{fontSize:10,color:'var(--green)',textTransform:'uppercase',letterSpacing:'.5px'}}>In Target</div><div style={{fontSize:24,fontWeight:700,marginTop:4,color:'var(--green)'}}>{stats.hit}</div></div>
-    </div>
-    {showMap&&<div style={{marginBottom:12}}>
-      <div className="panel" style={{height:380}}><FirmMap firms={base} roa={roa} rMin={rMin} rMax={rMax} onSelect={onSelect} onBounds={setBounds}/></div>
-      <div style={{display:'flex',alignItems:'center',gap:8,marginTop:8}}>
-        <button onClick={()=>setFByMap(!fByMap)} className={fByMap?'btn-p':'btn-g'} style={{fontSize:11,padding:'4px 12px'}}>{fByMap?'\u2713 Filtering by map':'Filter by map view'}</button>
-        {fByMap&&<span style={{fontSize:11,color:'var(--text3)',background:'var(--surface2)',border:'1px solid var(--border)',borderRadius:20,padding:'2px 10px'}}>{stats.total} firms in view</span>}
-        <span style={{marginLeft:'auto',display:'flex',gap:12,fontSize:11,color:'var(--text3)'}}>
-          <span><span style={{display:'inline-block',width:10,height:10,borderRadius:'50%',background:'#059669',marginRight:4,verticalAlign:'middle'}}></span>Target</span>
-          <span><span style={{display:'inline-block',width:7,height:7,borderRadius:'50%',background:'#2563eb',marginRight:4,verticalAlign:'middle'}}></span>Other</span>
-        </span>
-      </div>
-    </div>}
-    <div className="panel"><table><thead><tr>
-      <th onClick={()=>tog('name')} style={{position:'sticky',left:0,background:'var(--surface)',zIndex:3}}>Firm{arr('name')}</th>
-      <th>St</th><th>City</th>
-      <th onClick={()=>tog('aum')} style={{textAlign:'right'}}>RAUM{arr('aum')}</th>
-      <th onClick={()=>tog('estRev')} style={{textAlign:'right'}}>Est Rev{arr('estRev')}</th>
-      <th style={{textAlign:'center'}}>Target?</th>
-      <th onClick={()=>tog('accounts')} style={{textAlign:'right'}}>Accts{arr('accounts')}</th>
-      <th onClick={()=>tog('clientsInd')} style={{textAlign:'right'}}># Ind{arr('clientsInd')}</th>
-      <th onClick={()=>tog('clientsHNW')} style={{textAlign:'right'}}># HNW{arr('clientsHNW')}</th>
-      <th onClick={()=>tog('employees')} style={{textAlign:'right'}}>Emp{arr('employees')}</th>
-      <th style={{textAlign:'center'}}>Detail</th>
-      <th style={{textAlign:'center',width:40}}>&#9733;</th>
-    </tr></thead><tbody>
-      {filtered.map((f,i)=>{const rev=(f.aum||0)*roa,hit=rev>=rMin&&rev<=rMax;
-        return(<tr key={f.crd+i} style={hit?{background:'rgba(16,185,129,.07)'}:{}}>
-          <td style={{fontWeight:600,position:'sticky',left:0,background:hit?'rgba(16,185,129,.12)':'var(--surface)',zIndex:1,maxWidth:260,overflow:'hidden',textOverflow:'ellipsis'}}>{f.name}</td>
-          <td style={{textAlign:'center'}}><span className="tag tag-b">{f.state}</span></td>
-          <td style={{color:'var(--text2)'}}>{f.city}</td>
-          <td style={{textAlign:'right'}} className="mono">{fmtM(f.aum)}</td>
-          <td style={{textAlign:'right',fontWeight:600}} className="mono">{fmtM(rev)}</td>
-          <td style={{textAlign:'center'}}>{hit?<span className="tag tag-g">YES</span>:''}</td>
-          <td style={{textAlign:'right'}} className="mono">{fmtN(f.accounts)}</td>
-          <td style={{textAlign:'right'}} className="mono">{fmtN(f.clientsInd)}</td>
-          <td style={{textAlign:'right'}} className="mono">{fmtN(f.clientsHNW)}</td>
-          <td style={{textAlign:'right'}} className="mono">{fmtN(f.employees)}</td>
-          <td style={{textAlign:'center'}}><button className="btn-g btn-s" onClick={()=>onSelect(f)}>View</button></td>
-          <td style={{textAlign:'center'}}><button onClick={(e)=>{e.stopPropagation();toggleSave(f.crd)}} style={{background:'none',border:'none',cursor:'pointer',fontSize:16,color:saved.has(f.crd)?'var(--amber)':'var(--text3)',padding:'2px 6px'}} title={saved.has(f.crd)?'Remove from saved':'Save to targets'}>{saved.has(f.crd)?'\u2605':'\u2606'}</button></td>
-        </tr>)})}
-    </tbody></table></div>
-  </div>);
-}
-
-function FirmDetail({firm,setFirm,onLetter,roa,saved,toggleSave}){
-  if(!firm)return(<div className="fade" style={{padding:40,textAlign:'center',color:'var(--text3)'}}>
-    <div style={{fontSize:48,marginBottom:16}}>&#128269;</div><div style={{fontSize:18,fontWeight:600,marginBottom:8}}>Select a firm</div>
-    <select onChange={e=>{const f=FIRMS.find(x=>x.crd===e.target.value);if(f)setFirm(f)}} style={{width:340,padding:10,marginTop:12}}>
-      <option value="">Choose a firm...</option>
-      {FIRMS.sort((a,b)=>a.name.localeCompare(b.name)).map(f=><option key={f.crd} value={f.crd}>{f.name} ({f.state})</option>)}
-    </select></div>);
-  const rev=(firm.aum||0)*roa,avg=firm.accounts>0?firm.aum/firm.accounts:null,rpe=firm.employees>0?rev/firm.employees:null;
-  const pctD=firm.aum>0&&firm.aumDisc?(firm.aumDisc/firm.aum*100).toFixed(1)+'%':'-';
-  const wurl=wu(firm.website);
-  const S=({t,children})=>(<div style={{marginBottom:20}}><div style={{fontSize:11,fontWeight:700,color:'var(--accent)',textTransform:'uppercase',letterSpacing:1,marginBottom:8,paddingBottom:4,borderBottom:'1px solid var(--border)'}}>{t}</div>{children}</div>);
-  const R=({l,v,m,g})=>(<div style={{display:'flex',justifyContent:'space-between',padding:'5px 0',borderBottom:'1px solid rgba(42,52,65,.4)'}}><span style={{color:'var(--text2)',fontSize:13}}>{l}</span><span className="mono" style={{fontSize:13,fontWeight:g?700:400,color:g?'var(--green)':'var(--text)'}}>{m?fmt(v):v!=null?v:'-'}</span></div>);
-  return(<div className="fade" style={{padding:20,maxWidth:900,margin:'0 auto'}}>
-    <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start',marginBottom:20}}>
-      <div>
-        <div style={{fontSize:24,fontWeight:700}}>{firm.name}</div>
-        <div style={{color:'var(--text2)',fontSize:13}}>{firm.legal} &middot; CRD #{firm.crd} &middot; <span className="tag tag-b">{firm.state}</span></div>
-        <div style={{color:'var(--text3)',fontSize:12,marginTop:4}}>{firm.addr1}{firm.addr2?', '+firm.addr2:''}, {firm.city}, {firm.state} {firm.zip}</div>
-        <div style={{marginTop:8,display:'flex',gap:16,fontSize:12,color:'var(--text2)'}}>
-          {firm.phone&&<span>{firm.phone}</span>}
-          {wurl&&<a href={wurl} target="_blank" rel="noopener" style={{color:'var(--accent)'}}>Website</a>}
-          <a href={'https://adviserinfo.sec.gov/firm/summary/'+firm.crd} target="_blank" rel="noopener" style={{color:'var(--accent)'}}>IAPD Profile</a>
-        </div>
-      </div>
-      <div style={{display:'flex',gap:8}}>
-        <button onClick={()=>toggleSave(firm.crd)} className={saved.has(firm.crd)?'btn-p':'btn-g'} style={{whiteSpace:'nowrap',fontSize:13}}>{saved.has(firm.crd)?'\u2605 Saved':'\u2606 Save'}</button>
-        <button className="btn-p" onClick={()=>onLetter(firm)} style={{whiteSpace:'nowrap'}}>&#9993; Write Letter</button>
-      </div>
-    </div>
-    <div style={{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:12,marginBottom:20}}>
-      <div className="sc"><div style={{fontSize:10,color:'var(--text3)',textTransform:'uppercase'}}>Total RAUM</div><div style={{fontSize:22,fontWeight:700,marginTop:4}}>{fmtM(firm.aum)}</div></div>
-      <div className="sc" style={{borderColor:'var(--green)'}}><div style={{fontSize:10,color:'var(--green)',textTransform:'uppercase'}}>Est Revenue</div><div style={{fontSize:22,fontWeight:700,marginTop:4,color:'var(--green)'}}>{fmtM(rev)}</div></div>
-      <div className="sc"><div style={{fontSize:10,color:'var(--text3)',textTransform:'uppercase'}}>Accounts</div><div style={{fontSize:22,fontWeight:700,marginTop:4}}>{fmtN(firm.accounts)}</div></div>
-      <div className="sc"><div style={{fontSize:10,color:'var(--text3)',textTransform:'uppercase'}}>Employees</div><div style={{fontSize:22,fontWeight:700,marginTop:4}}>{fmtN(firm.employees)}</div></div>
-    </div>
-    <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:20}}>
-      <div className="panel" style={{padding:16}}>
-        <S t="Assets"><R l="Total RAUM" v={firm.aum} m g/><R l="Discretionary" v={firm.aumDisc} m/><R l="Non-Discretionary" v={firm.aumNonDisc} m/><R l="% Discretionary" v={pctD}/><R l="Avg Account Size" v={avg} m/></S>
-        <S t="Revenue"><R l="Est Revenue" v={rev} m g/><R l="Rev per Employee" v={rpe} m/></S>
-        <S t="Clients"><R l="Individual" v={fmtN(firm.clientsInd)}/><R l="Ind RAUM" v={firm.aumInd} m/><R l="HNW" v={fmtN(firm.clientsHNW)}/><R l="HNW RAUM" v={firm.aumHNW} m/><R l="Pension" v={fmtN(firm.clientsPension)}/><R l="Charitable" v={fmtN(firm.clientsCharitable)}/><R l="Corp/Biz" v={fmtN(firm.clientsCorp)}/><R l="Pooled" v={fmtN(firm.clientsPooled)}/><R l="Govt" v={fmtN(firm.clientsGovt)}/></S>
-      </div>
-      <div className="panel" style={{padding:16}}>
-        <S t="Services & Comp"><div style={{marginBottom:8}}>{firm.services.map(s=><span key={s} className="tag tag-v">{s}</span>)}</div><div>{firm.compensation.map(c=><span key={c} className="tag tag-a">{c}</span>)}</div></S>
-        <S t="Profile"><R l="Org Type" v={firm.orgType}/><R l="SEC Status" v={firm.secStatus}/><R l="Status Date" v={firm.statusDate}/><R l="Latest ADV" v={firm.advDate}/><R l="Other Offices" v={fmtN(firm.otherOffices)}/><R l="Private Res" v={firm.privateRes?'Yes':'No'}/></S>
-        <S t="Affiliations"><R l="BD Affiliate" v={firm.bdAffiliate?'Yes':'No'}/><R l="IA Affiliate" v={firm.iaAffiliate?'Yes':'No'}/><R l="# IA Aff" v={fmtN(firm.iaAffCount)}/><R l="# BD Aff" v={fmtN(firm.bdAffCount)}/><R l="Custody" v={firm.custody?'Yes':'No'}/><R l="Custody Amt" v={firm.custodyAmt} m/><R l="Disclosures" v={firm.disclosures?'Yes':'No'}/><R l="Wrap Fee" v={firm.wrapFee?'Yes':'No'}/></S>
-      </div>
-    </div>
-  </div>);
-}
-
-function LetterWriter({firm,setFirm,roa}){
-  const[sN,setSN]=useState('');const[sT,setST]=useState('');const[sF,setSF]=useState('');const[sA,setSA]=useState('');
-  const[purpose,setP]=useState('acquisition');const[tone,setTo]=useState('professional');const[ctx,setCtx]=useState('');
-  const[prompt,setPrompt]=useState('');const[copied,setCopied]=useState(false);const[settOpen,setSettOpen]=useState(true);
-
-  const pMap={acquisition:'exploring a potential acquisition or merger of their firm',partnership:'exploring a strategic partnership or affiliation',recruiting:'recruiting their advisors or team to join your firm',services:'offering professional services (compliance, technology, operations)',referral:'establishing a referral relationship'};
-  const tMap={professional:'calm, credible, understated sophistication',warm:'friendly, approachable, relationship-focused',direct:'concise, to the point, respect their time',strategic:'measured, confident, emphasizing mutual benefit'};
-
-  const generate=()=>{
-    if(!firm)return;
-    const rev=(firm.aum||0)*roa;
-    const lines=['Write a personalized physical letter to be mailed to an RIA firm. Tailor it using their SEC Form ADV data below.','',
-      'SENDER:','Name: '+sN,'Title: '+sT,'Firm: '+sF,'Address: '+sA,'',
-      'RECIPIENT FIRM (from SEC Form ADV):','Firm: '+firm.name+' (CRD #'+firm.crd+')','Address: '+firm.addr1+(firm.addr2?', '+firm.addr2:'')+', '+firm.city+', '+firm.state+' '+firm.zip,
-      'Total RAUM: $'+Math.round(firm.aum||0).toLocaleString(),'Discretionary RAUM: $'+Math.round(firm.aumDisc||0).toLocaleString(),
-      'Est Revenue (at '+(roa*100).toFixed(2)+'% ROA): $'+Math.round(rev).toLocaleString(),'Employees: '+(firm.employees||'N/A'),
-      'Individual Clients: '+(firm.clientsInd||'N/A')+', HNW Clients: '+(firm.clientsHNW||'N/A'),
-      'Services: '+firm.services.join(', '),'Compensation: '+firm.compensation.join(', '),'Org Type: '+firm.orgType,
-      'BD Affiliate: '+(firm.bdAffiliate?'Yes':'No')+', Custody: '+(firm.custody?'Yes':'No')+', Wrap Fee: '+(firm.wrapFee?'Yes':'No'),'',
-      'PURPOSE: '+pMap[purpose],'TONE: '+tMap[tone],'ADDITIONAL CONTEXT: '+(ctx||'None'),'',
-      'INSTRUCTIONS:','- Professional letter for physical mail (date, addresses, salutation, body, closing)',
-      '- Reference their ADV data naturally (client mix, services) to show homework, not heavy-handed',
-      '- 250-350 word body, one page','- No hype, buzzwords, or marketing language',
-      '- Do NOT mention dollar amounts of AUM or revenue, reference scale indirectly',
-      '- Address to The Principals','- Signal sophistication without being promotional','- Do NOT use em dashes',
-      '- End with a specific, low-pressure call to action'];
-    setPrompt(lines.join('\n'));
-  };
-
-  const copyPrompt=()=>{navigator.clipboard.writeText(prompt);setCopied(true);setTimeout(()=>setCopied(false),2000)};
-
-  return(<div className="fade" style={{padding:20,maxWidth:1100,margin:'0 auto'}}>
-    {settOpen&&<div className="panel" style={{padding:16,marginBottom:16}}>
-      <div style={{fontSize:13,fontWeight:700,marginBottom:12,color:'var(--accent)'}}>Your Information <span style={{fontWeight:400,fontSize:11,color:'var(--text3)'}}>(fill once, reuse for all letters)</span></div>
-      <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10,marginBottom:10}}>
-        <input placeholder="Your Name" value={sN} onChange={e=>setSN(e.target.value)}/>
-        <input placeholder="Your Title" value={sT} onChange={e=>setST(e.target.value)}/>
-        <input placeholder="Your Firm" value={sF} onChange={e=>setSF(e.target.value)}/>
-        <input placeholder="Your Address" value={sA} onChange={e=>setSA(e.target.value)}/>
-      </div>
-      <button className="btn-p" onClick={()=>setSettOpen(false)} style={{fontSize:12}}>Save & Close</button>
-    </div>}
-    {!settOpen&&<div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:16,background:'var(--surface)',border:'1px solid var(--border)',borderRadius:8,padding:'8px 16px'}}>
-      <div style={{fontSize:13,color:'var(--text2)'}}><span style={{fontWeight:600,color:'var(--text)'}}>{sN}</span> &middot; {sT} &middot; {sF}</div>
-      <button className="btn-g btn-s" onClick={()=>setSettOpen(true)}>Edit</button>
-    </div>}
-
-    <div style={{display:'grid',gridTemplateColumns:'360px 1fr',gap:20}}>
-      <div>
-        <div className="panel" style={{padding:16,marginBottom:16}}>
-          <div style={{fontSize:13,fontWeight:700,marginBottom:12}}>Recipient Firm</div>
-          <select value={firm?.crd||''} onChange={e=>{const f=FIRMS.find(x=>x.crd===e.target.value);setFirm(f||null)}} style={{width:'100%',padding:8}}>
-            <option value="">Choose a firm...</option>
-            {FIRMS.sort((a,b)=>a.name.localeCompare(b.name)).map(f=><option key={f.crd} value={f.crd}>{f.name} ({f.state}) - {fmtM(f.aum)}</option>)}
-          </select>
-          {firm&&<div style={{marginTop:10,fontSize:12,color:'var(--text2)',lineHeight:1.6}}>
-            <div style={{fontWeight:600,color:'var(--text)'}}>{firm.name}</div>
-            <div>{firm.addr1}{firm.addr2?', '+firm.addr2:''}, {firm.city}, {firm.state} {firm.zip}</div>
-            <div style={{marginTop:4}} className="mono">RAUM: {fmtM(firm.aum)} &middot; Rev: {fmtM((firm.aum||0)*roa)} &middot; {fmtN(firm.employees)} emp</div>
-          </div>}
-        </div>
-        <div className="panel" style={{padding:16,marginBottom:16}}>
-          <div style={{marginBottom:10}}><label style={{fontSize:11,color:'var(--text3)',display:'block',marginBottom:4}}>PURPOSE</label>
-            <select value={purpose} onChange={e=>setP(e.target.value)} style={{width:'100%'}}><option value="acquisition">Acquisition / Merger</option><option value="partnership">Strategic Partnership</option><option value="recruiting">Recruiting</option><option value="services">Professional Services</option><option value="referral">Referral Relationship</option></select></div>
-          <div style={{marginBottom:10}}><label style={{fontSize:11,color:'var(--text3)',display:'block',marginBottom:4}}>TONE</label>
-            <select value={tone} onChange={e=>setTo(e.target.value)} style={{width:'100%'}}><option value="professional">Professional / Understated</option><option value="warm">Warm / Relationship-Focused</option><option value="direct">Direct / Respect Their Time</option><option value="strategic">Strategic / Mutual Benefit</option></select></div>
-          <div><label style={{fontSize:11,color:'var(--text3)',display:'block',marginBottom:4}}>ADDITIONAL CONTEXT</label>
-            <textarea rows={3} value={ctx} onChange={e=>setCtx(e.target.value)} style={{width:'100%',resize:'vertical'}} placeholder="Shared connection, specific angle..."/></div>
-        </div>
-        <button className="btn-p" onClick={generate} style={{width:'100%',padding:12,fontSize:14}}>Generate Prompt</button>
-      </div>
-      <div>
-        {prompt?<div>
-          <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:12}}>
-            <div style={{fontSize:13,fontWeight:600}}>AI Prompt Ready</div>
-            <button className="btn-p" onClick={copyPrompt} style={{fontSize:12,background:copied?'#059669':'var(--accent)'}}>
-              {copied?'\u2713 Copied!':'Copy to Clipboard'}
-            </button>
-          </div>
-          <div style={{fontSize:12,color:'var(--text2)',marginBottom:12,lineHeight:1.5}}>
-            Copy this prompt and paste it into <a href="https://claude.ai" target="_blank" rel="noopener" style={{color:'var(--accent)'}}>Claude</a>, ChatGPT, or any AI assistant to generate your tailored letter.
-          </div>
-          <div className="panel" style={{padding:20,maxHeight:'calc(100vh - 300px)',overflow:'auto'}}>
-            <pre style={{whiteSpace:'pre-wrap',fontFamily:'"JetBrains Mono",monospace',fontSize:12,lineHeight:1.6,color:'var(--text2)',margin:0}}>{prompt}</pre>
-          </div>
-        </div>:<div style={{textAlign:'center',color:'var(--text3)',paddingTop:120}}>
-          <div style={{fontSize:36,marginBottom:12}}>&#9993;</div>
-          <div style={{fontSize:16,fontWeight:600,marginBottom:8}}>Letter Prompt Generator</div>
-          <div style={{fontSize:13,maxWidth:300,margin:'0 auto',lineHeight:1.6}}>Select a firm and click Generate. The prompt will include all their ADV data, ready to paste into any AI for a tailored letter.</div>
-        </div>}
-      </div>
-    </div>
-  </div>);
+  return <div ref={ref} style={{width:'100%',height:'100%',borderRadius:10}}/>;
 }
 
 function Dashboard({roa,onSelect,saved,toggleSave}){
   const ST=['NH','VT','MA','ME'];
-  const BUCKETS=[{l:'< $100M',lo:0,hi:100e6},{l:'$100-250M',lo:100e6,hi:250e6},{l:'$250-500M',lo:250e6,hi:500e6},{l:'$500M-1B',lo:500e6,hi:1e9},{l:'$1-5B',lo:1e9,hi:5e9},{l:'$5-50B',lo:5e9,hi:50e9},{l:'$50B+',lo:50e9,hi:Infinity}];
-
+  const BUCKETS=[{l:'< $100M',lo:0,hi:100e6},{l:'$100–250M',lo:100e6,hi:250e6},{l:'$250–500M',lo:250e6,hi:500e6},{l:'$500M–1B',lo:500e6,hi:1e9},{l:'$1–5B',lo:1e9,hi:5e9},{l:'$5–50B',lo:5e9,hi:50e9},{l:'$50B+',lo:50e9,hi:Infinity}];
   const[fState,setFState]=useState(null);
   const[fBucket,setFBucket]=useState(null);
   const[aumCap,setAumCap]=useState(10e9);
-
   const capOpts=[{l:'No cap',v:Infinity},{l:'$50B',v:50e9},{l:'$10B',v:10e9},{l:'$5B',v:5e9},{l:'$1B',v:1e9},{l:'$500M',v:500e6},{l:'$250M',v:250e6}];
 
   const pool=useMemo(()=>{
@@ -377,149 +326,595 @@ function Dashboard({roa,onSelect,saved,toggleSave}){
   },[aumCap,fState]);
   const maxBucket=Math.max(...dist.map(d=>d.count),1);
 
-  const top=(arr,n=5)=>arr.slice(0,n);
-  const topAum=useMemo(()=>top([...pool].sort((a,b)=>b.aum-a.aum)),[pool]);
-  const topRev=useMemo(()=>top([...pool].sort((a,b)=>b.aum*roa-a.aum*roa)),[pool,roa]);
-  const topDisc=useMemo(()=>top([...pool].filter(f=>f.aumDisc>0).sort((a,b)=>b.aumDisc-a.aumDisc)),[pool]);
-  const topHNW=useMemo(()=>top([...pool].filter(f=>f.clientsHNW>0).sort((a,b)=>b.clientsHNW-a.clientsHNW)),[pool]);
-  const topAcctSize=useMemo(()=>top([...pool].filter(f=>f.accounts>=10).sort((a,b)=>(b.aum/(b.accounts||1))-(a.aum/(a.accounts||1)))),[pool]);
-  const topRPE=useMemo(()=>top([...pool].filter(f=>f.employees>=2).sort((a,b)=>((b.aum*roa)/(b.employees||1))-((a.aum*roa)/(a.employees||1)))),[pool,roa]);
+  const top5=(arr)=>arr.slice(0,5);
+  const topAum=useMemo(()=>top5([...pool].sort((a,b)=>b.aum-a.aum)),[pool]);
+  const topRev=useMemo(()=>top5([...pool].sort((a,b)=>b.aum*roa-a.aum*roa)),[pool,roa]);
+  const topHNW=useMemo(()=>top5([...pool].filter(f=>f.clientsHNW>0).sort((a,b)=>b.clientsHNW-a.clientsHNW)),[pool]);
+  const topAcctSize=useMemo(()=>top5([...pool].filter(f=>f.accounts>=10).sort((a,b)=>(b.aum/(b.accounts||1))-(a.aum/(a.accounts||1)))),[pool]);
+  const topRPE=useMemo(()=>top5([...pool].filter(f=>f.employees>=2).sort((a,b)=>((b.aum*roa)/(b.employees||1))-((a.aum*roa)/(a.employees||1)))),[pool,roa]);
 
   const sweetSpot=useMemo(()=>{
     return pool.filter(f=>{const rev=f.aum*roa;return rev>=500000&&rev<=3000000&&f.employees>=1&&f.employees<=10;}).sort((a,b)=>(b.aum*roa)-(a.aum*roa));
   },[pool,roa]);
 
-  const filterLabel=()=>{
-    const parts=[];
-    if(fState)parts.push(fState);
-    if(fBucket)parts.push(fBucket.l);
-    if(aumCap!==10e9)parts.push(aumCap===Infinity?'No cap':'Cap: '+capOpts.find(c=>c.v===aumCap)?.l);
-    return parts.length?parts.join(' \u00b7 '):'All firms';
-  };
   const hasFilter=fState||fBucket||aumCap!==10e9;
   const clearFilters=()=>{setFState(null);setFBucket(null);setAumCap(10e9)};
 
-  const Card=({title,value,sub,accent})=>(<div className="sc"><div style={{fontSize:10,color:accent?'var(--green)':'var(--text3)',textTransform:'uppercase',letterSpacing:'.5px'}}>{title}</div><div style={{fontSize:22,fontWeight:700,marginTop:4,color:accent?'var(--green)':'var(--text)'}}>{value}</div>{sub&&<div style={{fontSize:11,color:'var(--text3)',marginTop:2}}>{sub}</div>}</div>);
-
-  const LB=({title,firms:lbFirms,valFn,sub})=>(<div className="panel" style={{padding:14}}>
-    <div style={{fontSize:12,fontWeight:700,color:'var(--accent)',marginBottom:10,textTransform:'uppercase',letterSpacing:'.5px'}}>{title}</div>
-    {lbFirms.length===0?<div style={{fontSize:12,color:'var(--text3)',padding:'12px 0'}}>No firms match filters</div>:
-    lbFirms.map((f,i)=>(<div key={f.crd} style={{display:'flex',alignItems:'center',gap:8,padding:'6px 0',borderBottom:i<lbFirms.length-1?'1px solid var(--border)':'none'}}>
-      <span style={{width:18,height:18,borderRadius:'50%',background:i===0?'var(--accent)':i<3?'var(--surface2)':'transparent',border:i>=3?'1px solid var(--border)':'none',display:'flex',alignItems:'center',justifyContent:'center',fontSize:10,fontWeight:700,color:i===0?'#fff':'var(--text3)',flexShrink:0}}>{i+1}</span>
-      <div style={{flex:1,minWidth:0}}>
-        <div style={{fontSize:12,fontWeight:600,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap',cursor:'pointer'}} onClick={()=>onSelect(f)}>{f.name}</div>
-        <div style={{fontSize:10,color:'var(--text3)'}}>{f.city}, {f.state}{sub?' \u00b7 '+sub(f):''}</div>
-      </div>
-      <div className="mono" style={{fontSize:12,fontWeight:600,flexShrink:0}}>{valFn(f)}</div>
-      <button onClick={()=>toggleSave(f.crd)} style={{background:'none',border:'none',cursor:'pointer',fontSize:14,color:saved.has(f.crd)?'var(--amber)':'var(--text3)',padding:'0 2px',flexShrink:0}}>{saved.has(f.crd)?'\u2605':'\u2606'}</button>
-    </div>))}
-  </div>);
-
-  return(<div className="fade" style={{padding:20}}>
-    <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start',marginBottom:16}}>
-      <div>
-        <div style={{fontSize:20,fontWeight:700,marginBottom:4}}>Advisory Landscape Dashboard</div>
-        <div style={{fontSize:12,color:'var(--text3)'}}>SEC-registered RIAs &middot; NH / VT / MA / ME &middot; Form ADV (Feb 2026) &middot; ROA: {(roa*100).toFixed(2)}%</div>
-      </div>
-      <div style={{display:'flex',alignItems:'center',gap:8}}>
-        <label style={{fontSize:11,color:'var(--text3)'}}>AUM Cap:</label>
-        <select value={aumCap} onChange={e=>setAumCap(+e.target.value)} style={{padding:'4px 8px',fontSize:12}}>
-          {capOpts.map(c=><option key={c.l} value={c.v}>{c.l}</option>)}
-        </select>
-      </div>
+  const Stat=({label,value,sub,gold,green})=>(
+    <div className="stat-card" style={gold?{borderColor:'rgba(200,169,110,.35)'}:green?{borderColor:'rgba(74,222,128,.25)'}:{}}>
+      <div className="stat-label">{label}</div>
+      <div className={'stat-value'+(gold?' metric-accent':green?' metric-green':'')}>{value}</div>
+      {sub&&<div className="stat-sub">{sub}</div>}
     </div>
+  );
 
-    {hasFilter&&<div style={{display:'flex',alignItems:'center',gap:8,marginBottom:14,background:'var(--surface)',border:'1px solid var(--border)',borderRadius:8,padding:'8px 14px'}}>
-      <span style={{fontSize:11,color:'var(--text3)'}}>Filtered:</span>
-      <span style={{fontSize:12,fontWeight:600}}>{filterLabel()}</span>
-      <span style={{fontSize:12,color:'var(--text2)'}}>&middot; {pool.length} firms</span>
-      <button onClick={clearFilters} className="btn-g" style={{fontSize:11,padding:'2px 10px',marginLeft:'auto'}}>Clear filters</button>
-    </div>}
-
-    <div style={{display:'grid',gridTemplateColumns:'repeat(5,1fr)',gap:12,marginBottom:20}}>
-      <Card title="Firms" value={totals.firms.toLocaleString()}/>
-      <Card title="Total RAUM" value={fmtM(totals.aum)}/>
-      <Card title="Est Industry Rev" value={fmtM(totals.rev)} accent/>
-      <Card title="Total Accounts" value={totals.accounts.toLocaleString()}/>
-      <Card title="Total Employees" value={totals.employees.toLocaleString()}/>
-    </div>
-
-    <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:16,marginBottom:20}}>
-      <div className="panel" style={{padding:16}}>
-        <div style={{fontSize:12,fontWeight:700,color:'var(--accent)',marginBottom:12,textTransform:'uppercase',letterSpacing:'.5px'}}>Market by State <span style={{fontWeight:400,fontSize:10,color:'var(--text3)',textTransform:'none'}}>(click to filter)</span></div>
-        <table style={{width:'100%'}}><thead><tr>
-          <th style={{fontSize:10,padding:'6px 8px'}}>State</th><th style={{fontSize:10,padding:'6px 8px',textAlign:'right'}}>Firms</th><th style={{fontSize:10,padding:'6px 8px',textAlign:'right'}}>Total RAUM</th><th style={{fontSize:10,padding:'6px 8px',textAlign:'right'}}>Est Rev</th><th style={{fontSize:10,padding:'6px 8px',textAlign:'right'}}>Median AUM</th><th style={{fontSize:10,padding:'6px 8px',textAlign:'right'}}>Med Rev/Emp</th>
-        </tr></thead><tbody>
-          {ST.map(s=>{const d=byState[s];const active=fState===s;return(<tr key={s} onClick={()=>setFState(active?null:s)} style={{cursor:'pointer',background:active?'rgba(59,130,246,.15)':'transparent',borderLeft:active?'3px solid var(--accent)':'3px solid transparent'}}>
-            <td style={{padding:'6px 8px',fontWeight:600}}><span className="tag tag-b">{s}</span></td>
-            <td style={{padding:'6px 8px',textAlign:'right'}} className="mono">{d.count}</td>
-            <td style={{padding:'6px 8px',textAlign:'right'}} className="mono">{fmtM(d.aum)}</td>
-            <td style={{padding:'6px 8px',textAlign:'right',color:'var(--green)'}} className="mono">{fmtM(d.rev)}</td>
-            <td style={{padding:'6px 8px',textAlign:'right'}} className="mono">{fmtM(d.med)}</td>
-            <td style={{padding:'6px 8px',textAlign:'right'}} className="mono">{fmtM(d.medRPE)}</td>
-          </tr>)})}
-        </tbody></table>
-      </div>
-
-      <div className="panel" style={{padding:16}}>
-        <div style={{fontSize:12,fontWeight:700,color:'var(--accent)',marginBottom:12,textTransform:'uppercase',letterSpacing:'.5px'}}>AUM Distribution <span style={{fontWeight:400,fontSize:10,color:'var(--text3)',textTransform:'none'}}>(click to filter)</span></div>
-        <div style={{display:'flex',flexDirection:'column',gap:6}}>
-          {dist.map((d,i)=>{const active=fBucket&&fBucket.l===d.l;return(<div key={d.l} onClick={()=>setFBucket(active?null:BUCKETS[i])} style={{display:'flex',alignItems:'center',gap:8,cursor:'pointer',padding:'2px 4px',borderRadius:4,background:active?'rgba(59,130,246,.15)':'transparent'}}>
-            <span style={{width:70,fontSize:11,color:active?'var(--accent)':'var(--text2)',fontWeight:active?700:400,textAlign:'right',flexShrink:0}}>{d.l}</span>
-            <div style={{flex:1,height:22,background:'var(--surface2)',borderRadius:4,overflow:'hidden'}}>
-              <div style={{width:d.count>0?(d.count/maxBucket*100)+'%':'0%',height:'100%',background:active?'var(--accent)':'linear-gradient(90deg,var(--accent),var(--purple))',borderRadius:4,transition:'width .3s'}}></div>
-            </div>
-            <span className="mono" style={{fontSize:11,width:28,textAlign:'right',flexShrink:0,color:active?'var(--accent)':'var(--text2)',fontWeight:active?700:400}}>{d.count}</span>
-          </div>)})}
+  const Leaderboard=({title,firms:lbF,valFn,sub})=>(
+    <div className="card" style={{padding:'18px 20px'}}>
+      <div className="section-head">{title}</div>
+      {lbF.length===0?<div style={{fontSize:12,color:'var(--text3)',padding:'10px 0'}}>No firms match</div>:
+      lbF.map((f,i)=>(
+        <div key={f.crd} style={{display:'flex',alignItems:'center',gap:10,padding:'8px 0',borderBottom:i<lbF.length-1?'1px solid var(--border)':'none',cursor:'pointer',transition:'opacity .15s'}} onClick={()=>onSelect(f)}
+          onMouseEnter={e=>e.currentTarget.style.opacity='.75'} onMouseLeave={e=>e.currentTarget.style.opacity='1'}>
+          <div className="rank-badge" style={{background:i===0?'var(--accent)':i<3?'var(--surface3)':'transparent',border:i>=3?'1px solid var(--border)':'none',color:i===0?'#0e0f11':'var(--text3)'}}>{i+1}</div>
+          <div style={{flex:1,minWidth:0}}>
+            <div style={{fontSize:12,fontWeight:500,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{f.name}</div>
+            <div style={{fontSize:10,color:'var(--text3)',marginTop:1}}>{f.city}, {f.state}{sub?' · '+sub(f):''}</div>
+          </div>
+          <div style={{fontSize:12,fontFamily:'DM Mono,monospace',fontWeight:500,flexShrink:0}}>{valFn(f)}</div>
+          <StarBtn crd={f.crd} saved={saved} toggleSave={toggleSave}/>
         </div>
-      </div>
+      ))}
     </div>
+  );
 
-    <div style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:16,marginBottom:20}}>
-      <LB title="Top RAUM" firms={topAum} valFn={f=>fmtM(f.aum)} sub={f=>fmtN(f.employees)+' emp'}/>
-      <LB title="Top Est Revenue" firms={topRev} valFn={f=>fmtM(f.aum*roa)} sub={f=>fmtM(f.aum)+' RAUM'}/>
-      <LB title="Top Discretionary AUM" firms={topDisc} valFn={f=>fmtM(f.aumDisc)} sub={f=>f.aum>0?Math.round(f.aumDisc/f.aum*100)+'% disc':''}/>
-    </div>
-
-    <div style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:16,marginBottom:20}}>
-      <LB title="Top HNW Client Count" firms={topHNW} valFn={f=>fmtN(f.clientsHNW)+' HNW'} sub={f=>fmtM(f.aumHNW)+' HNW AUM'}/>
-      <LB title="Largest Avg Account Size" firms={topAcctSize} valFn={f=>fmtM(f.aum/(f.accounts||1))} sub={f=>fmtN(f.accounts)+' accts'}/>
-      <LB title="Highest Rev per Employee" firms={topRPE} valFn={f=>fmtM(f.aum*roa/(f.employees||1))} sub={f=>fmtN(f.employees)+' emp, '+fmtM(f.aum*roa)+' rev'}/>
-    </div>
-
-    <div className="panel" style={{padding:16,marginBottom:20}}>
-      <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:12}}>
+  return(
+    <div className="page fade-up">
+      <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-end',marginBottom:24}}>
         <div>
-          <div style={{fontSize:12,fontWeight:700,color:'var(--green)',textTransform:'uppercase',letterSpacing:'.5px'}}>Acquisition Sweet Spot</div>
-          <div style={{fontSize:11,color:'var(--text3)',marginTop:2}}>$500K-$3M est revenue, 1-10 employees{fState?' in '+fState:''}. Classic owner-operator succession targets.</div>
+          <div className="page-title">Advisory Landscape</div>
+          <div className="page-sub">SEC Form ADV · Feb 2026 · ROA assumption: {(roa*100).toFixed(2)}%</div>
         </div>
-        <span style={{fontSize:13,fontWeight:700}}>{sweetSpot.length} firms</span>
+        <div style={{display:'flex',alignItems:'center',gap:8}}>
+          {hasFilter&&<button className="btn-ghost btn-sm" onClick={clearFilters} style={{color:'var(--accent)'}}>Clear filters</button>}
+          <div className="filter-group">
+            <label>AUM Cap</label>
+            <select value={aumCap} onChange={e=>setAumCap(+e.target.value)} style={{width:'auto',padding:'7px 12px'}}>
+              {capOpts.map(c=><option key={c.l} value={c.v}>{c.l}</option>)}
+            </select>
+          </div>
+        </div>
       </div>
-      {sweetSpot.length===0?<div style={{fontSize:12,color:'var(--text3)',padding:12,textAlign:'center'}}>No firms match current filters. Try adjusting the AUM cap or clearing filters.</div>:
-      <div style={{overflowX:'auto'}}><table><thead><tr>
-        <th style={{fontSize:10,padding:'6px 8px'}}>Firm</th><th style={{fontSize:10,padding:'6px 8px'}}>St</th><th style={{fontSize:10,padding:'6px 8px'}}>City</th>
-        <th style={{fontSize:10,padding:'6px 8px',textAlign:'right'}}>RAUM</th><th style={{fontSize:10,padding:'6px 8px',textAlign:'right'}}>Est Rev</th>
-        <th style={{fontSize:10,padding:'6px 8px',textAlign:'right'}}>Emp</th><th style={{fontSize:10,padding:'6px 8px',textAlign:'right'}}>Accts</th>
-        <th style={{fontSize:10,padding:'6px 8px',textAlign:'right'}}>Rev/Emp</th><th style={{fontSize:10,padding:'6px 8px',textAlign:'right'}}>Avg Acct</th>
-        <th style={{fontSize:10,padding:'6px 8px',textAlign:'center'}}>&#9733;</th>
-      </tr></thead><tbody>
-        {sweetSpot.slice(0,25).map((f,i)=>{const rev=f.aum*roa;const rpe=f.employees>0?rev/f.employees:0;const aa=f.accounts>0?f.aum/f.accounts:0;
-          return(<tr key={f.crd}>
-            <td style={{padding:'6px 8px',fontWeight:600,fontSize:12,cursor:'pointer',maxWidth:220,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}} onClick={()=>onSelect(f)}>{f.name}</td>
-            <td style={{padding:'6px 8px',textAlign:'center'}}><span className="tag tag-b">{f.state}</span></td>
-            <td style={{padding:'6px 8px',fontSize:12,color:'var(--text2)'}}>{f.city}</td>
-            <td style={{padding:'6px 8px',textAlign:'right'}} className="mono">{fmtM(f.aum)}</td>
-            <td style={{padding:'6px 8px',textAlign:'right',color:'var(--green)',fontWeight:600}} className="mono">{fmtM(rev)}</td>
-            <td style={{padding:'6px 8px',textAlign:'right'}} className="mono">{fmtN(f.employees)}</td>
-            <td style={{padding:'6px 8px',textAlign:'right'}} className="mono">{fmtN(f.accounts)}</td>
-            <td style={{padding:'6px 8px',textAlign:'right'}} className="mono">{fmtM(rpe)}</td>
-            <td style={{padding:'6px 8px',textAlign:'right'}} className="mono">{fmtM(aa)}</td>
-            <td style={{padding:'6px 8px',textAlign:'center'}}><button onClick={()=>toggleSave(f.crd)} style={{background:'none',border:'none',cursor:'pointer',fontSize:14,color:saved.has(f.crd)?'var(--amber)':'var(--text3)'}}>{saved.has(f.crd)?'\u2605':'\u2606'}</button></td>
-          </tr>)})}
-      </tbody></table></div>}
-      {sweetSpot.length>25&&<div style={{fontSize:11,color:'var(--text3)',textAlign:'center',marginTop:8}}>Showing top 25 of {sweetSpot.length}. Use Explorer for full list.</div>}
+
+      <div style={{display:'grid',gridTemplateColumns:'repeat(5,1fr)',gap:12,marginBottom:24}}>
+        <Stat label="Firms" value={totals.firms.toLocaleString()}/>
+        <Stat label="Total RAUM" value={fmtM(totals.aum)}/>
+        <Stat label="Est. Industry Revenue" value={fmtM(totals.rev)} gold/>
+        <Stat label="Total Accounts" value={totals.accounts.toLocaleString()}/>
+        <Stat label="Employees" value={totals.employees.toLocaleString()}/>
+      </div>
+
+      <div style={{display:'grid',gridTemplateColumns:'1.1fr 1fr',gap:16,marginBottom:16}}>
+        <div className="card" style={{padding:'18px 20px'}}>
+          <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:14}}>
+            <div className="section-head" style={{marginBottom:0}}>Market by State</div>
+            <span style={{fontSize:10,color:'var(--text3)'}}>click to filter</span>
+          </div>
+          <table style={{width:'100%'}}>
+            <thead><tr>
+              <th style={{background:'transparent',position:'static',padding:'6px 10px'}}>State</th>
+              <th style={{background:'transparent',position:'static',padding:'6px 10px',textAlign:'right'}}>Firms</th>
+              <th style={{background:'transparent',position:'static',padding:'6px 10px',textAlign:'right'}}>RAUM</th>
+              <th style={{background:'transparent',position:'static',padding:'6px 10px',textAlign:'right',color:'var(--accent)'}}>Est Rev</th>
+              <th style={{background:'transparent',position:'static',padding:'6px 10px',textAlign:'right'}}>Median</th>
+            </tr></thead>
+            <tbody>
+              {ST.map(s=>{const d=byState[s];const active=fState===s;return(
+                <tr key={s} onClick={()=>setFState(active?null:s)} style={{cursor:'pointer',borderLeft:active?'2px solid var(--accent)':'2px solid transparent',transition:'background .15s'}}>
+                  <td style={{padding:'9px 10px',paddingLeft:active?8:10}}><span className="tag tag-state">{s}</span></td>
+                  <td style={{padding:'9px 10px',textAlign:'right',fontFamily:'DM Mono,monospace',fontSize:12}}>{d.count}</td>
+                  <td style={{padding:'9px 10px',textAlign:'right',fontFamily:'DM Mono,monospace',fontSize:12}}>{fmtM(d.aum)}</td>
+                  <td style={{padding:'9px 10px',textAlign:'right',fontFamily:'DM Mono,monospace',fontSize:12,color:'var(--accent)'}}>{fmtM(d.rev)}</td>
+                  <td style={{padding:'9px 10px',textAlign:'right',fontFamily:'DM Mono,monospace',fontSize:12,color:'var(--text2)'}}>{fmtM(d.med)}</td>
+                </tr>
+              )})}
+            </tbody>
+          </table>
+        </div>
+
+        <div className="card" style={{padding:'18px 20px'}}>
+          <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:14}}>
+            <div className="section-head" style={{marginBottom:0}}>AUM Distribution</div>
+            <span style={{fontSize:10,color:'var(--text3)'}}>click to filter</span>
+          </div>
+          <div style={{display:'flex',flexDirection:'column',gap:8}}>
+            {dist.map((d,i)=>{const active=fBucket&&fBucket.l===d.l;return(
+              <div key={d.l} onClick={()=>setFBucket(active?null:BUCKETS[i])} style={{display:'flex',alignItems:'center',gap:10,cursor:'pointer'}}>
+                <span style={{width:76,fontSize:11,color:active?'var(--accent)':'var(--text3)',textAlign:'right',flexShrink:0,fontWeight:active?600:400}}>{d.l}</span>
+                <div style={{flex:1,height:18,background:'var(--surface2)',borderRadius:4,overflow:'hidden'}}>
+                  <div className="bar-fill" style={{width:d.count>0?(d.count/maxBucket*100)+'%':'0%',background:active?'var(--accent)':'linear-gradient(90deg,rgba(200,169,110,.6),rgba(200,169,110,.3))'}}></div>
+                </div>
+                <span style={{fontFamily:'DM Mono,monospace',fontSize:11,width:26,textAlign:'right',color:active?'var(--accent)':'var(--text3)',flexShrink:0}}>{d.count}</span>
+              </div>
+            )})}
+          </div>
+        </div>
+      </div>
+
+      <div style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:16,marginBottom:16}}>
+        <Leaderboard title="Top RAUM" firms={topAum} valFn={f=>fmtM(f.aum)} sub={f=>fmtN(f.employees)+' emp'}/>
+        <Leaderboard title="Top Est. Revenue" firms={topRev} valFn={f=>fmtM(f.aum*roa)} sub={f=>fmtM(f.aum)+' AUM'}/>
+        <Leaderboard title="Top HNW Clients" firms={topHNW} valFn={f=>fmtN(f.clientsHNW)+' HNW'} sub={f=>fmtM(f.aumHNW)+' HNW AUM'}/>
+      </div>
+
+      <div style={{display:'grid',gridTemplateColumns:'repeat(2,1fr)',gap:16,marginBottom:24}}>
+        <Leaderboard title="Largest Avg Account Size" firms={topAcctSize} valFn={f=>fmtM(f.aum/(f.accounts||1))} sub={f=>fmtN(f.accounts)+' accts'}/>
+        <Leaderboard title="Highest Rev per Employee" firms={topRPE} valFn={f=>fmtM(f.aum*roa/(f.employees||1))} sub={f=>fmtN(f.employees)+' emp'}/>
+      </div>
+
+      <div className="card" style={{padding:'18px 20px'}}>
+        <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:16}}>
+          <div>
+            <div style={{display:'flex',alignItems:'center',gap:10}}>
+              <div className="pulse"></div>
+              <span style={{fontSize:13,fontWeight:600,color:'var(--green)'}}>Acquisition Sweet Spot</span>
+              <span style={{fontFamily:'DM Mono,monospace',fontSize:12,color:'var(--green)',background:'var(--green-dim)',padding:'2px 10px',borderRadius:20}}>{sweetSpot.length}</span>
+            </div>
+            <div style={{fontSize:11,color:'var(--text3)',marginTop:3}}>$500K–$3M est. revenue · 1–10 employees · classic owner-operator succession profile</div>
+          </div>
+        </div>
+        {sweetSpot.length===0?<div style={{fontSize:12,color:'var(--text3)',padding:'16px 0',textAlign:'center'}}>No firms match current filters</div>:
+        <div className="table-scroll">
+          <table>
+            <thead><tr>
+              <th>Firm</th><th>St</th><th>City</th>
+              <th style={{textAlign:'right'}}>RAUM</th>
+              <th style={{textAlign:'right',color:'var(--green)'}}>Est Rev</th>
+              <th style={{textAlign:'right'}}>Emp</th>
+              <th style={{textAlign:'right'}}>Accts</th>
+              <th style={{textAlign:'right'}}>Rev/Emp</th>
+              <th style={{textAlign:'right'}}>Avg Acct</th>
+              <th style={{textAlign:'center',width:36}}>★</th>
+            </tr></thead>
+            <tbody>
+              {sweetSpot.slice(0,25).map(f=>{
+                const rev=f.aum*roa,rpe=f.employees>0?rev/f.employees:0,aa=f.accounts>0?f.aum/f.accounts:0;
+                return(
+                  <tr key={f.crd} className="ss-row" onClick={()=>onSelect(f)}>
+                    <td style={{fontWeight:500,maxWidth:240,overflow:'hidden',textOverflow:'ellipsis'}}>{f.name}</td>
+                    <td><span className="tag tag-state">{f.state}</span></td>
+                    <td style={{color:'var(--text2)'}}>{f.city}</td>
+                    <td style={{textAlign:'right'}} className="mono">{fmtM(f.aum)}</td>
+                    <td style={{textAlign:'right',color:'var(--green)',fontWeight:500}} className="mono">{fmtM(rev)}</td>
+                    <td style={{textAlign:'right'}} className="mono">{fmtN(f.employees)}</td>
+                    <td style={{textAlign:'right'}} className="mono">{fmtN(f.accounts)}</td>
+                    <td style={{textAlign:'right'}} className="mono">{fmtM(rpe)}</td>
+                    <td style={{textAlign:'right'}} className="mono">{fmtM(aa)}</td>
+                    <td style={{textAlign:'center'}} onClick={e=>e.stopPropagation()}><StarBtn crd={f.crd} saved={saved} toggleSave={toggleSave}/></td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>}
+        {sweetSpot.length>25&&<div style={{fontSize:11,color:'var(--text3)',textAlign:'center',marginTop:10,paddingTop:10,borderTop:'1px solid var(--border)'}}>Showing top 25 of {sweetSpot.length} — use Explorer for full list</div>}
+      </div>
     </div>
-  </div>);
+  );
+}
+
+function Explorer({roa,setRoa,onSelect,saved,toggleSave}){
+  const[search,setSearch]=useState('');const[stF,setStF]=useState('ALL');
+  const[rMin,setRMin]=useState(1000000);const[rMax,setRMax]=useState(2000000);
+  const[sCol,setSCol]=useState('aum');const[sDir,setSDir]=useState('desc');
+  const[tOnly,setTOnly]=useState(false);const[showMap,setShowMap]=useState(true);
+  const[bounds,setBounds]=useState(null);const[fByMap,setFByMap]=useState(false);
+
+  const base=useMemo(()=>FIRMS.filter(f=>{
+    if(stF!=='ALL'&&f.state!==stF)return false;
+    if(search&&!f.name.toLowerCase().includes(search.toLowerCase())&&!f.city.toLowerCase().includes(search.toLowerCase()))return false;
+    if(tOnly){const r=(f.aum||0)*roa;if(r<rMin||r>rMax)return false}return true;
+  }),[search,stF,roa,rMin,rMax,tOnly]);
+
+  const filtered=useMemo(()=>{
+    let fl=base;
+    if(fByMap&&bounds)fl=fl.filter(f=>{const co=COORDS[f.crd];if(!co)return false;return co.lat>=bounds.s&&co.lat<=bounds.n&&co.lng>=bounds.w&&co.lng<=bounds.e});
+    return[...fl].sort((a,b)=>{let va=a[sCol],vb=b[sCol];if(sCol==='estRev'){va=(a.aum||0)*roa;vb=(b.aum||0)*roa}if(va==null)va=sDir==='desc'?-Infinity:Infinity;if(vb==null)vb=sDir==='desc'?-Infinity:Infinity;if(typeof va==='string')return sDir==='desc'?vb.localeCompare(va):va.localeCompare(vb);return sDir==='desc'?vb-va:va-vb});
+  },[base,fByMap,bounds,sCol,sDir,roa]);
+
+  const stats=useMemo(()=>{
+    const t=filtered.reduce((s,f)=>s+(f.aum||0),0);
+    const hit=filtered.filter(f=>{const r=(f.aum||0)*roa;return r>=rMin&&r<=rMax}).length;
+    const s=[...filtered].filter(f=>f.aum).sort((a,b)=>a.aum-b.aum);
+    return{total:filtered.length,aum:t,hit,med:s.length?s[Math.floor(s.length/2)].aum:0};
+  },[filtered,roa,rMin,rMax]);
+
+  const tog=c=>{if(sCol===c)setSDir(d=>d==='desc'?'asc':'desc');else{setSCol(c);setSDir('desc')}};
+  const arr=c=>sCol===c?(sDir==='desc'?' ▾':' ▴'):'';
+
+  return(
+    <div className="page fade-up">
+      <div style={{marginBottom:20}}>
+        <div className="page-title">Firm Explorer</div>
+        <div className="page-sub">Browse, filter, and sort all SEC-registered RIAs in the region</div>
+      </div>
+
+      <div className="card" style={{padding:'16px 20px',marginBottom:16}}>
+        <div className="filter-bar">
+          <div className="filter-group" style={{flex:'1 1 180px'}}>
+            <label>Search</label>
+            <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Firm name or city…"/>
+          </div>
+          <div className="filter-group">
+            <label>State</label>
+            <select value={stF} onChange={e=>setStF(e.target.value)} style={{width:90}}>
+              <option value="ALL">All</option><option>NH</option><option>VT</option><option>MA</option><option>ME</option>
+            </select>
+          </div>
+          <div className="filter-group">
+            <label>ROA %</label>
+            <input type="number" value={(roa*100).toFixed(2)} onChange={e=>setRoa(parseFloat(e.target.value)/100||.0065)} step="0.05" style={{width:90,textAlign:'center'}}/>
+          </div>
+          <div className="filter-group">
+            <label>Rev Min</label>
+            <input type="number" value={rMin} onChange={e=>setRMin(+e.target.value)} step={100000} style={{width:130}}/>
+          </div>
+          <div className="filter-group">
+            <label>Rev Max</label>
+            <input type="number" value={rMax} onChange={e=>setRMax(+e.target.value)} step={100000} style={{width:130}}/>
+          </div>
+          <div style={{display:'flex',gap:8,alignSelf:'flex-end'}}>
+            <button onClick={()=>setTOnly(!tOnly)} className={tOnly?'btn-gold btn-sm':'btn-ghost btn-sm'}>{tOnly?'Targets only':'Show all'}</button>
+            <button onClick={()=>setShowMap(!showMap)} className={showMap?'btn-ghost btn-sm':'btn-ghost btn-sm'} style={showMap?{borderColor:'var(--accent)',color:'var(--accent)'}:{}}>{showMap?'Hide map':'Show map'}</button>
+          </div>
+        </div>
+      </div>
+
+      <div style={{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:12,marginBottom:16}}>
+        <div className="stat-card"><div className="stat-label">Firms</div><div className="stat-value">{stats.total.toLocaleString()}</div></div>
+        <div className="stat-card"><div className="stat-label">Total RAUM</div><div className="stat-value">{fmtM(stats.aum)}</div></div>
+        <div className="stat-card"><div className="stat-label">Median RAUM</div><div className="stat-value">{fmtM(stats.med)}</div></div>
+        <div className="stat-card" style={{borderColor:'rgba(74,222,128,.25)'}}><div className="stat-label" style={{color:'var(--green)'}}>In Target Range</div><div className="stat-value metric-green">{stats.hit.toLocaleString()}</div></div>
+      </div>
+
+      {showMap&&(
+        <div style={{marginBottom:16}}>
+          <div className="card" style={{height:380,padding:0,overflow:'hidden'}}>
+            <FirmMap firms={base} roa={roa} rMin={rMin} rMax={rMax} onSelect={onSelect} onBounds={setBounds}/>
+          </div>
+          <div style={{display:'flex',alignItems:'center',gap:10,marginTop:8}}>
+            <button onClick={()=>setFByMap(!fByMap)} className={fByMap?'btn-gold btn-sm':'btn-ghost btn-sm'}>
+              {fByMap?'✓ Filtering by map':'Filter by map view'}
+            </button>
+            <span style={{fontSize:11,color:'var(--text3)',display:'flex',gap:12,marginLeft:'auto'}}>
+              <span><span style={{display:'inline-block',width:9,height:9,borderRadius:'50%',background:'#4ade80',marginRight:5,verticalAlign:'middle'}}></span>Target range</span>
+              <span><span style={{display:'inline-block',width:7,height:7,borderRadius:'50%',background:'#60a5fa',marginRight:5,verticalAlign:'middle'}}></span>Other</span>
+            </span>
+          </div>
+        </div>
+      )}
+
+      <div className="card table-scroll">
+        <table>
+          <thead><tr>
+            <th onClick={()=>tog('name')}>Firm{arr('name')}</th>
+            <th>St</th><th>City</th>
+            <th onClick={()=>tog('aum')} style={{textAlign:'right'}}>RAUM{arr('aum')}</th>
+            <th onClick={()=>tog('estRev')} style={{textAlign:'right',color:'var(--accent)'}}>Est Rev{arr('estRev')}</th>
+            <th style={{textAlign:'center'}}>Target</th>
+            <th onClick={()=>tog('accounts')} style={{textAlign:'right'}}>Accts{arr('accounts')}</th>
+            <th onClick={()=>tog('clientsHNW')} style={{textAlign:'right'}}>HNW{arr('clientsHNW')}</th>
+            <th onClick={()=>tog('employees')} style={{textAlign:'right'}}>Emp{arr('employees')}</th>
+            <th style={{textAlign:'center',width:60}}>Detail</th>
+            <th style={{textAlign:'center',width:40}}>★</th>
+          </tr></thead>
+          <tbody>
+            {filtered.map((f,i)=>{
+              const rev=(f.aum||0)*roa,hit=rev>=rMin&&rev<=rMax;
+              return(
+                <tr key={f.crd+i} className={hit?'highlight-row':''} style={{cursor:'pointer'}} onClick={()=>onSelect(f)}>
+                  <td style={{fontWeight:500,maxWidth:260,overflow:'hidden',textOverflow:'ellipsis'}}>{f.name}</td>
+                  <td><span className="tag tag-state">{f.state}</span></td>
+                  <td style={{color:'var(--text2)'}}>{f.city}</td>
+                  <td style={{textAlign:'right'}} className="mono">{fmtM(f.aum)}</td>
+                  <td style={{textAlign:'right',color:hit?'var(--green)':'var(--accent)',fontWeight:500}} className="mono">{fmtM(rev)}</td>
+                  <td style={{textAlign:'center'}}>{hit?<span className="tag tag-green">Yes</span>:''}</td>
+                  <td style={{textAlign:'right'}} className="mono">{fmtN(f.accounts)}</td>
+                  <td style={{textAlign:'right'}} className="mono">{fmtN(f.clientsHNW)}</td>
+                  <td style={{textAlign:'right'}} className="mono">{fmtN(f.employees)}</td>
+                  <td style={{textAlign:'center'}} onClick={e=>e.stopPropagation()}>
+                    <button className="btn-ghost btn-sm" onClick={()=>onSelect(f)}>View</button>
+                  </td>
+                  <td style={{textAlign:'center'}} onClick={e=>e.stopPropagation()}><StarBtn crd={f.crd} saved={saved} toggleSave={toggleSave}/></td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
+
+function FirmDetail({firm,setFirm,onLetter,roa,saved,toggleSave}){
+  const[animKey,setAnimKey]=useState(0);
+  useEffect(()=>{if(firm)setAnimKey(k=>k+1)},[firm?.crd]);
+
+  if(!firm)return(
+    <div className="page" style={{display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',minHeight:'60vh'}}>
+      <div style={{fontSize:11,letterSpacing:'.1em',textTransform:'uppercase',color:'var(--text3)',marginBottom:16}}>Firm Lookup</div>
+      <div className="serif" style={{fontSize:36,marginBottom:24,color:'var(--text2)',letterSpacing:'-.02em'}}>Select a firm to explore</div>
+      <select onChange={e=>{const f=FIRMS.find(x=>x.crd===e.target.value);if(f)setFirm(f)}} style={{width:380,padding:12,fontSize:14}}>
+        <option value="">Choose a firm…</option>
+        {FIRMS.sort((a,b)=>a.name.localeCompare(b.name)).map(f=><option key={f.crd} value={f.crd}>{f.name} ({f.state})</option>)}
+      </select>
+    </div>
+  );
+
+  const rev=(firm.aum||0)*roa,avg=firm.accounts>0?firm.aum/firm.accounts:null;
+  const rpe=firm.employees>0?rev/firm.employees:null;
+  const pctD=firm.aum>0&&firm.aumDisc?(firm.aumDisc/firm.aum*100).toFixed(1)+'%':'-';
+  const wurl=wu(firm.website);
+
+  const Row=({label,value,money,green,accent})=>(
+    <div className="detail-row">
+      <span className="detail-label">{label}</span>
+      <span className={'detail-value'+(green?' metric-green':accent?' metric-accent':'')} style={green?{color:'var(--green)'}:accent?{color:'var(--accent)'}:{}}>
+        {money?fmt(value):value!=null?value:'-'}
+      </span>
+    </div>
+  );
+
+  const Section=({title,children})=>(
+    <div style={{marginBottom:20}}>
+      <div className="section-head">{title}</div>
+      {children}
+    </div>
+  );
+
+  return(
+    <div className="page">
+      {/* Header */}
+      <div key={animKey} className="fade-up" style={{marginBottom:28}}>
+        <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start',flexWrap:'wrap',gap:16}}>
+          <div style={{flex:1,minWidth:0}}>
+            <div style={{fontSize:11,letterSpacing:'.1em',textTransform:'uppercase',color:'var(--text3)',marginBottom:8}}>
+              CRD #{firm.crd} · <span className="tag tag-state" style={{fontSize:10}}>{firm.state}</span>
+            </div>
+            <div style={{fontFamily:'Instrument Serif,serif',fontSize:36,letterSpacing:'-.02em',lineHeight:1.1,marginBottom:10}}>{firm.name}</div>
+            <div style={{fontSize:12,color:'var(--text3)',marginBottom:8}}>{firm.addr1}{firm.addr2?', '+firm.addr2:''}, {firm.city}, {firm.state} {firm.zip}</div>
+            <div style={{display:'flex',gap:16,fontSize:12,flexWrap:'wrap'}}>
+              {firm.phone&&<span style={{color:'var(--text2)'}}>{firm.phone}</span>}
+              {wurl&&<a href={wurl} target="_blank" rel="noopener" style={{color:'var(--accent)',textDecoration:'none'}}>Website ↗</a>}
+              <a href={'https://adviserinfo.sec.gov/firm/summary/'+firm.crd} target="_blank" rel="noopener" style={{color:'var(--accent)',textDecoration:'none'}}>IAPD Profile ↗</a>
+            </div>
+          </div>
+          <div style={{display:'flex',gap:8,flexShrink:0}}>
+            <StarBtn crd={firm.crd} saved={saved} toggleSave={toggleSave}/>
+            <button className="btn-ghost" onClick={()=>onLetter(firm)}>✉ Write Letter</button>
+            <button className="btn-gold" onClick={()=>onLetter(firm)}>Generate Prompt</button>
+          </div>
+        </div>
+      </div>
+
+      {/* Key metrics */}
+      <div key={animKey+'m'} className="fade-up" style={{animationDelay:'.05s',display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:12,marginBottom:24}}>
+        <div className="stat-card">
+          <div className="stat-label">Total RAUM</div>
+          <div className="stat-value">{fmtM(firm.aum)}</div>
+          <div className="stat-sub">{pctD} discretionary</div>
+        </div>
+        <div className="stat-card" style={{borderColor:'rgba(200,169,110,.3)'}}>
+          <div className="stat-label" style={{color:'var(--accent)'}}>Est. Revenue</div>
+          <div className="stat-value metric-accent">{fmtM(rev)}</div>
+          <div className="stat-sub">at {(roa*100).toFixed(2)}% ROA</div>
+        </div>
+        <div className="stat-card">
+          <div className="stat-label">Accounts</div>
+          <div className="stat-value">{fmtN(firm.accounts)}</div>
+          {avg&&<div className="stat-sub">{fmtM(avg)} avg size</div>}
+        </div>
+        <div className="stat-card">
+          <div className="stat-label">Employees</div>
+          <div className="stat-value">{fmtN(firm.employees)}</div>
+          {rpe&&<div className="stat-sub">{fmtM(rpe)} rev/emp</div>}
+        </div>
+      </div>
+
+      {/* Detail panels */}
+      <div key={animKey+'d'} className="fade-up" style={{animationDelay:'.1s',display:'grid',gridTemplateColumns:'1fr 1fr',gap:16}}>
+        <div>
+          <div className="detail-panel" style={{marginBottom:14}}>
+            <Section title="Assets Under Management">
+              <Row label="Total RAUM" value={firm.aum} money accent/>
+              <Row label="Discretionary" value={firm.aumDisc} money/>
+              <Row label="Non-Discretionary" value={firm.aumNonDisc} money/>
+              <Row label="% Discretionary" value={pctD}/>
+              <Row label="Avg Account Size" value={avg} money/>
+            </Section>
+            <Section title="Revenue">
+              <Row label="Estimated Revenue" value={rev} money green/>
+              <Row label="Rev per Employee" value={rpe} money/>
+            </Section>
+            <Section title="Client Breakdown">
+              <Row label="Individual" value={fmtN(firm.clientsInd)}/>
+              <Row label="Individual AUM" value={firm.aumInd} money/>
+              <Row label="HNW" value={fmtN(firm.clientsHNW)}/>
+              <Row label="HNW AUM" value={firm.aumHNW} money/>
+              <Row label="Pension" value={fmtN(firm.clientsPension)}/>
+              <Row label="Charitable" value={fmtN(firm.clientsCharitable)}/>
+              <Row label="Corp / Business" value={fmtN(firm.clientsCorp)}/>
+              <Row label="Pooled Vehicles" value={fmtN(firm.clientsPooled)}/>
+            </Section>
+          </div>
+        </div>
+
+        <div>
+          <div className="detail-panel" style={{marginBottom:14}}>
+            <Section title="Services & Compensation">
+              <div style={{marginBottom:10}}>{firm.services.map(s=><span key={s} className="tag tag-gold" style={{margin:'2px'}}>{s}</span>)}</div>
+              <div>{firm.compensation.map(c=><span key={c} className="tag tag-dim" style={{margin:'2px'}}>{c}</span>)}</div>
+            </Section>
+            <Section title="Client Types">
+              <div>{(firm.clientTypes||[]).map(t=><span key={t} className="tag tag-state" style={{margin:'2px'}}>{t}</span>)}</div>
+            </Section>
+            <Section title="Firm Profile">
+              <Row label="Org Type" value={firm.orgType}/>
+              <Row label="State of Formation" value={firm.stateOfFormation}/>
+              <Row label="SEC Status" value={firm.secStatus}/>
+              <Row label="Status Date" value={firm.statusDate}/>
+              <Row label="Latest ADV Filing" value={firm.advDate}/>
+              <Row label="Other Offices" value={fmtN(firm.otherOffices)}/>
+            </Section>
+            <Section title="Affiliations & Flags">
+              <Row label="BD Affiliate" value={firm.bdAffiliate?'Yes':'No'}/>
+              <Row label="IA Affiliate" value={firm.iaAffiliate?'Yes':'No'}/>
+              <Row label="# IA Affiliates" value={fmtN(firm.iaAffCount)}/>
+              <Row label="# BD Affiliates" value={fmtN(firm.bdAffCount)}/>
+              <Row label="Custody" value={firm.custody?'Yes':'No'}/>
+              {firm.custodyAmt&&<Row label="Custody Amount" value={firm.custodyAmt} money/>}
+              <Row label="Disclosures" value={firm.disclosures?'Yes':'No'}/>
+              <Row label="Wrap Fee" value={firm.wrapFee?'Yes':'No'}/>
+            </Section>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function LetterWriter({firm,setFirm,roa}){
+  const[sN,setSN]=useState('');const[sT,setST]=useState('');const[sF,setSF]=useState('');const[sA,setSA]=useState('');
+  const[purpose,setP]=useState('acquisition');const[tone,setTo]=useState('professional');const[ctx,setCtx]=useState('');
+  const[prompt,setPrompt]=useState('');const[copied,setCopied]=useState(false);const[settOpen,setSettOpen]=useState(true);
+
+  const pMap={acquisition:'exploring a potential acquisition or merger of their firm',partnership:'exploring a strategic partnership or affiliation',recruiting:'recruiting their advisors or team to join your firm',services:'offering professional services (compliance, technology, operations)',referral:'establishing a referral relationship'};
+  const tMap={professional:'calm, credible, understated sophistication',warm:'friendly, approachable, relationship-focused',direct:'concise, to the point, respect their time',strategic:'measured, confident, emphasizing mutual benefit'};
+
+  const generate=()=>{
+    if(!firm)return;
+    const rev=(firm.aum||0)*roa;
+    const lines=['Write a personalized physical letter to be mailed to an RIA firm. Tailor it using their SEC Form ADV data below.','',
+      'SENDER:','Name: '+sN,'Title: '+sT,'Firm: '+sF,'Address: '+sA,'',
+      'RECIPIENT FIRM (from SEC Form ADV):','Firm: '+firm.name+' (CRD #'+firm.crd+')','Address: '+firm.addr1+(firm.addr2?', '+firm.addr2:'')+', '+firm.city+', '+firm.state+' '+firm.zip,
+      'Total RAUM: $'+Math.round(firm.aum||0).toLocaleString(),'Discretionary RAUM: $'+Math.round(firm.aumDisc||0).toLocaleString(),
+      'Est Revenue (at '+(roa*100).toFixed(2)+'% ROA): $'+Math.round(rev).toLocaleString(),'Employees: '+(firm.employees||'N/A'),
+      'Individual Clients: '+(firm.clientsInd||'N/A')+', HNW Clients: '+(firm.clientsHNW||'N/A'),
+      'Services: '+firm.services.join(', '),'Compensation: '+firm.compensation.join(', '),'Org Type: '+firm.orgType,
+      'BD Affiliate: '+(firm.bdAffiliate?'Yes':'No')+', Custody: '+(firm.custody?'Yes':'No')+', Wrap Fee: '+(firm.wrapFee?'Yes':'No'),'',
+      'PURPOSE: '+pMap[purpose],'TONE: '+tMap[tone],'ADDITIONAL CONTEXT: '+(ctx||'None'),'',
+      'INSTRUCTIONS:',
+      '- Professional letter for physical mail (date, addresses, salutation, body, closing)',
+      '- Reference their ADV data naturally (client mix, services) to show homework, not heavy-handed',
+      '- 250-350 word body, one page','- No hype, buzzwords, or marketing language',
+      '- Do NOT mention dollar amounts of AUM or revenue — reference scale indirectly',
+      '- Address to The Principals','- Signal sophistication without being promotional','- Do NOT use em dashes',
+      '- End with a specific, low-pressure call to action'];
+    setPrompt(lines.join('\n'));
+  };
+
+  const copyPrompt=()=>{navigator.clipboard.writeText(prompt);setCopied(true);setTimeout(()=>setCopied(false),2000)};
+
+  return(
+    <div className="page fade-up">
+      <div style={{marginBottom:20}}>
+        <div className="page-title">Letter Writer</div>
+        <div className="page-sub">Generate a tailored outreach prompt for any firm in the dataset</div>
+      </div>
+
+      {settOpen?(
+        <div className="card" style={{padding:'18px 20px',marginBottom:16}}>
+          <div className="section-head">Your Information <span style={{textTransform:'none',letterSpacing:'normal',color:'var(--text3)',fontWeight:400,fontSize:11}}>— fill once, reuse for all letters</span></div>
+          <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10,marginBottom:12}}>
+            <input placeholder="Your name" value={sN} onChange={e=>setSN(e.target.value)}/>
+            <input placeholder="Your title" value={sT} onChange={e=>setST(e.target.value)}/>
+            <input placeholder="Your firm" value={sF} onChange={e=>setSF(e.target.value)}/>
+            <input placeholder="Your mailing address" value={sA} onChange={e=>setSA(e.target.value)}/>
+          </div>
+          <button className="btn-gold btn-sm" onClick={()=>setSettOpen(false)}>Save & Continue</button>
+        </div>
+      ):(
+        <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:16,background:'var(--surface)',border:'1px solid var(--border)',borderRadius:10,padding:'10px 16px'}}>
+          <div style={{fontSize:13}}><span style={{fontWeight:600}}>{sN}</span><span style={{color:'var(--text3)'}}> · {sT} · {sF}</span></div>
+          <button className="btn-ghost btn-sm" onClick={()=>setSettOpen(true)}>Edit</button>
+        </div>
+      )}
+
+      <div style={{display:'grid',gridTemplateColumns:'340px 1fr',gap:20}}>
+        <div>
+          <div className="card" style={{padding:'18px 20px',marginBottom:14}}>
+            <div className="section-head">Recipient Firm</div>
+            <select value={firm?.crd||''} onChange={e=>{const f=FIRMS.find(x=>x.crd===e.target.value);setFirm(f||null)}} style={{marginBottom:12}}>
+              <option value="">Choose a firm…</option>
+              {FIRMS.sort((a,b)=>a.name.localeCompare(b.name)).map(f=><option key={f.crd} value={f.crd}>{f.name} ({f.state}) — {fmtM(f.aum)}</option>)}
+            </select>
+            {firm&&(
+              <div style={{fontSize:12,color:'var(--text2)',lineHeight:1.7}}>
+                <div style={{fontWeight:600,color:'var(--text)',marginBottom:2}}>{firm.name}</div>
+                <div style={{color:'var(--text3)'}}>{firm.addr1}{firm.addr2?', '+firm.addr2:''}, {firm.city}, {firm.state}</div>
+                <div style={{marginTop:6,fontFamily:'DM Mono,monospace',fontSize:11}}>
+                  <span>RAUM {fmtM(firm.aum)}</span><span style={{color:'var(--border2)',margin:'0 8px'}}>|</span>
+                  <span style={{color:'var(--accent)'}}>Rev {fmtM((firm.aum||0)*roa)}</span><span style={{color:'var(--border2)',margin:'0 8px'}}>|</span>
+                  <span>{fmtN(firm.employees)} emp</span>
+                </div>
+              </div>
+            )}
+          </div>
+          <div className="card" style={{padding:'18px 20px',marginBottom:14}}>
+            <div style={{marginBottom:12}}>
+              <div className="filter-group"><label>Purpose</label>
+                <select value={purpose} onChange={e=>setP(e.target.value)}>
+                  <option value="acquisition">Acquisition / Merger</option>
+                  <option value="partnership">Strategic Partnership</option>
+                  <option value="recruiting">Recruiting</option>
+                  <option value="services">Professional Services</option>
+                  <option value="referral">Referral Relationship</option>
+                </select>
+              </div>
+            </div>
+            <div style={{marginBottom:12}}>
+              <div className="filter-group"><label>Tone</label>
+                <select value={tone} onChange={e=>setTo(e.target.value)}>
+                  <option value="professional">Professional / Understated</option>
+                  <option value="warm">Warm / Relationship-Focused</option>
+                  <option value="direct">Direct / Respect Their Time</option>
+                  <option value="strategic">Strategic / Mutual Benefit</option>
+                </select>
+              </div>
+            </div>
+            <div className="filter-group"><label>Additional Context</label>
+              <textarea rows={3} value={ctx} onChange={e=>setCtx(e.target.value)} style={{resize:'vertical'}} placeholder="Shared connection, specific angle, timing…"/>
+            </div>
+          </div>
+          <button className="btn-gold" style={{width:'100%',padding:12}} onClick={generate}>Generate Prompt →</button>
+        </div>
+
+        <div>
+          {prompt?(
+            <div className="fade-in">
+              <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:12}}>
+                <div style={{fontSize:13,fontWeight:600}}>Prompt Ready</div>
+                <button className={'btn-gold btn-sm'+(copied?' copy-flash':'')} onClick={copyPrompt}>
+                  {copied?'✓ Copied':'Copy to Clipboard'}
+                </button>
+              </div>
+              <div style={{fontSize:12,color:'var(--text3)',marginBottom:12}}>
+                Paste into <a href="https://claude.ai" target="_blank" rel="noopener" style={{color:'var(--accent)'}}>Claude</a> or any AI to generate the tailored letter.
+              </div>
+              <div className="card" style={{padding:20,maxHeight:'calc(100vh - 320px)',overflow:'auto'}}>
+                <pre className="prompt-box">{prompt}</pre>
+              </div>
+            </div>
+          ):(
+            <div style={{display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',height:'100%',minHeight:300,color:'var(--text3)'}}>
+              <div style={{fontSize:48,marginBottom:12,opacity:.4}}>✉</div>
+              <div style={{fontFamily:'Instrument Serif,serif',fontSize:22,marginBottom:8,color:'var(--text2)'}}>Letter Prompt Generator</div>
+              <div style={{fontSize:12,maxWidth:280,textAlign:'center',lineHeight:1.7}}>Select a firm and hit Generate. The prompt includes all ADV data, ready to paste into any AI.</div>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
 }
 
 function SavedTargets({saved,setSaved,notes,setNotes,roa,onSelect,onLetter}){
@@ -532,8 +927,7 @@ function SavedTargets({saved,setSaved,notes,setNotes,roa,onSelect,onLetter}){
   const startEdit=(crd)=>{setEditCrd(crd);setEditText(notes[crd]||'')};
   const saveNote=(crd)=>{const n={...notes};if(editText.trim())n[crd]=editText.trim();else delete n[crd];setNotes(n);try{localStorage.setItem('ria_notes',JSON.stringify(n))}catch(e){};setEditCrd(null)};
   const remove=(crd)=>{const s=new Set(saved);s.delete(crd);setSaved(s);try{localStorage.setItem('ria_saved',JSON.stringify([...s]))}catch(e){};const n={...notes};delete n[crd];setNotes(n);try{localStorage.setItem('ria_notes',JSON.stringify(n))}catch(e){}};
-  const clearAll=()=>{if(!confirm('Remove all '+firms.length+' saved firms?'))return;setSaved(new Set());setNotes({});try{localStorage.removeItem('ria_saved');localStorage.removeItem('ria_notes')}catch(e){}};
-
+  const clearAll=()=>{if(!confirm('Remove all '+firms.length+' saved targets?'))return;setSaved(new Set());setNotes({});try{localStorage.removeItem('ria_saved');localStorage.removeItem('ria_notes')}catch(e){}};
   const exportCSV=()=>{
     const hdr=['Name','CRD','State','City','Address','Zip','Phone','Website','RAUM','Est Revenue','Accounts','Employees','Ind Clients','HNW Clients','Services','Compensation','BD Affiliate','Custody','Notes'];
     const rows=firms.map(f=>[f.name,f.crd,f.state,f.city,f.addr1+(f.addr2?', '+f.addr2:''),f.zip,f.phone,f.website,f.aum||0,Math.round((f.aum||0)*roa),f.accounts||'',f.employees||'',f.clientsInd||'',f.clientsHNW||'','"'+f.services.join('; ')+'"','"'+f.compensation.join('; ')+'"',f.bdAffiliate?'Y':'N',f.custody?'Y':'N','"'+(notes[f.crd]||'').replace(/"/g,'""')+'"']);
@@ -541,73 +935,105 @@ function SavedTargets({saved,setSaved,notes,setNotes,roa,onSelect,onLetter}){
     const blob=new Blob([csv],{type:'text/csv'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='ria_targets_'+new Date().toISOString().slice(0,10)+'.csv';a.click();
   };
 
-  if(!firms.length)return(<div className="fade" style={{padding:40,textAlign:'center',color:'var(--text3)'}}>
-    <div style={{fontSize:48,marginBottom:16}}>&#9734;</div>
-    <div style={{fontSize:18,fontWeight:600,marginBottom:8}}>No Saved Targets</div>
-    <div style={{fontSize:13,maxWidth:400,margin:'0 auto',lineHeight:1.6}}>Use the &#9733; button in the Explorer or Firm Lookup views to save firms to your target list. Saved firms persist in your browser between sessions.</div>
-  </div>);
+  if(!firms.length)return(
+    <div className="page" style={{display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',minHeight:'60vh'}}>
+      <div style={{fontSize:48,marginBottom:16,opacity:.3}}>☆</div>
+      <div style={{fontFamily:'Instrument Serif,serif',fontSize:28,marginBottom:10,color:'var(--text2)'}}>No saved targets yet</div>
+      <div style={{fontSize:13,color:'var(--text3)',maxWidth:340,textAlign:'center',lineHeight:1.7}}>Use the ★ button anywhere in the platform to save firms to your target list. They persist across sessions.</div>
+    </div>
+  );
 
-  return(<div className="fade" style={{padding:20}}>
-    <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:16}}>
-      <div><span style={{fontSize:18,fontWeight:700}}>{firms.length} Saved Target{firms.length!==1?'s':''}</span><span style={{fontSize:13,color:'var(--text3)',marginLeft:12}}>Total RAUM: {fmtM(totAum)} &middot; Total Est Rev: {fmtM(totRev)}</span></div>
-      <div style={{display:'flex',gap:8}}>
-        <button className="btn-p" onClick={exportCSV} style={{fontSize:12}}>&#8681; Export CSV</button>
-        <button className="btn-g" onClick={clearAll} style={{fontSize:12,color:'var(--red)'}}>Clear All</button>
+  return(
+    <div className="page fade-up">
+      <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-end',marginBottom:24}}>
+        <div>
+          <div className="page-title">{firms.length} Saved Target{firms.length!==1?'s':''}</div>
+          <div className="page-sub">
+            <span style={{fontFamily:'DM Mono,monospace',fontSize:12}}>
+              RAUM {fmtM(totAum)} · Est Rev {fmtM(totRev)}
+            </span>
+          </div>
+        </div>
+        <div style={{display:'flex',gap:8}}>
+          <button className="btn-gold btn-sm" onClick={exportCSV}>↓ Export CSV</button>
+          <button className="btn-ghost btn-sm" style={{color:'var(--red)'}} onClick={clearAll}>Clear all</button>
+        </div>
+      </div>
+
+      <div style={{display:'flex',flexDirection:'column',gap:10}}>
+        {firms.map((f,idx)=>{
+          const rev=(f.aum||0)*roa,wurl=wu(f.website);
+          return(
+            <div key={f.crd} className="saved-card" style={{animationDelay:(idx*.03)+'s'}} >
+              <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start'}}>
+                <div style={{flex:1,minWidth:0}}>
+                  <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:6}}>
+                    <span style={{fontFamily:'Instrument Serif,serif',fontSize:18,letterSpacing:'-.01em',cursor:'pointer'}} onClick={()=>onSelect(f)}>{f.name}</span>
+                    <span className="tag tag-state">{f.state}</span>
+                  </div>
+                  <div style={{fontSize:11,color:'var(--text3)',marginBottom:10}}>
+                    {f.city}, {f.state} {f.zip}
+                    {f.phone&&<span> · {f.phone}</span>}
+                    {wurl&&<span> · <a href={wurl} target="_blank" rel="noopener" style={{color:'var(--accent)'}}>Website ↗</a></span>}
+                  </div>
+                  <div style={{display:'flex',gap:20,fontFamily:'DM Mono,monospace',fontSize:12}}>
+                    <span>RAUM <b>{fmtM(f.aum)}</b></span>
+                    <span style={{color:'var(--accent)'}}>Rev <b>{fmtM(rev)}</b></span>
+                    <span>Accts <b>{fmtN(f.accounts)}</b></span>
+                    <span>Emp <b>{fmtN(f.employees)}</b></span>
+                    <span>HNW <b>{fmtN(f.clientsHNW)}</b></span>
+                  </div>
+                  {editCrd===f.crd?(
+                    <div style={{marginTop:12,display:'flex',gap:8,alignItems:'flex-start'}}>
+                      <textarea value={editText} onChange={e=>setEditText(e.target.value)} rows={2} style={{flex:1,resize:'vertical',fontSize:12}} placeholder="Notes on this firm…"/>
+                      <button className="btn-gold btn-sm" onClick={()=>saveNote(f.crd)}>Save</button>
+                      <button className="btn-ghost btn-sm" onClick={()=>setEditCrd(null)}>Cancel</button>
+                    </div>
+                  ):notes[f.crd]?(
+                    <div style={{marginTop:10,fontSize:12,color:'var(--text2)',background:'var(--surface2)',padding:'8px 14px',borderRadius:8,borderLeft:'2px solid var(--accent)',cursor:'pointer'}} onClick={()=>startEdit(f.crd)}>
+                      {notes[f.crd]}
+                    </div>
+                  ):null}
+                </div>
+                <div style={{display:'flex',gap:6,marginLeft:16,flexShrink:0}}>
+                  <button className="btn-ghost btn-sm btn-icon" onClick={()=>startEdit(f.crd)} title="Add note">✎</button>
+                  <button className="btn-ghost btn-sm" onClick={()=>onSelect(f)}>View</button>
+                  <button className="btn-ghost btn-sm" onClick={()=>onLetter(f)}>✉</button>
+                  <button className="btn-ghost btn-sm" style={{color:'var(--red)'}} onClick={()=>remove(f.crd)}>✕</button>
+                </div>
+              </div>
+            </div>
+          );
+        })}
       </div>
     </div>
-    <div style={{display:'flex',flexDirection:'column',gap:8}}>
-      {firms.map(f=>{
-        const rev=(f.aum||0)*roa;const wurl=wu(f.website);
-        return(<div key={f.crd} className="panel" style={{padding:16}}>
-          <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start'}}>
-            <div style={{flex:1,minWidth:0}}>
-              <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:4}}>
-                <span style={{fontWeight:700,fontSize:15,cursor:'pointer'}} onClick={()=>onSelect(f)}>{f.name}</span>
-                <span className="tag tag-b">{f.state}</span>
-              </div>
-              <div style={{fontSize:12,color:'var(--text3)',marginBottom:8}}>{f.city}, {f.state} {f.zip}{f.phone?' \u00b7 '+f.phone:''}{wurl?<span> &middot; <a href={wurl} target="_blank" rel="noopener" style={{color:'var(--accent)'}}>Website</a></span>:null}</div>
-              <div style={{display:'flex',gap:20,fontSize:13}} className="mono">
-                <span>RAUM: <b>{fmtM(f.aum)}</b></span>
-                <span style={{color:'var(--green)'}}>Rev: <b>{fmtM(rev)}</b></span>
-                <span>Accts: {fmtN(f.accounts)}</span>
-                <span>Emp: {fmtN(f.employees)}</span>
-                <span>HNW: {fmtN(f.clientsHNW)}</span>
-              </div>
-              {editCrd===f.crd?<div style={{marginTop:10,display:'flex',gap:8,alignItems:'flex-start'}}>
-                <textarea value={editText} onChange={e=>setEditText(e.target.value)} rows={2} style={{flex:1,resize:'vertical',fontSize:12}} placeholder="Add notes about this firm..."/>
-                <button className="btn-p btn-s" onClick={()=>saveNote(f.crd)}>Save</button>
-                <button className="btn-g btn-s" onClick={()=>setEditCrd(null)}>Cancel</button>
-              </div>:notes[f.crd]?<div style={{marginTop:8,fontSize:12,color:'var(--text2)',background:'var(--surface2)',padding:'8px 12px',borderRadius:6,borderLeft:'3px solid var(--accent)',cursor:'pointer'}} onClick={()=>startEdit(f.crd)}>{notes[f.crd]}</div>:null}
-            </div>
-            <div style={{display:'flex',gap:6,marginLeft:12,flexShrink:0}}>
-              <button className="btn-g btn-s" onClick={()=>startEdit(f.crd)} title="Add/edit notes" style={{fontSize:14}}>&#9998;</button>
-              <button className="btn-g btn-s" onClick={()=>onSelect(f)} title="View details">View</button>
-              <button className="btn-g btn-s" onClick={()=>onLetter(f)} title="Write letter">&#9993;</button>
-              <button className="btn-g btn-s" onClick={()=>remove(f.crd)} title="Remove from saved" style={{color:'var(--red)'}}>&#10005;</button>
-            </div>
-          </div>
-        </div>);
-      })}
-    </div>
-  </div>);
+  );
 }
 
 function App(){
-  const[view,setView]=useState('dashboard');const[firm,setFirm]=useState(null);const[roa,setRoa]=useState(0.0065);
+  const[view,setView]=useState('dashboard');
+  const[firm,setFirm]=useState(null);
+  const[roa,setRoa]=useState(0.0065);
   const[saved,setSaved]=useState(()=>{try{const s=JSON.parse(localStorage.getItem('ria_saved')||'[]');return new Set(s)}catch(e){return new Set()}});
   const[notes,setNotes]=useState(()=>{try{return JSON.parse(localStorage.getItem('ria_notes')||'{}')}catch(e){return {}}});
   const toggleSave=(crd)=>{const s=new Set(saved);if(s.has(crd))s.delete(crd);else s.add(crd);setSaved(s);try{localStorage.setItem('ria_saved',JSON.stringify([...s]))}catch(e){}};
-  const sel=f=>{setFirm(f);setView('detail')};const wl=f=>{setFirm(f);setView('letter')};
-  return(<div style={{minHeight:'100vh',display:'flex',flexDirection:'column'}}>
-    <Header view={view} setView={setView} savedCount={saved.size}/>
-    <div style={{flex:1,overflow:'auto'}}>
-      {view==='dashboard'&&<Dashboard roa={roa} onSelect={sel} saved={saved} toggleSave={toggleSave}/>}
-      {view==='explorer'&&<Explorer roa={roa} setRoa={setRoa} onSelect={sel} saved={saved} toggleSave={toggleSave}/>}
-      {view==='detail'&&<FirmDetail firm={firm} setFirm={setFirm} onLetter={wl} roa={roa} saved={saved} toggleSave={toggleSave}/>}
-      {view==='letter'&&<LetterWriter firm={firm} setFirm={setFirm} roa={roa}/>}
-      {view==='saved'&&<SavedTargets saved={saved} setSaved={setSaved} notes={notes} setNotes={setNotes} roa={roa} onSelect={sel} onLetter={wl}/>}
+  const sel=f=>{setFirm(f);setView('detail')};
+  const wl=f=>{setFirm(f);setView('letter')};
+
+  return(
+    <div style={{minHeight:'100vh',display:'flex',flexDirection:'column'}}>
+      <Nav view={view} setView={setView} savedCount={saved.size}/>
+      <div style={{flex:1,overflow:'auto'}}>
+        {view==='dashboard'&&<Dashboard roa={roa} onSelect={sel} saved={saved} toggleSave={toggleSave}/>}
+        {view==='explorer'&&<Explorer roa={roa} setRoa={setRoa} onSelect={sel} saved={saved} toggleSave={toggleSave}/>}
+        {view==='detail'&&<FirmDetail firm={firm} setFirm={setFirm} onLetter={wl} roa={roa} saved={saved} toggleSave={toggleSave}/>}
+        {view==='letter'&&<LetterWriter firm={firm} setFirm={setFirm} roa={roa}/>}
+        {view==='saved'&&<SavedTargets saved={saved} setSaved={setSaved} notes={notes} setNotes={setNotes} roa={roa} onSelect={sel} onLetter={wl}/>}
+      </div>
     </div>
-  </div>);
+  );
 }
 ReactDOM.render(<App/>,document.getElementById('root'));
-</script></body></html>
+</script>
+</body>
+</html>
