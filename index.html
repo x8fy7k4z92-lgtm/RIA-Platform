@@ -13,182 +13,105 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{
-  --bg:#0e0f11;
-  --surface:#16181c;
-  --surface2:#1e2128;
-  --surface3:#252830;
-  --border:#2c3038;
-  --border2:#363b44;
-  --text:#f0f1f3;
-  --text2:#9aa0ad;
-  --text3:#5c6270;
-  --accent:#c8a96e;
-  --accent2:#b8955a;
-  --green:#4ade80;
-  --green-dim:#1a3326;
-  --red:#f87171;
-  --blue:#60a5fa;
-  --blue-dim:#1a2540;
+  --bg:#0e0f11;--surface:#16181c;--surface2:#1e2128;--surface3:#252830;
+  --border:#2c3038;--border2:#363b44;--text:#f0f1f3;--text2:#9aa0ad;--text3:#5c6270;
+  --accent:#c8a96e;--accent2:#b8955a;--green:#4ade80;--green-dim:#1a3326;
+  --red:#f87171;--red-dim:#2d1515;--blue:#60a5fa;--blue-dim:#1a2540;
+  --purple:#a78bfa;--purple-dim:#1e1a35;--amber:#fbbf24;--amber-dim:#2a1f06;
 }
 html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
-::-webkit-scrollbar{width:5px;height:5px}
-::-webkit-scrollbar-track{background:transparent}
-::-webkit-scrollbar-thumb{background:var(--border2);border-radius:10px}
-.serif{font-family:'Instrument Serif',serif}
-.mono{font-family:'DM Mono',monospace;font-size:12px}
-
-/* Inputs */
-input,select,textarea{
-  font-family:'DM Sans',sans-serif;font-size:13px;
-  background:var(--surface2);border:1px solid var(--border);
-  color:var(--text);padding:9px 13px;border-radius:8px;
-  outline:none;transition:border-color .2s,box-shadow .2s;width:100%
-}
+::-webkit-scrollbar{width:5px;height:5px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--border2);border-radius:10px}
+.serif{font-family:'Instrument Serif',serif}.mono{font-family:'DM Mono',monospace;font-size:12px}
+input,select,textarea{font-family:'DM Sans',sans-serif;font-size:13px;background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:9px 13px;border-radius:8px;outline:none;transition:border-color .2s,box-shadow .2s;width:100%}
 input:focus,select:focus,textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(200,169,110,.12)}
 select option{background:var(--surface2)}
-
-/* Buttons */
 button{font-family:'DM Sans',sans-serif;cursor:pointer;border:none;border-radius:8px;padding:9px 18px;font-size:13px;font-weight:500;transition:all .18s;letter-spacing:.01em}
-.btn-gold{background:var(--accent);color:#0e0f11;font-weight:600}
-.btn-gold:hover{background:var(--accent2);transform:translateY(-1px);box-shadow:0 4px 16px rgba(200,169,110,.3)}
-.btn-ghost{background:transparent;color:var(--text2);border:1px solid var(--border)}
-.btn-ghost:hover{background:var(--surface2);color:var(--text);border-color:var(--border2)}
-.btn-sm{padding:6px 12px;font-size:12px;border-radius:6px}
-.btn-icon{padding:7px 10px;font-size:15px;border-radius:7px}
-
-/* Tags */
+.btn-gold{background:var(--accent);color:#0e0f11;font-weight:600}.btn-gold:hover{background:var(--accent2);transform:translateY(-1px);box-shadow:0 4px 16px rgba(200,169,110,.3)}
+.btn-ghost{background:transparent;color:var(--text2);border:1px solid var(--border)}.btn-ghost:hover{background:var(--surface2);color:var(--text);border-color:var(--border2)}
+.btn-sm{padding:6px 12px;font-size:12px;border-radius:6px}.btn-icon{padding:7px 10px;font-size:15px;border-radius:7px}
+.btn-sub{background:var(--purple-dim);color:var(--purple);border:1px solid rgba(167,139,250,.3);font-size:12px;padding:5px 12px;border-radius:6px}
+.btn-sub:hover{background:rgba(167,139,250,.2)}
 .tag{display:inline-flex;align-items:center;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:500;letter-spacing:.02em}
-.tag-state{background:var(--blue-dim);color:var(--blue)}
-.tag-green{background:var(--green-dim);color:var(--green)}
-.tag-gold{background:rgba(200,169,110,.15);color:var(--accent)}
-.tag-dim{background:var(--surface3);color:var(--text2)}
-
-/* Cards */
+.tag-state{background:var(--blue-dim);color:var(--blue)}.tag-green{background:var(--green-dim);color:var(--green)}.tag-gold{background:rgba(200,169,110,.15);color:var(--accent)}.tag-dim{background:var(--surface3);color:var(--text2)}.tag-sub{background:var(--purple-dim);color:var(--purple)}.tag-red{background:var(--red-dim);color:var(--red)}.tag-amber{background:var(--amber-dim);color:var(--amber)}
 .card{background:var(--surface);border:1px solid var(--border);border-radius:14px;overflow:hidden}
-.card-hover{transition:border-color .2s,transform .2s,box-shadow .2s}
-.card-hover:hover{border-color:var(--border2);transform:translateY(-2px);box-shadow:0 8px 32px rgba(0,0,0,.4)}
-
-/* Tables */
 table{width:100%;border-collapse:collapse}
 th{text-align:left;padding:11px 14px;font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--text3);border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--surface);z-index:2;white-space:nowrap;cursor:pointer;user-select:none;font-weight:500}
-th:hover{color:var(--text2)}
-td{padding:11px 14px;font-size:13px;border-bottom:1px solid var(--border);white-space:nowrap}
-tr:hover td{background:var(--surface2)}
-tr:last-child td{border-bottom:none}
-
-/* Stat cards */
+th:hover{color:var(--text2)}td{padding:11px 14px;font-size:13px;border-bottom:1px solid var(--border);white-space:nowrap}
+tr:hover td{background:var(--surface2)}tr:last-child td{border-bottom:none}
 .stat-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px 20px}
 .stat-label{font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--text3);font-weight:500}
 .stat-value{font-family:'Instrument Serif',serif;font-size:28px;margin-top:4px;line-height:1.1}
 .stat-sub{font-size:11px;color:var(--text3);margin-top:3px}
-
-/* Animations */
 @keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
-@keyframes slideRight{from{opacity:0;transform:translateX(-8px)}to{opacity:1;transform:translateX(0)}}
-@keyframes shimmer{from{background-position:-200% 0}to{background-position:200% 0}}
-.fade-up{animation:fadeUp .35s cubic-bezier(.22,.68,0,1.2) both}
-.fade-in{animation:fadeIn .25s ease both}
-.slide-right{animation:slideRight .3s ease both}
-
-/* Divider */
-.divider{border:none;border-top:1px solid var(--border);margin:0}
-
-/* Nav active indicator */
-.nav-pill{position:relative;transition:all .2s}
-.nav-pill.active{color:var(--text)!important}
-.nav-pill.active::after{content:'';position:absolute;bottom:-2px;left:0;right:0;height:2px;background:var(--accent);border-radius:2px}
-
-/* Map */
+@keyframes shimmer{0%{opacity:.6}50%{opacity:1}100%{opacity:.6}}
+.fade-up{animation:fadeUp .35s cubic-bezier(.22,.68,0,1.2) both}.fade-in{animation:fadeIn .25s ease both}
+.detail-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid rgba(44,48,56,.6)}
+.detail-row:last-child{border-bottom:none}.detail-label{font-size:12px;color:var(--text3)}.detail-value{font-family:'DM Mono',monospace;font-size:12px;color:var(--text)}
+.section-head{font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--accent);font-weight:600;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border)}
+.highlight-row{background:rgba(74,222,128,.05)}.highlight-row td{border-bottom-color:rgba(44,48,56,.4)!important}
+.rank-badge{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0}
+.pulse{width:7px;height:7px;border-radius:50%;background:var(--green);animation:pulse-anim 2s infinite}
+@keyframes pulse-anim{0%,100%{box-shadow:0 0 0 0 rgba(74,222,128,.4)}50%{box-shadow:0 0 0 5px rgba(74,222,128,0)}}
+.filter-group label{display:block;font-size:10px;text-transform:uppercase;letter-spacing:.07em;color:var(--text3);margin-bottom:5px;font-weight:500}
+.bar-fill{height:100%;border-radius:4px;transition:width .5s cubic-bezier(.22,.68,0,1.2),background .2s}
+.saved-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px 20px;transition:border-color .2s}.saved-card:hover{border-color:var(--border2)}
+.detail-panel{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:22px}
+.metric-big{font-family:'Instrument Serif',serif;font-size:32px;line-height:1;letter-spacing:-.02em}
+.metric-accent{color:var(--accent)}.metric-green{color:var(--green)}.metric-red{color:var(--red)}.metric-amber{color:var(--amber)}.metric-purple{color:var(--purple)}
+.star-btn{background:none;border:none;cursor:pointer;font-size:17px;padding:3px 5px;transition:transform .15s,color .15s;border-radius:5px}
+.star-btn:hover{transform:scale(1.2)}.star-btn.starred{color:#f59e0b}.star-btn:not(.starred){color:var(--text3)}.star-btn:not(.starred):hover{color:var(--accent)}
+@keyframes copyFlash{0%{background:var(--green);color:#0e0f11}100%{background:var(--accent);color:#0e0f11}}
+.copy-flash{animation:copyFlash .8s ease forwards}
 .leaflet-container{background:#1a1c20!important;border-radius:10px}
 .mp .leaflet-popup-content-wrapper{background:var(--surface);color:var(--text);border:1px solid var(--border2);border-radius:10px;box-shadow:0 12px 40px rgba(0,0,0,.6)}
 .mp .leaflet-popup-tip{background:var(--surface)}
 .mp .leaflet-popup-content{margin:14px;font-family:'DM Sans',sans-serif;font-size:12px;line-height:1.6}
-.pvb{display:inline-block;margin-top:10px;padding:6px 14px;background:var(--accent);color:#0e0f11;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer;transition:background .15s}
-.pvb:hover{background:var(--accent2)}
-
-/* Firm detail row */
-.detail-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid rgba(44,48,56,.6)}
-.detail-row:last-child{border-bottom:none}
-.detail-label{font-size:12px;color:var(--text3)}
-.detail-value{font-family:'DM Mono',monospace;font-size:12px;color:var(--text)}
-
-/* Section header */
-.section-head{font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--accent);font-weight:600;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border)}
-
-/* Highlight row */
-.highlight-row{background:rgba(74,222,128,.05)}
-.highlight-row td{border-bottom-color:rgba(44,48,56,.4)!important}
-
-/* Number badge */
-.rank-badge{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0}
-
-/* Pulse dot */
-.pulse{width:7px;height:7px;border-radius:50%;background:var(--green);animation:pulse-anim 2s infinite}
-@keyframes pulse-anim{0%,100%{box-shadow:0 0 0 0 rgba(74,222,128,.4)}50%{box-shadow:0 0 0 5px rgba(74,222,128,0)}}
-
-/* Filter bar */
-.filter-bar{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end}
-.filter-group label{display:block;font-size:10px;text-transform:uppercase;letter-spacing:.07em;color:var(--text3);margin-bottom:5px;font-weight:500}
-
-/* Sweet spot row hover */
-.ss-row{cursor:pointer;transition:background .15s}
-.ss-row:hover td{background:rgba(200,169,110,.06)!important}
-
-/* Letter prompt */
-pre.prompt-box{white-space:pre-wrap;font-family:'DM Mono',monospace;font-size:12px;line-height:1.7;color:var(--text2);margin:0}
-
-/* Scrollable table container */
-.table-scroll{overflow:auto;border-radius:14px}
-
-/* Header logo */
-.logo-mark{width:34px;height:34px;background:linear-gradient(135deg,var(--accent),#7c5c2e);border-radius:9px;display:flex;align-items:center;justify-content:center;font-family:'Instrument Serif',serif;font-size:16px;color:#0e0f11;font-weight:normal;letter-spacing:-.02em;flex-shrink:0}
-
-/* Top nav */
-.top-nav{background:rgba(14,15,17,.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);padding:0 28px;display:flex;align-items:center;gap:32px;height:58px;flex-shrink:0;position:sticky;top:0;z-index:100}
+.pvb{display:inline-block;margin-top:10px;padding:6px 14px;background:var(--accent);color:#0e0f11;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer;transition:background .15s}.pvb:hover{background:var(--accent2)}
+.logo-mark{width:34px;height:34px;background:linear-gradient(135deg,var(--accent),#7c5c2e);border-radius:9px;display:flex;align-items:center;justify-content:center;font-family:'Instrument Serif',serif;font-size:16px;color:#0e0f11;letter-spacing:-.02em;flex-shrink:0}
+.top-nav{background:rgba(14,15,17,.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);padding:0 28px;display:flex;align-items:center;gap:28px;height:58px;flex-shrink:0;position:sticky;top:0;z-index:100}
 .nav-brand{display:flex;align-items:center;gap:11px;margin-right:8px}
 .nav-brand-name{font-family:'Instrument Serif',serif;font-size:19px;letter-spacing:-.02em}
-.nav-link{font-size:13px;color:var(--text3);cursor:pointer;padding:4px 0;transition:color .15s;font-weight:400;white-space:nowrap;position:relative;bottom:0}
-.nav-link:hover{color:var(--text2)}
-.nav-link.active{color:var(--text)}
+.nav-link{font-size:13px;color:var(--text3);cursor:pointer;padding:4px 0;transition:color .15s;font-weight:400;white-space:nowrap;position:relative}
+.nav-link:hover{color:var(--text2)}.nav-link.active{color:var(--text)}
 .nav-link.active::after{content:'';position:absolute;bottom:-3px;left:0;right:0;height:1px;background:var(--accent);border-radius:1px}
 .nav-right{margin-left:auto;display:flex;align-items:center;gap:10px}
-
-/* Page wrapper */
 .page{padding:28px 28px 48px;max-width:1400px;margin:0 auto}
 .page-title{font-family:'Instrument Serif',serif;font-size:30px;letter-spacing:-.02em;margin-bottom:4px}
 .page-sub{font-size:12px;color:var(--text3)}
+.table-scroll{overflow:auto;border-radius:14px}
+.ss-row{cursor:pointer;transition:background .15s}.ss-row:hover td{background:rgba(200,169,110,.06)!important}
+pre.prompt-box{white-space:pre-wrap;font-family:'DM Mono',monospace;font-size:12px;line-height:1.7;color:var(--text2);margin:0}
+.filter-bar{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end}
 
-/* Bar chart */
-.bar-fill{height:100%;border-radius:4px;transition:width .5s cubic-bezier(.22,.68,0,1.2),background .2s}
+/* Score meter */
+.score-meter{height:6px;border-radius:3px;background:var(--surface3);overflow:hidden;margin-top:6px}
+.score-fill{height:100%;border-radius:3px;transition:width .6s cubic-bezier(.22,.68,0,1.2)}
 
-/* Saved card */
-.saved-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px 20px;transition:border-color .2s}
-.saved-card:hover{border-color:var(--border2)}
+/* Intelligence badge */
+.intel-badge{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;letter-spacing:.03em}
 
-/* Firm detail panel */
-.detail-panel{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:22px}
+/* Profile form */
+.profile-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.profile-section{margin-bottom:18px}
+.profile-section-title{font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--text3);font-weight:600;margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid var(--border)}
+.req{color:var(--red);margin-left:2px;font-size:10px}
 
-/* Metric highlight */
-.metric-big{font-family:'Instrument Serif',serif;font-size:32px;line-height:1;letter-spacing:-.02em}
-.metric-accent{color:var(--accent)}
-.metric-green{color:var(--green)}
+/* Subscriber gate */
+.sub-gate{background:var(--purple-dim);border:1px solid rgba(167,139,250,.25);border-radius:12px;padding:14px 16px}
+.sub-gate-icon{font-size:20px;margin-bottom:6px}
 
-/* Star button */
-.star-btn{background:none;border:none;cursor:pointer;font-size:17px;padding:3px 5px;transition:transform .15s,color .15s;border-radius:5px}
-.star-btn:hover{transform:scale(1.2)}
-.star-btn.starred{color:#f59e0b}
-.star-btn:not(.starred){color:var(--text3)}
-.star-btn:not(.starred):hover{color:var(--accent)}
+/* Intelligence dashboard */
+.intel-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
+.intel-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px 18px}
+.intel-card-label{font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--text3)}
+.intel-card-value{font-family:'Instrument Serif',serif;font-size:26px;margin-top:4px}
 
-/* Copy flash */
-@keyframes copyFlash{0%{background:var(--green);color:#0e0f11}100%{background:var(--accent);color:#0e0f11}}
-.copy-flash{animation:copyFlash .8s ease forwards}
-
-/* Tooltip */
-.tooltip{position:relative}
-.tooltip::after{content:attr(data-tip);position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);background:var(--surface3);border:1px solid var(--border2);color:var(--text2);font-size:11px;padding:4px 8px;border-radius:5px;white-space:nowrap;pointer-events:none;opacity:0;transition:opacity .15s}
-.tooltip:hover::after{opacity:1}
+/* Role toggle pill */
+.role-pill{display:flex;align-items:center;background:var(--surface2);border:1px solid var(--border);border-radius:20px;padding:3px;gap:2px}
+.role-pill-opt{padding:4px 12px;border-radius:16px;font-size:11px;cursor:pointer;transition:all .15s;color:var(--text3);font-weight:500}
+.role-pill-opt.active{background:var(--purple);color:#fff}
+.role-pill-opt.active.public{background:var(--blue);color:#fff}
 </style>
 </head>
 <body>
@@ -197,46 +120,217 @@ pre.prompt-box{white-space:pre-wrap;font-family:'DM Mono',monospace;font-size:12
 <script type="text/babel">
 const {useState,useMemo,useRef,useEffect,useCallback} = React;
 
-const FIRMS = FR.map(f=>({
+// =============================================================================
+// DATA ARCHITECTURE NOTE
+// =============================================================================
+// FIRMS (from ria-data.js via FR) = BASE DATASET. IMMUTABLE. Never mutated.
+//   - Sourced from SEC Form ADV. Replaced monthly as a full dataset swap.
+//   - No writes, no patches, no merges into this object.
+// USER_PROFILES = ENHANCEMENT LAYER. Separate. Lives in localStorage under
+//   'ria_user_profiles'. Contains brokerDealerProfiles + claimedRiaProfiles.
+//   - Merged with base data AT RENDER TIME only (getEnrichedFirm).
+//   - Derived intelligence (scores) calculated in memory. Never persisted.
+// =============================================================================
+
+// --- Base data (read-only) ---
+const FIRMS = Object.freeze(FR.map(f=>Object.freeze({
   name:f.n,legal:f.l,crd:f.crd,addr1:f.a1,addr2:f.a2,city:f.ci,state:f.st,zip:f.z,
-  phone:f.ph,fax:f.fx,website:f.w,orgType:f.ot,stateOfFormation:f.sf,fiscalYE:f.fy,
-  secStatus:f.ss,statusDate:f.sd,advDate:f.ad,
-  aum:f.au,aumDisc:f.aud,aumNonDisc:f.aun,accounts:f.ac,acctsDisc:f.acd,employees:f.em,
+  phone:f.ph,website:f.w,orgType:f.ot,secStatus:f.ss,statusDate:f.sd,advDate:f.ad,
+  aum:f.au,aumDisc:f.aud,aumNonDisc:f.aun,accounts:f.ac,employees:f.em,
   clientsInd:f.ci_,aumInd:f.aui,clientsHNW:f.ch,aumHNW:f.auh,
-  clientsPension:f.cp,aumPension:f.aup,clientsCharitable:f.cc,aumCharitable:f.auc,
-  clientsCorp:f.cb,aumCorp:f.aub,clientsPooled:f.cpl,aumPooled:f.aupl,
-  clientsGovt:f.cg,clientsInsurance:f.cins,clientsOtherIA:f.cia,
+  clientsPension:f.cp,clientsCharitable:f.cc,clientsCorp:f.cb,clientsPooled:f.cpl,clientsGovt:f.cg,
   services:f.sv,compensation:f.co,clientTypes:f.ct,
   custody:f.cu,custodyAmt:f.cua,disclosures:f.di,
-  bdAffiliate:f.bd,iaAffiliate:f.ia,cpoAffiliate:f.cpo,
-  iaAffCount:f.iac,bdAffCount:f.bdc,wrapFee:f.wf,privateRes:f.pr,otherOffices:f.oo,
-}));
+  bdAffiliate:f.bd,iaAffiliate:f.ia,iaAffCount:f.iac,bdAffCount:f.bdc,
+  wrapFee:f.wf,privateRes:f.pr,otherOffices:f.oo,
+  aumPension:f.aup,aumCharitable:f.auc,aumCorp:f.aub,aumPooled:f.aupl,
+  stateOfFormation:f.sf,fiscalYE:f.fy,cpoAffiliate:f.cpo,fax:f.fx,
+})));
 
+// --- Formatters ---
 const fmt=(v)=>v!=null?'$'+Math.round(v).toLocaleString():'-';
 const fmtM=(v)=>{if(v==null)return'-';if(v>=1e12)return'$'+(v/1e12).toFixed(1)+'T';if(v>=1e9)return'$'+(v/1e9).toFixed(2).replace(/\.?0+$/,'')+'B';if(v>=1e6)return'$'+(v/1e6).toFixed(1).replace(/\.0$/,'')+'M';if(v>=1e3)return'$'+Math.round(v/1e3).toLocaleString()+'K';return'$'+Math.round(v).toLocaleString()};
 const fmtN=(v)=>v!=null?v.toLocaleString():'-';
 const wu=(r)=>{if(!r)return null;const u=r.trim();if(!u)return null;return/^https?:\/\//i.test(u)?u:'https://'+u};
 window.__rvf=null;
 
-function Nav({view,setView,savedCount}){
-  const links=[['dashboard','Overview'],['explorer','Explorer'],['detail','Firm Lookup'],['saved','Targets'+(savedCount?' ('+savedCount+')':'')],['letter','Letter Writer']];
-  return(
-    <nav className="top-nav">
-      <div className="nav-brand">
-        <div className="logo-mark">RI</div>
-        <span className="nav-brand-name">RIA Intelligence</span>
-      </div>
-      {links.map(([v,l])=>(
-        <span key={v} className={'nav-link'+(view===v?' active':'')} onClick={()=>setView(v)}>{l}</span>
-      ))}
-      <div className="nav-right">
-        <span style={{fontSize:11,color:'var(--text3)',background:'var(--surface)',border:'1px solid var(--border)',borderRadius:20,padding:'4px 12px'}}>
-          NH · VT · MA · ME · <span style={{color:'var(--text2)'}}>{FIRMS.length.toLocaleString()} firms</span>
-        </span>
-      </div>
-    </nav>
-  );
+// =============================================================================
+// PROFILE SCHEMA
+// =============================================================================
+// Normalized intelligence fields. Required for profile creation.
+// Shared between brokerDealerProfiles and claimedRiaProfiles.enhancedFields.
+// AUM band derived from base data at runtime; stored here as user-verified override.
+// =============================================================================
+const AUM_BANDS=['0-100M','100-250M','250-500M','500M-1B','1B+'];
+const OWNERSHIP_STRUCTURES=['solo owner','2 partners','3+ partners','corporate owned'];
+const FOUNDER_AGE_BANDS=['<40','40-49','50-59','60-64','65+'];
+const SUCCESSION_TIMELINES=['none','5+ years','3-5 years','1-3 years','actively exploring'];
+const GEOGRAPHIC_FLEXIBILITIES=['none','regional','national'];
+const GROWTH_INTENTS=['organic only','acquisitive','strategic partnership','undecided'];
+
+const EMPTY_INTELLIGENCE_FIELDS = {
+  teamSize: null,
+  aumBand: null,
+  ownershipStructure: null,
+  founderAgeBand: null,
+  internalSuccessorIdentified: null,
+  successionTimeline: null,
+  openToMinorityCapital: null,
+  openToFullSale: null,
+  seekingAcquisitions: null,
+  hiringJuniorAdvisors: null,
+  geographicFlexibility: null,
+  growthIntent: null,
+};
+
+// Default profile store structure
+const DEFAULT_PROFILES = {
+  // BD profiles: firms added manually by the platform operator
+  // Each: { crd, firmName, profileType:'bd', createdAt, intelligenceFields:{...}, narrative? }
+  brokerDealerProfiles: [],
+  // Claimed profiles: RIA firms that have self-claimed and enhanced their ADV record
+  // Each: { crd, claimedAt, verifiedAt?, enhancedFields:{...EMPTY_INTELLIGENCE_FIELDS, narrative?} }
+  claimedRiaProfiles: [],
+};
+
+function loadProfiles(){
+  try{ return JSON.parse(localStorage.getItem('ria_user_profiles')||'null')||DEFAULT_PROFILES; }
+  catch(e){ return DEFAULT_PROFILES; }
 }
+function saveProfiles(p){
+  try{ localStorage.setItem('ria_user_profiles',JSON.stringify(p)); }catch(e){}
+}
+
+// =============================================================================
+// MERGE FUNCTION
+// Base firm + profile enhancement, computed at render time.
+// Never mutates the frozen FIRMS array.
+// Returns a new plain object — safe to read, never written back.
+// =============================================================================
+function getEnrichedFirm(baseFirm, profiles){
+  if(!baseFirm) return null;
+  const bdProfile = profiles.brokerDealerProfiles.find(p=>p.crd===baseFirm.crd);
+  const claimedProfile = profiles.claimedRiaProfiles.find(p=>p.crd===baseFirm.crd);
+  const intelligenceFields =
+    claimedProfile?.enhancedFields ||
+    bdProfile?.intelligenceFields ||
+    null;
+  return {
+    ...baseFirm,                    // immutable base (spread creates new obj)
+    _bdProfile: bdProfile||null,
+    _claimedProfile: claimedProfile||null,
+    _intelligenceFields: intelligenceFields,
+    _hasProfile: !!(bdProfile||claimedProfile),
+    _profileSource: claimedProfile?'claimed':bdProfile?'bd':null,
+  };
+}
+
+function getEnrichedFirms(profiles){
+  // Returns enriched copies for all firms. Base FIRMS array is untouched.
+  return FIRMS.map(f=>getEnrichedFirm(f,profiles));
+}
+
+// =============================================================================
+// INTELLIGENCE ENGINE
+// All functions pure, runtime-only. No persistence.
+// =============================================================================
+
+// A. Succession Vulnerability Score (0-100)
+// Higher = more vulnerable (founder aging, no successor, solo op)
+function calcSuccessionScore(ef){
+  const inf = ef._intelligenceFields;
+  if(!inf) return null;
+  let score = 0;
+  if(inf.founderAgeBand==='60-64') score+=20;
+  if(inf.founderAgeBand==='65+') score+=30;
+  if(inf.internalSuccessorIdentified===false) score+=25;
+  if(inf.ownershipStructure==='solo owner') score+=15;
+  if(inf.successionTimeline==='actively exploring') score+=10;
+  if(inf.teamSize===1) score+=10;
+  return Math.min(100, score);
+}
+
+// B. Acquisition Appetite Score (0-100)
+// Higher = more actively seeking to grow via acquisition
+function calcAcquisitionScore(ef){
+  const inf = ef._intelligenceFields;
+  if(!inf) return null;
+  let score = 0;
+  if(inf.seekingAcquisitions===true) score+=30;
+  if(inf.growthIntent==='acquisitive') score+=25;
+  if(inf.teamSize>=3) score+=15;
+  if(inf.hiringJuniorAdvisors===true) score+=10;
+  if(inf.geographicFlexibility==='regional'||inf.geographicFlexibility==='national') score+=10;
+  return Math.min(100, score);
+}
+
+// AUM band derived from live base data (runtime, not stored)
+function derivedAumBand(aum){
+  if(!aum) return '0-100M';
+  if(aum<100e6) return '0-100M';
+  if(aum<250e6) return '100-250M';
+  if(aum<500e6) return '250-500M';
+  if(aum<1e9) return '500M-1B';
+  return '1B+';
+}
+
+// =============================================================================
+// AGGREGATED INTELLIGENCE (intelligenceEngine)
+// Operates on enriched firm array. Returns counts only, no PII.
+// =============================================================================
+function intelligenceEngine(profiles){
+  const enriched = getEnrichedFirms(profiles);
+  const withProfiles = enriched.filter(ef=>ef._intelligenceFields);
+
+  function getRegionalSuccessionStats(state){
+    const regional = withProfiles.filter(ef=>ef.state===state);
+    const noSuccessor = regional.filter(ef=>ef._intelligenceFields?.internalSuccessorIdentified===false);
+    const activelyExploring = regional.filter(ef=>ef._intelligenceFields?.successionTimeline==='actively exploring');
+    const scores = regional.map(ef=>calcSuccessionScore(ef)).filter(s=>s!=null);
+    const avgScore = scores.length?Math.round(scores.reduce((a,b)=>a+b,0)/scores.length):null;
+    return { state, total:regional.length, noSuccessor:noSuccessor.length, activelyExploring:activelyExploring.length, avgVulnerabilityScore:avgScore };
+  }
+
+  function getAumBandBreakdown(){
+    return AUM_BANDS.map(band=>({
+      band,
+      total: FIRMS.filter(f=>derivedAumBand(f.aum)===band).length,
+      withProfiles: withProfiles.filter(ef=>derivedAumBand(ef.aum)===band).length,
+    }));
+  }
+
+  function getFirmsWithoutSuccessors(){
+    return withProfiles
+      .filter(ef=>ef._intelligenceFields?.internalSuccessorIdentified===false)
+      .length;
+  }
+
+  function getHighVulnerabilityFirms(threshold=60){
+    return withProfiles
+      .filter(ef=>{const s=calcSuccessionScore(ef);return s!=null&&s>=threshold;})
+      .map(ef=>({ crd:ef.crd, name:ef.name, state:ef.state, score:calcSuccessionScore(ef) }));
+  }
+
+  const allScores = withProfiles.map(ef=>calcSuccessionScore(ef)).filter(s=>s!=null);
+  const avgVulnerability = allScores.length?Math.round(allScores.reduce((a,b)=>a+b,0)/allScores.length):null;
+
+  return {
+    totalProfiles: withProfiles.length,
+    totalFirms: FIRMS.length,
+    noSuccessorCount: getFirmsWithoutSuccessors(),
+    noSuccessorPct: withProfiles.length?Math.round(getFirmsWithoutSuccessors()/withProfiles.length*100):null,
+    avgVulnerabilityScore: avgVulnerability,
+    activelyExploringCount: withProfiles.filter(ef=>ef._intelligenceFields?.successionTimeline==='actively exploring').length,
+    getRegionalSuccessionStats,
+    getAumBandBreakdown,
+    getFirmsWithoutSuccessors,
+    getHighVulnerabilityFirms,
+  };
+}
+
+// =============================================================================
+// UI COMPONENTS
+// =============================================================================
 
 function StarBtn({crd,saved,toggleSave}){
   return(
@@ -244,6 +338,273 @@ function StarBtn({crd,saved,toggleSave}){
       title={saved.has(crd)?'Remove from targets':'Save as target'}>
       {saved.has(crd)?'★':'☆'}
     </button>
+  );
+}
+
+function ScoreMeter({score, color, label}){
+  const c = color||'var(--accent)';
+  return(
+    <div>
+      <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:4}}>
+        <span style={{fontSize:11,color:'var(--text3)'}}>{label}</span>
+        <span style={{fontFamily:'DM Mono,monospace',fontSize:12,fontWeight:600,color:c}}>{score}/100</span>
+      </div>
+      <div className="score-meter">
+        <div className="score-fill" style={{width:score+'%',background:c}}></div>
+      </div>
+    </div>
+  );
+}
+
+function SubscriberGate({children, userRole}){
+  if(userRole==='subscriber') return children;
+  return(
+    <div className="sub-gate">
+      <div className="sub-gate-icon">🔒</div>
+      <div style={{fontSize:12,fontWeight:600,color:'var(--purple)',marginBottom:4}}>Subscriber Intelligence</div>
+      <div style={{fontSize:11,color:'var(--text3)',lineHeight:1.6}}>Vulnerability and acquisition scoring, derived insight panels, and aggregated intelligence are available to subscribers.</div>
+    </div>
+  );
+}
+
+// Structured profile field display (public-safe)
+function ProfileFields({fields, userRole}){
+  if(!fields) return null;
+  const F=({label,value,sensitive})=>{
+    if(sensitive&&userRole!=='subscriber') return null;
+    return(
+      <div className="detail-row">
+        <span className="detail-label">{label}</span>
+        <span className="detail-value">{value!=null&&value!==''?String(value):'—'}</span>
+      </div>
+    );
+  };
+  return(
+    <div>
+      <F label="Team Size" value={fields.teamSize}/>
+      <F label="AUM Band" value={fields.aumBand}/>
+      <F label="Ownership" value={fields.ownershipStructure}/>
+      <F label="Founder Age Band" value={fields.founderAgeBand}/>
+      <F label="Internal Successor" value={fields.internalSuccessorIdentified!=null?(fields.internalSuccessorIdentified?'Yes':'No'):null}/>
+      <F label="Succession Timeline" value={fields.successionTimeline}/>
+      <F label="Open to Minority Capital" value={fields.openToMinorityCapital!=null?(fields.openToMinorityCapital?'Yes':'No'):null}/>
+      <F label="Open to Full Sale" value={fields.openToFullSale!=null?(fields.openToFullSale?'Yes':'No'):null}/>
+      <F label="Seeking Acquisitions" value={fields.seekingAcquisitions!=null?(fields.seekingAcquisitions?'Yes':'No'):null}/>
+      <F label="Hiring Junior Advisors" value={fields.hiringJuniorAdvisors!=null?(fields.hiringJuniorAdvisors?'Yes':'No'):null}/>
+      <F label="Geographic Flexibility" value={fields.geographicFlexibility}/>
+      <F label="Growth Intent" value={fields.growthIntent}/>
+      {fields.narrative&&<div style={{marginTop:10,fontSize:12,color:'var(--text2)',background:'var(--surface2)',padding:'10px 14px',borderRadius:8,borderLeft:'2px solid var(--accent)',lineHeight:1.7}}>{fields.narrative}</div>}
+    </div>
+  );
+}
+
+// Intelligence scores panel (subscriber-only)
+function IntelligencePanel({ef, userRole}){
+  const successionScore = calcSuccessionScore(ef);
+  const acquisitionScore = calcAcquisitionScore(ef);
+  if(successionScore===null&&acquisitionScore===null) return null;
+  return(
+    <SubscriberGate userRole={userRole}>
+      <div style={{display:'flex',flexDirection:'column',gap:14}}>
+        {successionScore!==null&&(
+          <div>
+            <ScoreMeter score={successionScore} label="Succession Vulnerability"
+              color={successionScore>=70?'var(--red)':successionScore>=40?'var(--amber)':'var(--green)'}/>
+            {userRole==='subscriber'&&(
+              <div style={{fontSize:11,color:'var(--text3)',marginTop:4,lineHeight:1.5}}>
+                {successionScore>=70&&'High vulnerability. Founder likely near retirement without identified successor.'}
+                {successionScore>=40&&successionScore<70&&'Moderate vulnerability. Consider monitoring for transition signals.'}
+                {successionScore<40&&'Low vulnerability. Succession appears to be planned or early-stage.'}
+              </div>
+            )}
+          </div>
+        )}
+        {acquisitionScore!==null&&(
+          <div>
+            <ScoreMeter score={acquisitionScore} label="Acquisition Appetite"
+              color={acquisitionScore>=60?'var(--green)':acquisitionScore>=30?'var(--accent)':'var(--text3)'}/>
+          </div>
+        )}
+      </div>
+    </SubscriberGate>
+  );
+}
+
+// Profile creation / edit form
+function ProfileForm({crd, firmName, existingFields, onSave, onCancel}){
+  const[fields,setFields]=useState({...EMPTY_INTELLIGENCE_FIELDS,...existingFields});
+  const[narrative,setNarrative]=useState(existingFields?.narrative||'');
+  const[profileType,setProfileType]=useState('bd');
+  const[errors,setErrors]=useState({});
+
+  const REQUIRED_FIELDS=['teamSize','aumBand','ownershipStructure','founderAgeBand','internalSuccessorIdentified',
+    'successionTimeline','openToMinorityCapital','openToFullSale','seekingAcquisitions',
+    'hiringJuniorAdvisors','geographicFlexibility','growthIntent'];
+
+  const validate=()=>{
+    const e={};
+    REQUIRED_FIELDS.forEach(k=>{
+      if(fields[k]===null||fields[k]==='')e[k]='Required';
+    });
+    setErrors(e);
+    return Object.keys(e).length===0;
+  };
+
+  const set=(k,v)=>setFields(prev=>({...prev,[k]:v}));
+  const setBool=(k,v)=>setFields(prev=>({...prev,[k]:v===''?null:v==='true'}));
+  const setInt=(k,v)=>setFields(prev=>({...prev,[k]:v===''?null:parseInt(v,10)||null}));
+
+  const save=()=>{
+    if(!validate())return;
+    onSave({...fields,narrative:narrative.trim()||undefined},profileType);
+  };
+
+  const Field=({label,field,children})=>(
+    <div>
+      <div style={{fontSize:11,color:errors[field]?'var(--red)':'var(--text3)',marginBottom:4,fontWeight:500}}>
+        {label}<span className="req">*</span>{errors[field]&&<span style={{marginLeft:6,fontSize:10,fontStyle:'italic'}}>{errors[field]}</span>}
+      </div>
+      {children}
+    </div>
+  );
+
+  return(
+    <div className="fade-in" style={{padding:'0'}}>
+      <div style={{marginBottom:16}}>
+        <div style={{fontSize:11,color:'var(--text3)',marginBottom:6,fontWeight:500}}>Profile Type</div>
+        <div style={{display:'flex',gap:8}}>
+          <button className={profileType==='bd'?'btn-gold btn-sm':'btn-ghost btn-sm'} onClick={()=>setProfileType('bd')}>BD / Operator Profile</button>
+          <button className={profileType==='claimed'?'btn-gold btn-sm':'btn-ghost btn-sm'} onClick={()=>setProfileType('claimed')}>Claimed RIA Profile</button>
+        </div>
+      </div>
+
+      <div className="profile-section">
+        <div className="profile-section-title">Firm Structure</div>
+        <div className="profile-form-grid">
+          <Field label="Team Size (total headcount)" field="teamSize">
+            <input type="number" min="1" value={fields.teamSize??''} onChange={e=>setInt('teamSize',e.target.value)} style={{borderColor:errors.teamSize?'var(--red)':''}}/>
+          </Field>
+          <Field label="AUM Band" field="aumBand">
+            <select value={fields.aumBand??''} onChange={e=>set('aumBand',e.target.value||null)} style={{borderColor:errors.aumBand?'var(--red)':''}}>
+              <option value="">Select...</option>
+              {AUM_BANDS.map(b=><option key={b}>{b}</option>)}
+            </select>
+          </Field>
+          <Field label="Ownership Structure" field="ownershipStructure">
+            <select value={fields.ownershipStructure??''} onChange={e=>set('ownershipStructure',e.target.value||null)} style={{borderColor:errors.ownershipStructure?'var(--red)':''}}>
+              <option value="">Select...</option>
+              {OWNERSHIP_STRUCTURES.map(o=><option key={o}>{o}</option>)}
+            </select>
+          </Field>
+          <Field label="Founder Age Band" field="founderAgeBand">
+            <select value={fields.founderAgeBand??''} onChange={e=>set('founderAgeBand',e.target.value||null)} style={{borderColor:errors.founderAgeBand?'var(--red)':''}}>
+              <option value="">Select...</option>
+              {FOUNDER_AGE_BANDS.map(a=><option key={a}>{a}</option>)}
+            </select>
+          </Field>
+        </div>
+      </div>
+
+      <div className="profile-section">
+        <div className="profile-section-title">Succession &amp; Transition</div>
+        <div className="profile-form-grid">
+          <Field label="Internal Successor Identified" field="internalSuccessorIdentified">
+            <select value={fields.internalSuccessorIdentified==null?'':String(fields.internalSuccessorIdentified)} onChange={e=>setBool('internalSuccessorIdentified',e.target.value)} style={{borderColor:errors.internalSuccessorIdentified?'var(--red)':''}}>
+              <option value="">Select...</option>
+              <option value="true">Yes</option><option value="false">No</option>
+            </select>
+          </Field>
+          <Field label="Succession Timeline" field="successionTimeline">
+            <select value={fields.successionTimeline??''} onChange={e=>set('successionTimeline',e.target.value||null)} style={{borderColor:errors.successionTimeline?'var(--red)':''}}>
+              <option value="">Select...</option>
+              {SUCCESSION_TIMELINES.map(t=><option key={t}>{t}</option>)}
+            </select>
+          </Field>
+          <Field label="Open to Minority Capital" field="openToMinorityCapital">
+            <select value={fields.openToMinorityCapital==null?'':String(fields.openToMinorityCapital)} onChange={e=>setBool('openToMinorityCapital',e.target.value)} style={{borderColor:errors.openToMinorityCapital?'var(--red)':''}}>
+              <option value="">Select...</option>
+              <option value="true">Yes</option><option value="false">No</option>
+            </select>
+          </Field>
+          <Field label="Open to Full Sale" field="openToFullSale">
+            <select value={fields.openToFullSale==null?'':String(fields.openToFullSale)} onChange={e=>setBool('openToFullSale',e.target.value)} style={{borderColor:errors.openToFullSale?'var(--red)':''}}>
+              <option value="">Select...</option>
+              <option value="true">Yes</option><option value="false">No</option>
+            </select>
+          </Field>
+        </div>
+      </div>
+
+      <div className="profile-section">
+        <div className="profile-section-title">Growth &amp; Intent</div>
+        <div className="profile-form-grid">
+          <Field label="Seeking Acquisitions" field="seekingAcquisitions">
+            <select value={fields.seekingAcquisitions==null?'':String(fields.seekingAcquisitions)} onChange={e=>setBool('seekingAcquisitions',e.target.value)} style={{borderColor:errors.seekingAcquisitions?'var(--red)':''}}>
+              <option value="">Select...</option>
+              <option value="true">Yes</option><option value="false">No</option>
+            </select>
+          </Field>
+          <Field label="Hiring Junior Advisors" field="hiringJuniorAdvisors">
+            <select value={fields.hiringJuniorAdvisors==null?'':String(fields.hiringJuniorAdvisors)} onChange={e=>setBool('hiringJuniorAdvisors',e.target.value)} style={{borderColor:errors.hiringJuniorAdvisors?'var(--red)':''}}>
+              <option value="">Select...</option>
+              <option value="true">Yes</option><option value="false">No</option>
+            </select>
+          </Field>
+          <Field label="Geographic Flexibility" field="geographicFlexibility">
+            <select value={fields.geographicFlexibility??''} onChange={e=>set('geographicFlexibility',e.target.value||null)} style={{borderColor:errors.geographicFlexibility?'var(--red)':''}}>
+              <option value="">Select...</option>
+              {GEOGRAPHIC_FLEXIBILITIES.map(g=><option key={g}>{g}</option>)}
+            </select>
+          </Field>
+          <Field label="Growth Intent" field="growthIntent">
+            <select value={fields.growthIntent??''} onChange={e=>set('growthIntent',e.target.value||null)} style={{borderColor:errors.growthIntent?'var(--red)':''}}>
+              <option value="">Select...</option>
+              {GROWTH_INTENTS.map(g=><option key={g}>{g}</option>)}
+            </select>
+          </Field>
+        </div>
+      </div>
+
+      <div className="profile-section" style={{marginBottom:0}}>
+        <div className="profile-section-title">Narrative <span style={{fontWeight:400,letterSpacing:'normal',textTransform:'none',color:'var(--text3)',fontSize:10}}>(optional)</span></div>
+        <textarea rows={3} value={narrative} onChange={e=>setNarrative(e.target.value)} placeholder="Optional context about the firm's situation, relationship notes, or transition dynamics..."/>
+      </div>
+
+      <div style={{display:'flex',gap:8,marginTop:14}}>
+        <button className="btn-gold" onClick={save}>Save Profile</button>
+        <button className="btn-ghost btn-sm" onClick={onCancel}>Cancel</button>
+      </div>
+    </div>
+  );
+}
+
+function Nav({view,setView,savedCount,userRole,setUserRole}){
+  const links=[
+    ['dashboard','Overview'],['explorer','Explorer'],['detail','Firm Lookup'],
+    ['saved','Targets'+(savedCount?' ('+savedCount+')':'')],['letter','Letter Writer'],
+  ];
+  if(userRole==='subscriber') links.push(['intelligence','Intelligence']);
+  return(
+    <nav className="top-nav">
+      <div className="nav-brand">
+        <div className="logo-mark">RI</div>
+        <span className="nav-brand-name">RIA Intelligence</span>
+      </div>
+      {links.map(([v,l])=>(
+        <span key={v} className={'nav-link'+(view===v?' active':'')}
+          style={v==='intelligence'?{color:view==='intelligence'?'var(--purple)':'var(--text3)'}:{}}
+          onClick={()=>setView(v)}>{l}</span>
+      ))}
+      <div className="nav-right">
+        <span style={{fontSize:11,color:'var(--text3)',background:'var(--surface)',border:'1px solid var(--border)',borderRadius:20,padding:'4px 12px',marginRight:4}}>
+          NH · VT · MA · ME · <span style={{color:'var(--text2)'}}>{FIRMS.length.toLocaleString()} firms</span>
+        </span>
+        <div className="role-pill" title="Simulate user role">
+          <span className={'role-pill-opt public'+(userRole==='public'?' active':'')} onClick={()=>setUserRole('public')}>Public</span>
+          <span className={'role-pill-opt'+(userRole==='subscriber'?' active':'')} onClick={()=>setUserRole('subscriber')}>Subscriber</span>
+        </div>
+      </div>
+    </nav>
   );
 }
 
@@ -265,81 +626,33 @@ function FirmMap({firms,roa,rMin,rMax,onSelect,onBounds}){
       const co=COORDS[f.crd];if(!co)return;
       const rev=(f.aum||0)*roa,hit=rev>=rMin&&rev<=rMax;
       const br=Math.max(4,Math.min(11,Math.sqrt((f.aum||0)/1e8)*2.5)),r=hit?br+5:br;
-      const c=L.circleMarker([co.lat,co.lng],{
-        radius:r,
-        fillColor:hit?'#4ade80':'#60a5fa',
-        color:hit?'#166534':'#1d4ed8',
-        weight:hit?2:1,opacity:hit?.9:.5,fillOpacity:hit?.6:.3
-      });
-      c.bindPopup(
-        '<div style="min-width:200px">'+
-        '<div style="font-family:Instrument Serif,serif;font-size:14px;font-weight:normal;margin-bottom:2px">'+f.name+'</div>'+
-        '<div style="color:#9aa0ad;font-size:11px;margin-bottom:8px">'+f.city+', '+f.state+'</div>'+
-        '<div style="font-family:DM Mono,monospace;font-size:11px;color:#f0f1f3">'+
-        'RAUM&nbsp;&nbsp;<b>'+fmtM(f.aum)+'</b><br/>'+
-        'Est Rev&nbsp;<b style="color:'+(hit?'#4ade80':'#f0f1f3')+'">'+fmtM(rev)+'</b>'+
-        '</div>'+
-        (hit?'<div style="margin-top:6px;font-size:10px;color:#4ade80;font-weight:600;letter-spacing:.05em;text-transform:uppercase">In target range</div>':'')+
-        '<div onclick="window.__rvf(\''+f.crd+'\')" class="pvb">View details →</div></div>',
-        {className:'mp'}
-      );
+      const c=L.circleMarker([co.lat,co.lng],{radius:r,fillColor:hit?'#4ade80':'#60a5fa',color:hit?'#166534':'#1d4ed8',weight:hit?2:1,opacity:hit?.9:.5,fillOpacity:hit?.6:.3});
+      c.bindPopup('<div style="min-width:200px"><div style="font-family:Instrument Serif,serif;font-size:14px;margin-bottom:2px">'+f.name+'</div><div style="color:#9aa0ad;font-size:11px;margin-bottom:8px">'+f.city+', '+f.state+'</div><div style="font-family:DM Mono,monospace;font-size:11px">RAUM&nbsp;<b>'+fmtM(f.aum)+'</b><br/>Rev&nbsp;&nbsp;&nbsp;<b style="color:'+(hit?'#4ade80':'#f0f1f3')+'">'+fmtM(rev)+'</b></div>'+(hit?'<div style="margin-top:6px;font-size:10px;color:#4ade80;font-weight:600;text-transform:uppercase;letter-spacing:.05em">In target range</div>':'')+'<div onclick="window.__rvf(\''+f.crd+'\')" class="pvb">View details →</div></div>',{className:'mp'});
       lRef.current.addLayer(c);
     });
   },[firms,roa,rMin,rMax]);
   return <div ref={ref} style={{width:'100%',height:'100%',borderRadius:10}}/>;
 }
 
-function Dashboard({roa,onSelect,saved,toggleSave}){
+function Dashboard({roa,onSelect,saved,toggleSave,profiles}){
   const ST=['NH','VT','MA','ME'];
   const BUCKETS=[{l:'< $100M',lo:0,hi:100e6},{l:'$100–250M',lo:100e6,hi:250e6},{l:'$250–500M',lo:250e6,hi:500e6},{l:'$500M–1B',lo:500e6,hi:1e9},{l:'$1–5B',lo:1e9,hi:5e9},{l:'$5–50B',lo:5e9,hi:50e9},{l:'$50B+',lo:50e9,hi:Infinity}];
-  const[fState,setFState]=useState(null);
-  const[fBucket,setFBucket]=useState(null);
-  const[aumCap,setAumCap]=useState(10e9);
+  const[fState,setFState]=useState(null);const[fBucket,setFBucket]=useState(null);const[aumCap,setAumCap]=useState(10e9);
   const capOpts=[{l:'No cap',v:Infinity},{l:'$50B',v:50e9},{l:'$10B',v:10e9},{l:'$5B',v:5e9},{l:'$1B',v:1e9},{l:'$500M',v:500e6},{l:'$250M',v:250e6}];
-
-  const pool=useMemo(()=>{
-    let fs=FIRMS.filter(f=>f.aum>0&&f.aum<=aumCap);
-    if(fState)fs=fs.filter(f=>f.state===fState);
-    if(fBucket)fs=fs.filter(f=>f.aum>=fBucket.lo&&f.aum<fBucket.hi);
-    return fs;
-  },[fState,fBucket,aumCap]);
-
-  const byState=useMemo(()=>{
-    const m={};ST.forEach(s=>{
-      const fs=pool.filter(f=>f.state===s);
-      const aums=fs.map(f=>f.aum).sort((a,b)=>a-b);
-      const totAum=aums.reduce((s,a)=>s+a,0);
-      const empFs=fs.filter(f=>f.employees>0);
-      const rpes=empFs.map(f=>(f.aum*roa)/f.employees).sort((a,b)=>a-b);
-      m[s]={count:fs.length,aum:totAum,rev:totAum*roa,med:aums.length?aums[Math.floor(aums.length/2)]:0,medRPE:rpes.length?rpes[Math.floor(rpes.length/2)]:0};
-    });return m;
-  },[pool,roa]);
-
-  const totals=useMemo(()=>{
-    const a=pool.reduce((s,f)=>s+f.aum,0);
-    return{firms:pool.length,aum:a,rev:a*roa,accounts:pool.reduce((s,f)=>s+(f.accounts||0),0),employees:pool.reduce((s,f)=>s+(f.employees||0),0)};
-  },[pool,roa]);
-
-  const dist=useMemo(()=>{
-    const base=FIRMS.filter(f=>f.aum>0&&f.aum<=aumCap&&(!fState||f.state===fState));
-    return BUCKETS.map(b=>({...b,count:base.filter(f=>f.aum>=b.lo&&f.aum<b.hi).length}));
-  },[aumCap,fState]);
+  const pool=useMemo(()=>{let fs=FIRMS.filter(f=>f.aum>0&&f.aum<=aumCap);if(fState)fs=fs.filter(f=>f.state===fState);if(fBucket)fs=fs.filter(f=>f.aum>=fBucket.lo&&f.aum<fBucket.hi);return fs;},[fState,fBucket,aumCap]);
+  const byState=useMemo(()=>{const m={};ST.forEach(s=>{const fs=pool.filter(f=>f.state===s);const aums=fs.map(f=>f.aum).sort((a,b)=>a-b);const totAum=aums.reduce((s,a)=>s+a,0);const empFs=fs.filter(f=>f.employees>0);const rpes=empFs.map(f=>(f.aum*roa)/f.employees).sort((a,b)=>a-b);m[s]={count:fs.length,aum:totAum,rev:totAum*roa,med:aums.length?aums[Math.floor(aums.length/2)]:0,medRPE:rpes.length?rpes[Math.floor(rpes.length/2)]:0};});return m;},[pool,roa]);
+  const totals=useMemo(()=>{const a=pool.reduce((s,f)=>s+f.aum,0);return{firms:pool.length,aum:a,rev:a*roa,accounts:pool.reduce((s,f)=>s+(f.accounts||0),0),employees:pool.reduce((s,f)=>s+(f.employees||0),0)};},[pool,roa]);
+  const dist=useMemo(()=>{const base=FIRMS.filter(f=>f.aum>0&&f.aum<=aumCap&&(!fState||f.state===fState));return BUCKETS.map(b=>({...b,count:base.filter(f=>f.aum>=b.lo&&f.aum<b.hi).length}));},[aumCap,fState]);
   const maxBucket=Math.max(...dist.map(d=>d.count),1);
-
   const top5=(arr)=>arr.slice(0,5);
   const topAum=useMemo(()=>top5([...pool].sort((a,b)=>b.aum-a.aum)),[pool]);
   const topRev=useMemo(()=>top5([...pool].sort((a,b)=>b.aum*roa-a.aum*roa)),[pool,roa]);
   const topHNW=useMemo(()=>top5([...pool].filter(f=>f.clientsHNW>0).sort((a,b)=>b.clientsHNW-a.clientsHNW)),[pool]);
   const topAcctSize=useMemo(()=>top5([...pool].filter(f=>f.accounts>=10).sort((a,b)=>(b.aum/(b.accounts||1))-(a.aum/(a.accounts||1)))),[pool]);
   const topRPE=useMemo(()=>top5([...pool].filter(f=>f.employees>=2).sort((a,b)=>((b.aum*roa)/(b.employees||1))-((a.aum*roa)/(a.employees||1)))),[pool,roa]);
-
-  const sweetSpot=useMemo(()=>{
-    return pool.filter(f=>{const rev=f.aum*roa;return rev>=500000&&rev<=3000000&&f.employees>=1&&f.employees<=10;}).sort((a,b)=>(b.aum*roa)-(a.aum*roa));
-  },[pool,roa]);
-
+  const sweetSpot=useMemo(()=>pool.filter(f=>{const rev=f.aum*roa;return rev>=500000&&rev<=3000000&&f.employees>=1&&f.employees<=10;}).sort((a,b)=>(b.aum*roa)-(a.aum*roa)),[pool,roa]);
   const hasFilter=fState||fBucket||aumCap!==10e9;
   const clearFilters=()=>{setFState(null);setFBucket(null);setAumCap(10e9)};
-
   const Stat=({label,value,sub,gold,green})=>(
     <div className="stat-card" style={gold?{borderColor:'rgba(200,169,110,.35)'}:green?{borderColor:'rgba(74,222,128,.25)'}:{}}>
       <div className="stat-label">{label}</div>
@@ -347,14 +660,12 @@ function Dashboard({roa,onSelect,saved,toggleSave}){
       {sub&&<div className="stat-sub">{sub}</div>}
     </div>
   );
-
   const Leaderboard=({title,firms:lbF,valFn,sub})=>(
     <div className="card" style={{padding:'18px 20px'}}>
       <div className="section-head">{title}</div>
       {lbF.length===0?<div style={{fontSize:12,color:'var(--text3)',padding:'10px 0'}}>No firms match</div>:
       lbF.map((f,i)=>(
-        <div key={f.crd} style={{display:'flex',alignItems:'center',gap:10,padding:'8px 0',borderBottom:i<lbF.length-1?'1px solid var(--border)':'none',cursor:'pointer',transition:'opacity .15s'}} onClick={()=>onSelect(f)}
-          onMouseEnter={e=>e.currentTarget.style.opacity='.75'} onMouseLeave={e=>e.currentTarget.style.opacity='1'}>
+        <div key={f.crd} style={{display:'flex',alignItems:'center',gap:10,padding:'8px 0',borderBottom:i<lbF.length-1?'1px solid var(--border)':'none',cursor:'pointer',transition:'opacity .15s'}} onClick={()=>onSelect(f)} onMouseEnter={e=>e.currentTarget.style.opacity='.75'} onMouseLeave={e=>e.currentTarget.style.opacity='1'}>
           <div className="rank-badge" style={{background:i===0?'var(--accent)':i<3?'var(--surface3)':'transparent',border:i>=3?'1px solid var(--border)':'none',color:i===0?'#0e0f11':'var(--text3)'}}>{i+1}</div>
           <div style={{flex:1,minWidth:0}}>
             <div style={{fontSize:12,fontWeight:500,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{f.name}</div>
@@ -376,15 +687,13 @@ function Dashboard({roa,onSelect,saved,toggleSave}){
         </div>
         <div style={{display:'flex',alignItems:'center',gap:8}}>
           {hasFilter&&<button className="btn-ghost btn-sm" onClick={clearFilters} style={{color:'var(--accent)'}}>Clear filters</button>}
-          <div className="filter-group">
-            <label>AUM Cap</label>
+          <div className="filter-group"><label>AUM Cap</label>
             <select value={aumCap} onChange={e=>setAumCap(+e.target.value)} style={{width:'auto',padding:'7px 12px'}}>
               {capOpts.map(c=><option key={c.l} value={c.v}>{c.l}</option>)}
             </select>
           </div>
         </div>
       </div>
-
       <div style={{display:'grid',gridTemplateColumns:'repeat(5,1fr)',gap:12,marginBottom:24}}>
         <Stat label="Firms" value={totals.firms.toLocaleString()}/>
         <Stat label="Total RAUM" value={fmtM(totals.aum)}/>
@@ -392,35 +701,30 @@ function Dashboard({roa,onSelect,saved,toggleSave}){
         <Stat label="Total Accounts" value={totals.accounts.toLocaleString()}/>
         <Stat label="Employees" value={totals.employees.toLocaleString()}/>
       </div>
-
       <div style={{display:'grid',gridTemplateColumns:'1.1fr 1fr',gap:16,marginBottom:16}}>
         <div className="card" style={{padding:'18px 20px'}}>
           <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:14}}>
             <div className="section-head" style={{marginBottom:0}}>Market by State</div>
             <span style={{fontSize:10,color:'var(--text3)'}}>click to filter</span>
           </div>
-          <table style={{width:'100%'}}>
-            <thead><tr>
-              <th style={{background:'transparent',position:'static',padding:'6px 10px'}}>State</th>
-              <th style={{background:'transparent',position:'static',padding:'6px 10px',textAlign:'right'}}>Firms</th>
-              <th style={{background:'transparent',position:'static',padding:'6px 10px',textAlign:'right'}}>RAUM</th>
-              <th style={{background:'transparent',position:'static',padding:'6px 10px',textAlign:'right',color:'var(--accent)'}}>Est Rev</th>
-              <th style={{background:'transparent',position:'static',padding:'6px 10px',textAlign:'right'}}>Median</th>
-            </tr></thead>
-            <tbody>
-              {ST.map(s=>{const d=byState[s];const active=fState===s;return(
-                <tr key={s} onClick={()=>setFState(active?null:s)} style={{cursor:'pointer',borderLeft:active?'2px solid var(--accent)':'2px solid transparent',transition:'background .15s'}}>
-                  <td style={{padding:'9px 10px',paddingLeft:active?8:10}}><span className="tag tag-state">{s}</span></td>
-                  <td style={{padding:'9px 10px',textAlign:'right',fontFamily:'DM Mono,monospace',fontSize:12}}>{d.count}</td>
-                  <td style={{padding:'9px 10px',textAlign:'right',fontFamily:'DM Mono,monospace',fontSize:12}}>{fmtM(d.aum)}</td>
-                  <td style={{padding:'9px 10px',textAlign:'right',fontFamily:'DM Mono,monospace',fontSize:12,color:'var(--accent)'}}>{fmtM(d.rev)}</td>
-                  <td style={{padding:'9px 10px',textAlign:'right',fontFamily:'DM Mono,monospace',fontSize:12,color:'var(--text2)'}}>{fmtM(d.med)}</td>
-                </tr>
-              )})}
-            </tbody>
-          </table>
+          <table style={{width:'100%'}}><thead><tr>
+            <th style={{background:'transparent',position:'static',padding:'6px 10px'}}>State</th>
+            <th style={{background:'transparent',position:'static',padding:'6px 10px',textAlign:'right'}}>Firms</th>
+            <th style={{background:'transparent',position:'static',padding:'6px 10px',textAlign:'right'}}>RAUM</th>
+            <th style={{background:'transparent',position:'static',padding:'6px 10px',textAlign:'right',color:'var(--accent)'}}>Est Rev</th>
+            <th style={{background:'transparent',position:'static',padding:'6px 10px',textAlign:'right'}}>Median</th>
+          </tr></thead><tbody>
+            {ST.map(s=>{const d=byState[s];const active=fState===s;return(
+              <tr key={s} onClick={()=>setFState(active?null:s)} style={{cursor:'pointer',borderLeft:active?'2px solid var(--accent)':'2px solid transparent',transition:'background .15s'}}>
+                <td style={{padding:'9px 10px',paddingLeft:active?8:10}}><span className="tag tag-state">{s}</span></td>
+                <td style={{padding:'9px 10px',textAlign:'right',fontFamily:'DM Mono,monospace',fontSize:12}}>{d.count}</td>
+                <td style={{padding:'9px 10px',textAlign:'right',fontFamily:'DM Mono,monospace',fontSize:12}}>{fmtM(d.aum)}</td>
+                <td style={{padding:'9px 10px',textAlign:'right',fontFamily:'DM Mono,monospace',fontSize:12,color:'var(--accent)'}}>{fmtM(d.rev)}</td>
+                <td style={{padding:'9px 10px',textAlign:'right',fontFamily:'DM Mono,monospace',fontSize:12,color:'var(--text2)'}}>{fmtM(d.med)}</td>
+              </tr>
+            )})}
+          </tbody></table>
         </div>
-
         <div className="card" style={{padding:'18px 20px'}}>
           <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:14}}>
             <div className="section-head" style={{marginBottom:0}}>AUM Distribution</div>
@@ -439,18 +743,15 @@ function Dashboard({roa,onSelect,saved,toggleSave}){
           </div>
         </div>
       </div>
-
       <div style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:16,marginBottom:16}}>
         <Leaderboard title="Top RAUM" firms={topAum} valFn={f=>fmtM(f.aum)} sub={f=>fmtN(f.employees)+' emp'}/>
         <Leaderboard title="Top Est. Revenue" firms={topRev} valFn={f=>fmtM(f.aum*roa)} sub={f=>fmtM(f.aum)+' AUM'}/>
         <Leaderboard title="Top HNW Clients" firms={topHNW} valFn={f=>fmtN(f.clientsHNW)+' HNW'} sub={f=>fmtM(f.aumHNW)+' HNW AUM'}/>
       </div>
-
       <div style={{display:'grid',gridTemplateColumns:'repeat(2,1fr)',gap:16,marginBottom:24}}>
         <Leaderboard title="Largest Avg Account Size" firms={topAcctSize} valFn={f=>fmtM(f.aum/(f.accounts||1))} sub={f=>fmtN(f.accounts)+' accts'}/>
         <Leaderboard title="Highest Rev per Employee" firms={topRPE} valFn={f=>fmtM(f.aum*roa/(f.employees||1))} sub={f=>fmtN(f.employees)+' emp'}/>
       </div>
-
       <div className="card" style={{padding:'18px 20px'}}>
         <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:16}}>
           <div>
@@ -463,39 +764,32 @@ function Dashboard({roa,onSelect,saved,toggleSave}){
           </div>
         </div>
         {sweetSpot.length===0?<div style={{fontSize:12,color:'var(--text3)',padding:'16px 0',textAlign:'center'}}>No firms match current filters</div>:
-        <div className="table-scroll">
-          <table>
-            <thead><tr>
-              <th>Firm</th><th>St</th><th>City</th>
-              <th style={{textAlign:'right'}}>RAUM</th>
-              <th style={{textAlign:'right',color:'var(--green)'}}>Est Rev</th>
-              <th style={{textAlign:'right'}}>Emp</th>
-              <th style={{textAlign:'right'}}>Accts</th>
-              <th style={{textAlign:'right'}}>Rev/Emp</th>
-              <th style={{textAlign:'right'}}>Avg Acct</th>
-              <th style={{textAlign:'center',width:36}}>★</th>
-            </tr></thead>
-            <tbody>
-              {sweetSpot.slice(0,25).map(f=>{
-                const rev=f.aum*roa,rpe=f.employees>0?rev/f.employees:0,aa=f.accounts>0?f.aum/f.accounts:0;
-                return(
-                  <tr key={f.crd} className="ss-row" onClick={()=>onSelect(f)}>
-                    <td style={{fontWeight:500,maxWidth:240,overflow:'hidden',textOverflow:'ellipsis'}}>{f.name}</td>
-                    <td><span className="tag tag-state">{f.state}</span></td>
-                    <td style={{color:'var(--text2)'}}>{f.city}</td>
-                    <td style={{textAlign:'right'}} className="mono">{fmtM(f.aum)}</td>
-                    <td style={{textAlign:'right',color:'var(--green)',fontWeight:500}} className="mono">{fmtM(rev)}</td>
-                    <td style={{textAlign:'right'}} className="mono">{fmtN(f.employees)}</td>
-                    <td style={{textAlign:'right'}} className="mono">{fmtN(f.accounts)}</td>
-                    <td style={{textAlign:'right'}} className="mono">{fmtM(rpe)}</td>
-                    <td style={{textAlign:'right'}} className="mono">{fmtM(aa)}</td>
-                    <td style={{textAlign:'center'}} onClick={e=>e.stopPropagation()}><StarBtn crd={f.crd} saved={saved} toggleSave={toggleSave}/></td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>}
+        <div className="table-scroll"><table><thead><tr>
+          <th>Firm</th><th>St</th><th>City</th>
+          <th style={{textAlign:'right'}}>RAUM</th>
+          <th style={{textAlign:'right',color:'var(--green)'}}>Est Rev</th>
+          <th style={{textAlign:'right'}}>Emp</th><th style={{textAlign:'right'}}>Accts</th>
+          <th style={{textAlign:'right'}}>Rev/Emp</th><th style={{textAlign:'right'}}>Avg Acct</th>
+          <th style={{textAlign:'center',width:36}}>★</th>
+        </tr></thead><tbody>
+          {sweetSpot.slice(0,25).map(f=>{
+            const rev=f.aum*roa,rpe=f.employees>0?rev/f.employees:0,aa=f.accounts>0?f.aum/f.accounts:0;
+            return(
+              <tr key={f.crd} className="ss-row" onClick={()=>onSelect(f)}>
+                <td style={{fontWeight:500,maxWidth:240,overflow:'hidden',textOverflow:'ellipsis'}}>{f.name}</td>
+                <td><span className="tag tag-state">{f.state}</span></td>
+                <td style={{color:'var(--text2)'}}>{f.city}</td>
+                <td style={{textAlign:'right'}} className="mono">{fmtM(f.aum)}</td>
+                <td style={{textAlign:'right',color:'var(--green)',fontWeight:500}} className="mono">{fmtM(rev)}</td>
+                <td style={{textAlign:'right'}} className="mono">{fmtN(f.employees)}</td>
+                <td style={{textAlign:'right'}} className="mono">{fmtN(f.accounts)}</td>
+                <td style={{textAlign:'right'}} className="mono">{fmtM(rpe)}</td>
+                <td style={{textAlign:'right'}} className="mono">{fmtM(aa)}</td>
+                <td style={{textAlign:'center'}} onClick={e=>e.stopPropagation()}><StarBtn crd={f.crd} saved={saved} toggleSave={toggleSave}/></td>
+              </tr>
+            );
+          })}
+        </tbody></table></div>}
         {sweetSpot.length>25&&<div style={{fontSize:11,color:'var(--text3)',textAlign:'center',marginTop:10,paddingTop:10,borderTop:'1px solid var(--border)'}}>Showing top 25 of {sweetSpot.length} — use Explorer for full list</div>}
       </div>
     </div>
@@ -508,152 +802,120 @@ function Explorer({roa,setRoa,onSelect,saved,toggleSave}){
   const[sCol,setSCol]=useState('aum');const[sDir,setSDir]=useState('desc');
   const[tOnly,setTOnly]=useState(false);const[showMap,setShowMap]=useState(true);
   const[bounds,setBounds]=useState(null);const[fByMap,setFByMap]=useState(false);
-
-  const base=useMemo(()=>FIRMS.filter(f=>{
-    if(stF!=='ALL'&&f.state!==stF)return false;
-    if(search&&!f.name.toLowerCase().includes(search.toLowerCase())&&!f.city.toLowerCase().includes(search.toLowerCase()))return false;
-    if(tOnly){const r=(f.aum||0)*roa;if(r<rMin||r>rMax)return false}return true;
-  }),[search,stF,roa,rMin,rMax,tOnly]);
-
-  const filtered=useMemo(()=>{
-    let fl=base;
-    if(fByMap&&bounds)fl=fl.filter(f=>{const co=COORDS[f.crd];if(!co)return false;return co.lat>=bounds.s&&co.lat<=bounds.n&&co.lng>=bounds.w&&co.lng<=bounds.e});
-    return[...fl].sort((a,b)=>{let va=a[sCol],vb=b[sCol];if(sCol==='estRev'){va=(a.aum||0)*roa;vb=(b.aum||0)*roa}if(va==null)va=sDir==='desc'?-Infinity:Infinity;if(vb==null)vb=sDir==='desc'?-Infinity:Infinity;if(typeof va==='string')return sDir==='desc'?vb.localeCompare(va):va.localeCompare(vb);return sDir==='desc'?vb-va:va-vb});
-  },[base,fByMap,bounds,sCol,sDir,roa]);
-
-  const stats=useMemo(()=>{
-    const t=filtered.reduce((s,f)=>s+(f.aum||0),0);
-    const hit=filtered.filter(f=>{const r=(f.aum||0)*roa;return r>=rMin&&r<=rMax}).length;
-    const s=[...filtered].filter(f=>f.aum).sort((a,b)=>a.aum-b.aum);
-    return{total:filtered.length,aum:t,hit,med:s.length?s[Math.floor(s.length/2)].aum:0};
-  },[filtered,roa,rMin,rMax]);
-
+  const base=useMemo(()=>FIRMS.filter(f=>{if(stF!=='ALL'&&f.state!==stF)return false;if(search&&!f.name.toLowerCase().includes(search.toLowerCase())&&!f.city.toLowerCase().includes(search.toLowerCase()))return false;if(tOnly){const r=(f.aum||0)*roa;if(r<rMin||r>rMax)return false}return true;}),[search,stF,roa,rMin,rMax,tOnly]);
+  const filtered=useMemo(()=>{let fl=base;if(fByMap&&bounds)fl=fl.filter(f=>{const co=COORDS[f.crd];if(!co)return false;return co.lat>=bounds.s&&co.lat<=bounds.n&&co.lng>=bounds.w&&co.lng<=bounds.e});return[...fl].sort((a,b)=>{let va=a[sCol],vb=b[sCol];if(sCol==='estRev'){va=(a.aum||0)*roa;vb=(b.aum||0)*roa}if(va==null)va=sDir==='desc'?-Infinity:Infinity;if(vb==null)vb=sDir==='desc'?-Infinity:Infinity;if(typeof va==='string')return sDir==='desc'?vb.localeCompare(va):va.localeCompare(vb);return sDir==='desc'?vb-va:va-vb});},[base,fByMap,bounds,sCol,sDir,roa]);
+  const stats=useMemo(()=>{const t=filtered.reduce((s,f)=>s+(f.aum||0),0);const hit=filtered.filter(f=>{const r=(f.aum||0)*roa;return r>=rMin&&r<=rMax}).length;const s=[...filtered].filter(f=>f.aum).sort((a,b)=>a.aum-b.aum);return{total:filtered.length,aum:t,hit,med:s.length?s[Math.floor(s.length/2)].aum:0};},[filtered,roa,rMin,rMax]);
   const tog=c=>{if(sCol===c)setSDir(d=>d==='desc'?'asc':'desc');else{setSCol(c);setSDir('desc')}};
   const arr=c=>sCol===c?(sDir==='desc'?' ▾':' ▴'):'';
-
   return(
     <div className="page fade-up">
-      <div style={{marginBottom:20}}>
-        <div className="page-title">Firm Explorer</div>
-        <div className="page-sub">Browse, filter, and sort all SEC-registered RIAs in the region</div>
-      </div>
-
+      <div style={{marginBottom:20}}><div className="page-title">Firm Explorer</div><div className="page-sub">Browse, filter, and sort all SEC-registered RIAs in the region</div></div>
       <div className="card" style={{padding:'16px 20px',marginBottom:16}}>
         <div className="filter-bar">
-          <div className="filter-group" style={{flex:'1 1 180px'}}>
-            <label>Search</label>
-            <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Firm name or city…"/>
-          </div>
-          <div className="filter-group">
-            <label>State</label>
-            <select value={stF} onChange={e=>setStF(e.target.value)} style={{width:90}}>
-              <option value="ALL">All</option><option>NH</option><option>VT</option><option>MA</option><option>ME</option>
-            </select>
-          </div>
-          <div className="filter-group">
-            <label>ROA %</label>
-            <input type="number" value={(roa*100).toFixed(2)} onChange={e=>setRoa(parseFloat(e.target.value)/100||.0065)} step="0.05" style={{width:90,textAlign:'center'}}/>
-          </div>
-          <div className="filter-group">
-            <label>Rev Min</label>
-            <input type="number" value={rMin} onChange={e=>setRMin(+e.target.value)} step={100000} style={{width:130}}/>
-          </div>
-          <div className="filter-group">
-            <label>Rev Max</label>
-            <input type="number" value={rMax} onChange={e=>setRMax(+e.target.value)} step={100000} style={{width:130}}/>
-          </div>
+          <div className="filter-group" style={{flex:'1 1 180px'}}><label>Search</label><input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Firm name or city…"/></div>
+          <div className="filter-group"><label>State</label><select value={stF} onChange={e=>setStF(e.target.value)} style={{width:90}}><option value="ALL">All</option><option>NH</option><option>VT</option><option>MA</option><option>ME</option></select></div>
+          <div className="filter-group"><label>ROA %</label><input type="number" value={(roa*100).toFixed(2)} onChange={e=>setRoa(parseFloat(e.target.value)/100||.0065)} step="0.05" style={{width:90,textAlign:'center'}}/></div>
+          <div className="filter-group"><label>Rev Min</label><input type="number" value={rMin} onChange={e=>setRMin(+e.target.value)} step={100000} style={{width:130}}/></div>
+          <div className="filter-group"><label>Rev Max</label><input type="number" value={rMax} onChange={e=>setRMax(+e.target.value)} step={100000} style={{width:130}}/></div>
           <div style={{display:'flex',gap:8,alignSelf:'flex-end'}}>
             <button onClick={()=>setTOnly(!tOnly)} className={tOnly?'btn-gold btn-sm':'btn-ghost btn-sm'}>{tOnly?'Targets only':'Show all'}</button>
-            <button onClick={()=>setShowMap(!showMap)} className={showMap?'btn-ghost btn-sm':'btn-ghost btn-sm'} style={showMap?{borderColor:'var(--accent)',color:'var(--accent)'}:{}}>{showMap?'Hide map':'Show map'}</button>
+            <button onClick={()=>setShowMap(!showMap)} className="btn-ghost btn-sm" style={showMap?{borderColor:'var(--accent)',color:'var(--accent)'}:{}}>{showMap?'Hide map':'Show map'}</button>
           </div>
         </div>
       </div>
-
       <div style={{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:12,marginBottom:16}}>
         <div className="stat-card"><div className="stat-label">Firms</div><div className="stat-value">{stats.total.toLocaleString()}</div></div>
         <div className="stat-card"><div className="stat-label">Total RAUM</div><div className="stat-value">{fmtM(stats.aum)}</div></div>
         <div className="stat-card"><div className="stat-label">Median RAUM</div><div className="stat-value">{fmtM(stats.med)}</div></div>
         <div className="stat-card" style={{borderColor:'rgba(74,222,128,.25)'}}><div className="stat-label" style={{color:'var(--green)'}}>In Target Range</div><div className="stat-value metric-green">{stats.hit.toLocaleString()}</div></div>
       </div>
-
-      {showMap&&(
-        <div style={{marginBottom:16}}>
-          <div className="card" style={{height:380,padding:0,overflow:'hidden'}}>
-            <FirmMap firms={base} roa={roa} rMin={rMin} rMax={rMax} onSelect={onSelect} onBounds={setBounds}/>
-          </div>
-          <div style={{display:'flex',alignItems:'center',gap:10,marginTop:8}}>
-            <button onClick={()=>setFByMap(!fByMap)} className={fByMap?'btn-gold btn-sm':'btn-ghost btn-sm'}>
-              {fByMap?'✓ Filtering by map':'Filter by map view'}
-            </button>
-            <span style={{fontSize:11,color:'var(--text3)',display:'flex',gap:12,marginLeft:'auto'}}>
-              <span><span style={{display:'inline-block',width:9,height:9,borderRadius:'50%',background:'#4ade80',marginRight:5,verticalAlign:'middle'}}></span>Target range</span>
-              <span><span style={{display:'inline-block',width:7,height:7,borderRadius:'50%',background:'#60a5fa',marginRight:5,verticalAlign:'middle'}}></span>Other</span>
-            </span>
-          </div>
+      {showMap&&(<div style={{marginBottom:16}}>
+        <div className="card" style={{height:380,padding:0,overflow:'hidden'}}><FirmMap firms={base} roa={roa} rMin={rMin} rMax={rMax} onSelect={onSelect} onBounds={setBounds}/></div>
+        <div style={{display:'flex',alignItems:'center',gap:10,marginTop:8}}>
+          <button onClick={()=>setFByMap(!fByMap)} className={fByMap?'btn-gold btn-sm':'btn-ghost btn-sm'}>{fByMap?'✓ Filtering by map':'Filter by map view'}</button>
+          <span style={{fontSize:11,color:'var(--text3)',display:'flex',gap:12,marginLeft:'auto'}}>
+            <span><span style={{display:'inline-block',width:9,height:9,borderRadius:'50%',background:'#4ade80',marginRight:5,verticalAlign:'middle'}}></span>Target range</span>
+            <span><span style={{display:'inline-block',width:7,height:7,borderRadius:'50%',background:'#60a5fa',marginRight:5,verticalAlign:'middle'}}></span>Other</span>
+          </span>
         </div>
-      )}
-
-      <div className="card table-scroll">
-        <table>
-          <thead><tr>
-            <th onClick={()=>tog('name')}>Firm{arr('name')}</th>
-            <th>St</th><th>City</th>
-            <th onClick={()=>tog('aum')} style={{textAlign:'right'}}>RAUM{arr('aum')}</th>
-            <th onClick={()=>tog('estRev')} style={{textAlign:'right',color:'var(--accent)'}}>Est Rev{arr('estRev')}</th>
-            <th style={{textAlign:'center'}}>Target</th>
-            <th onClick={()=>tog('accounts')} style={{textAlign:'right'}}>Accts{arr('accounts')}</th>
-            <th onClick={()=>tog('clientsHNW')} style={{textAlign:'right'}}>HNW{arr('clientsHNW')}</th>
-            <th onClick={()=>tog('employees')} style={{textAlign:'right'}}>Emp{arr('employees')}</th>
-            <th style={{textAlign:'center',width:60}}>Detail</th>
-            <th style={{textAlign:'center',width:40}}>★</th>
-          </tr></thead>
-          <tbody>
-            {filtered.map((f,i)=>{
-              const rev=(f.aum||0)*roa,hit=rev>=rMin&&rev<=rMax;
-              return(
-                <tr key={f.crd+i} className={hit?'highlight-row':''} style={{cursor:'pointer'}} onClick={()=>onSelect(f)}>
-                  <td style={{fontWeight:500,maxWidth:260,overflow:'hidden',textOverflow:'ellipsis'}}>{f.name}</td>
-                  <td><span className="tag tag-state">{f.state}</span></td>
-                  <td style={{color:'var(--text2)'}}>{f.city}</td>
-                  <td style={{textAlign:'right'}} className="mono">{fmtM(f.aum)}</td>
-                  <td style={{textAlign:'right',color:hit?'var(--green)':'var(--accent)',fontWeight:500}} className="mono">{fmtM(rev)}</td>
-                  <td style={{textAlign:'center'}}>{hit?<span className="tag tag-green">Yes</span>:''}</td>
-                  <td style={{textAlign:'right'}} className="mono">{fmtN(f.accounts)}</td>
-                  <td style={{textAlign:'right'}} className="mono">{fmtN(f.clientsHNW)}</td>
-                  <td style={{textAlign:'right'}} className="mono">{fmtN(f.employees)}</td>
-                  <td style={{textAlign:'center'}} onClick={e=>e.stopPropagation()}>
-                    <button className="btn-ghost btn-sm" onClick={()=>onSelect(f)}>View</button>
-                  </td>
-                  <td style={{textAlign:'center'}} onClick={e=>e.stopPropagation()}><StarBtn crd={f.crd} saved={saved} toggleSave={toggleSave}/></td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-      </div>
+      </div>)}
+      <div className="card table-scroll"><table><thead><tr>
+        <th onClick={()=>tog('name')}>Firm{arr('name')}</th><th>St</th><th>City</th>
+        <th onClick={()=>tog('aum')} style={{textAlign:'right'}}>RAUM{arr('aum')}</th>
+        <th onClick={()=>tog('estRev')} style={{textAlign:'right',color:'var(--accent)'}}>Est Rev{arr('estRev')}</th>
+        <th style={{textAlign:'center'}}>Target</th>
+        <th onClick={()=>tog('accounts')} style={{textAlign:'right'}}>Accts{arr('accounts')}</th>
+        <th onClick={()=>tog('clientsHNW')} style={{textAlign:'right'}}>HNW{arr('clientsHNW')}</th>
+        <th onClick={()=>tog('employees')} style={{textAlign:'right'}}>Emp{arr('employees')}</th>
+        <th style={{textAlign:'center',width:60}}>Detail</th>
+        <th style={{textAlign:'center',width:40}}>★</th>
+      </tr></thead><tbody>
+        {filtered.map((f,i)=>{const rev=(f.aum||0)*roa,hit=rev>=rMin&&rev<=rMax;return(
+          <tr key={f.crd+i} className={hit?'highlight-row':''} style={{cursor:'pointer'}} onClick={()=>onSelect(f)}>
+            <td style={{fontWeight:500,maxWidth:260,overflow:'hidden',textOverflow:'ellipsis'}}>{f.name}</td>
+            <td><span className="tag tag-state">{f.state}</span></td>
+            <td style={{color:'var(--text2)'}}>{f.city}</td>
+            <td style={{textAlign:'right'}} className="mono">{fmtM(f.aum)}</td>
+            <td style={{textAlign:'right',color:hit?'var(--green)':'var(--accent)',fontWeight:500}} className="mono">{fmtM(rev)}</td>
+            <td style={{textAlign:'center'}}>{hit?<span className="tag tag-green">Yes</span>:''}</td>
+            <td style={{textAlign:'right'}} className="mono">{fmtN(f.accounts)}</td>
+            <td style={{textAlign:'right'}} className="mono">{fmtN(f.clientsHNW)}</td>
+            <td style={{textAlign:'right'}} className="mono">{fmtN(f.employees)}</td>
+            <td style={{textAlign:'center'}} onClick={e=>e.stopPropagation()}><button className="btn-ghost btn-sm" onClick={()=>onSelect(f)}>View</button></td>
+            <td style={{textAlign:'center'}} onClick={e=>e.stopPropagation()}><StarBtn crd={f.crd} saved={saved} toggleSave={toggleSave}/></td>
+          </tr>
+        );})}
+      </tbody></table></div>
     </div>
   );
 }
 
-function FirmDetail({firm,setFirm,onLetter,roa,saved,toggleSave}){
+function FirmDetail({firm:baseFirm,setFirm,onLetter,roa,saved,toggleSave,profiles,setProfiles,userRole}){
   const[animKey,setAnimKey]=useState(0);
-  useEffect(()=>{if(firm)setAnimKey(k=>k+1)},[firm?.crd]);
+  const[showForm,setShowForm]=useState(false);
 
-  if(!firm)return(
+  useEffect(()=>{if(baseFirm){setAnimKey(k=>k+1);setShowForm(false);};},[baseFirm?.crd]);
+
+  // Merge base + profile at render time. Never mutates base.
+  const ef = useMemo(()=>baseFirm?getEnrichedFirm(baseFirm,profiles):null,[baseFirm,profiles]);
+
+  if(!baseFirm)return(
     <div className="page" style={{display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',minHeight:'60vh'}}>
       <div style={{fontSize:11,letterSpacing:'.1em',textTransform:'uppercase',color:'var(--text3)',marginBottom:16}}>Firm Lookup</div>
       <div className="serif" style={{fontSize:36,marginBottom:24,color:'var(--text2)',letterSpacing:'-.02em'}}>Select a firm to explore</div>
       <select onChange={e=>{const f=FIRMS.find(x=>x.crd===e.target.value);if(f)setFirm(f)}} style={{width:380,padding:12,fontSize:14}}>
         <option value="">Choose a firm…</option>
-        {FIRMS.sort((a,b)=>a.name.localeCompare(b.name)).map(f=><option key={f.crd} value={f.crd}>{f.name} ({f.state})</option>)}
+        {FIRMS.slice().sort((a,b)=>a.name.localeCompare(b.name)).map(f=><option key={f.crd} value={f.crd}>{f.name} ({f.state})</option>)}
       </select>
     </div>
   );
 
-  const rev=(firm.aum||0)*roa,avg=firm.accounts>0?firm.aum/firm.accounts:null;
-  const rpe=firm.employees>0?rev/firm.employees:null;
-  const pctD=firm.aum>0&&firm.aumDisc?(firm.aumDisc/firm.aum*100).toFixed(1)+'%':'-';
-  const wurl=wu(firm.website);
+  const rev=(ef.aum||0)*roa,avg=ef.accounts>0?ef.aum/ef.accounts:null;
+  const rpe=ef.employees>0?rev/ef.employees:null;
+  const pctD=ef.aum>0&&ef.aumDisc?(ef.aumDisc/ef.aum*100).toFixed(1)+'%':'-';
+  const wurl=wu(ef.website);
+
+  // Succession score: runtime only, subscriber-gated in render
+  const successionScore = calcSuccessionScore(ef);
+  const acquisitionScore = calcAcquisitionScore(ef);
+
+  const handleSaveProfile=(fields,profileType)=>{
+    const newProfiles = {...profiles};
+    if(profileType==='claimed'){
+      const existing = newProfiles.claimedRiaProfiles.findIndex(p=>p.crd===ef.crd);
+      const entry={crd:ef.crd,claimedAt:new Date().toISOString(),enhancedFields:{...fields}};
+      if(existing>=0) newProfiles.claimedRiaProfiles[existing]=entry;
+      else newProfiles.claimedRiaProfiles=[...newProfiles.claimedRiaProfiles,entry];
+    } else {
+      const existing = newProfiles.brokerDealerProfiles.findIndex(p=>p.crd===ef.crd);
+      const entry={crd:ef.crd,firmName:ef.name,profileType:'bd',createdAt:new Date().toISOString(),intelligenceFields:{...fields}};
+      if(existing>=0) newProfiles.brokerDealerProfiles[existing]=entry;
+      else newProfiles.brokerDealerProfiles=[...newProfiles.brokerDealerProfiles,entry];
+    }
+    saveProfiles(newProfiles);
+    setProfiles(newProfiles);
+    setShowForm(false);
+  };
 
   const Row=({label,value,money,green,accent})=>(
     <div className="detail-row">
@@ -663,13 +925,7 @@ function FirmDetail({firm,setFirm,onLetter,roa,saved,toggleSave}){
       </span>
     </div>
   );
-
-  const Section=({title,children})=>(
-    <div style={{marginBottom:20}}>
-      <div className="section-head">{title}</div>
-      {children}
-    </div>
-  );
+  const Section=({title,children})=>(<div style={{marginBottom:20}}><div className="section-head">{title}</div>{children}</div>);
 
   return(
     <div className="page">
@@ -677,107 +933,258 @@ function FirmDetail({firm,setFirm,onLetter,roa,saved,toggleSave}){
       <div key={animKey} className="fade-up" style={{marginBottom:28}}>
         <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start',flexWrap:'wrap',gap:16}}>
           <div style={{flex:1,minWidth:0}}>
-            <div style={{fontSize:11,letterSpacing:'.1em',textTransform:'uppercase',color:'var(--text3)',marginBottom:8}}>
-              CRD #{firm.crd} · <span className="tag tag-state" style={{fontSize:10}}>{firm.state}</span>
+            <div style={{fontSize:11,letterSpacing:'.1em',textTransform:'uppercase',color:'var(--text3)',marginBottom:8,display:'flex',alignItems:'center',gap:8}}>
+              CRD #{ef.crd} · <span className="tag tag-state" style={{fontSize:10}}>{ef.state}</span>
+              {ef._hasProfile&&<span className={'tag '+(ef._profileSource==='claimed'?'tag-green':'tag-gold')} style={{fontSize:10}}>{ef._profileSource==='claimed'?'Claimed Profile':'BD Profile'}</span>}
             </div>
-            <div style={{fontFamily:'Instrument Serif,serif',fontSize:36,letterSpacing:'-.02em',lineHeight:1.1,marginBottom:10}}>{firm.name}</div>
-            <div style={{fontSize:12,color:'var(--text3)',marginBottom:8}}>{firm.addr1}{firm.addr2?', '+firm.addr2:''}, {firm.city}, {firm.state} {firm.zip}</div>
+            <div style={{fontFamily:'Instrument Serif,serif',fontSize:36,letterSpacing:'-.02em',lineHeight:1.1,marginBottom:10}}>{ef.name}</div>
+            <div style={{fontSize:12,color:'var(--text3)',marginBottom:8}}>{ef.addr1}{ef.addr2?', '+ef.addr2:''}, {ef.city}, {ef.state} {ef.zip}</div>
             <div style={{display:'flex',gap:16,fontSize:12,flexWrap:'wrap'}}>
-              {firm.phone&&<span style={{color:'var(--text2)'}}>{firm.phone}</span>}
+              {ef.phone&&<span style={{color:'var(--text2)'}}>{ef.phone}</span>}
               {wurl&&<a href={wurl} target="_blank" rel="noopener" style={{color:'var(--accent)',textDecoration:'none'}}>Website ↗</a>}
-              <a href={'https://adviserinfo.sec.gov/firm/summary/'+firm.crd} target="_blank" rel="noopener" style={{color:'var(--accent)',textDecoration:'none'}}>IAPD Profile ↗</a>
+              <a href={'https://adviserinfo.sec.gov/firm/summary/'+ef.crd} target="_blank" rel="noopener" style={{color:'var(--accent)',textDecoration:'none'}}>IAPD ↗</a>
             </div>
           </div>
           <div style={{display:'flex',gap:8,flexShrink:0}}>
-            <StarBtn crd={firm.crd} saved={saved} toggleSave={toggleSave}/>
-            <button className="btn-ghost" onClick={()=>onLetter(firm)}>✉ Write Letter</button>
-            <button className="btn-gold" onClick={()=>onLetter(firm)}>Generate Prompt</button>
+            <StarBtn crd={ef.crd} saved={saved} toggleSave={toggleSave}/>
+            <button className="btn-ghost btn-sm" onClick={()=>setShowForm(!showForm)}>{ef._hasProfile?'Edit Profile':'Add Profile'}</button>
+            <button className="btn-ghost" onClick={()=>onLetter(baseFirm)}>✉ Write Letter</button>
+            <button className="btn-gold" onClick={()=>onLetter(baseFirm)}>Generate Prompt</button>
           </div>
         </div>
       </div>
 
+      {/* Profile form */}
+      {showForm&&(
+        <div key={animKey+'pf'} className="fade-in detail-panel" style={{marginBottom:20}}>
+          <div style={{fontSize:13,fontWeight:600,marginBottom:14,display:'flex',justifyContent:'space-between'}}>
+            <span>{ef._hasProfile?'Edit Intelligence Profile':'Add Intelligence Profile'}</span>
+            <span style={{fontSize:11,color:'var(--text3)'}}>All fields required · Data stored in enhancement layer only</span>
+          </div>
+          <ProfileForm
+            crd={ef.crd}
+            firmName={ef.name}
+            existingFields={ef._intelligenceFields}
+            onSave={handleSaveProfile}
+            onCancel={()=>setShowForm(false)}
+          />
+        </div>
+      )}
+
       {/* Key metrics */}
       <div key={animKey+'m'} className="fade-up" style={{animationDelay:'.05s',display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:12,marginBottom:24}}>
-        <div className="stat-card">
-          <div className="stat-label">Total RAUM</div>
-          <div className="stat-value">{fmtM(firm.aum)}</div>
-          <div className="stat-sub">{pctD} discretionary</div>
-        </div>
-        <div className="stat-card" style={{borderColor:'rgba(200,169,110,.3)'}}>
-          <div className="stat-label" style={{color:'var(--accent)'}}>Est. Revenue</div>
-          <div className="stat-value metric-accent">{fmtM(rev)}</div>
-          <div className="stat-sub">at {(roa*100).toFixed(2)}% ROA</div>
-        </div>
-        <div className="stat-card">
-          <div className="stat-label">Accounts</div>
-          <div className="stat-value">{fmtN(firm.accounts)}</div>
-          {avg&&<div className="stat-sub">{fmtM(avg)} avg size</div>}
-        </div>
-        <div className="stat-card">
-          <div className="stat-label">Employees</div>
-          <div className="stat-value">{fmtN(firm.employees)}</div>
-          {rpe&&<div className="stat-sub">{fmtM(rpe)} rev/emp</div>}
-        </div>
+        <div className="stat-card"><div className="stat-label">Total RAUM</div><div className="stat-value">{fmtM(ef.aum)}</div><div className="stat-sub">{pctD} discretionary</div></div>
+        <div className="stat-card" style={{borderColor:'rgba(200,169,110,.3)'}}><div className="stat-label" style={{color:'var(--accent)'}}>Est. Revenue</div><div className="stat-value metric-accent">{fmtM(rev)}</div><div className="stat-sub">at {(roa*100).toFixed(2)}% ROA</div></div>
+        <div className="stat-card"><div className="stat-label">Accounts</div><div className="stat-value">{fmtN(ef.accounts)}</div>{avg&&<div className="stat-sub">{fmtM(avg)} avg size</div>}</div>
+        <div className="stat-card"><div className="stat-label">Employees</div><div className="stat-value">{fmtN(ef.employees)}</div>{rpe&&<div className="stat-sub">{fmtM(rpe)} rev/emp</div>}</div>
       </div>
 
       {/* Detail panels */}
-      <div key={animKey+'d'} className="fade-up" style={{animationDelay:'.1s',display:'grid',gridTemplateColumns:'1fr 1fr',gap:16}}>
+      <div key={animKey+'d'} className="fade-up" style={{animationDelay:'.1s',display:'grid',gridTemplateColumns:'1fr 1fr 1fr',gap:16}}>
+        {/* Left: financials */}
         <div>
           <div className="detail-panel" style={{marginBottom:14}}>
             <Section title="Assets Under Management">
-              <Row label="Total RAUM" value={firm.aum} money accent/>
-              <Row label="Discretionary" value={firm.aumDisc} money/>
-              <Row label="Non-Discretionary" value={firm.aumNonDisc} money/>
+              <Row label="Total RAUM" value={ef.aum} money accent/>
+              <Row label="Discretionary" value={ef.aumDisc} money/>
+              <Row label="Non-Discretionary" value={ef.aumNonDisc} money/>
               <Row label="% Discretionary" value={pctD}/>
               <Row label="Avg Account Size" value={avg} money/>
             </Section>
             <Section title="Revenue">
-              <Row label="Estimated Revenue" value={rev} money green/>
+              <Row label="Est. Revenue" value={rev} money green/>
               <Row label="Rev per Employee" value={rpe} money/>
             </Section>
             <Section title="Client Breakdown">
-              <Row label="Individual" value={fmtN(firm.clientsInd)}/>
-              <Row label="Individual AUM" value={firm.aumInd} money/>
-              <Row label="HNW" value={fmtN(firm.clientsHNW)}/>
-              <Row label="HNW AUM" value={firm.aumHNW} money/>
-              <Row label="Pension" value={fmtN(firm.clientsPension)}/>
-              <Row label="Charitable" value={fmtN(firm.clientsCharitable)}/>
-              <Row label="Corp / Business" value={fmtN(firm.clientsCorp)}/>
-              <Row label="Pooled Vehicles" value={fmtN(firm.clientsPooled)}/>
+              <Row label="Individual" value={fmtN(ef.clientsInd)}/><Row label="Individual AUM" value={ef.aumInd} money/>
+              <Row label="HNW" value={fmtN(ef.clientsHNW)}/><Row label="HNW AUM" value={ef.aumHNW} money/>
+              <Row label="Pension" value={fmtN(ef.clientsPension)}/>
+              <Row label="Charitable" value={fmtN(ef.clientsCharitable)}/>
+              <Row label="Corp / Business" value={fmtN(ef.clientsCorp)}/>
             </Section>
           </div>
         </div>
 
+        {/* Middle: profile + org */}
         <div>
           <div className="detail-panel" style={{marginBottom:14}}>
-            <Section title="Services & Compensation">
-              <div style={{marginBottom:10}}>{firm.services.map(s=><span key={s} className="tag tag-gold" style={{margin:'2px'}}>{s}</span>)}</div>
-              <div>{firm.compensation.map(c=><span key={c} className="tag tag-dim" style={{margin:'2px'}}>{c}</span>)}</div>
-            </Section>
-            <Section title="Client Types">
-              <div>{(firm.clientTypes||[]).map(t=><span key={t} className="tag tag-state" style={{margin:'2px'}}>{t}</span>)}</div>
+            <Section title="Services &amp; Compensation">
+              <div style={{marginBottom:10}}>{ef.services.map(s=><span key={s} className="tag tag-gold" style={{margin:'2px'}}>{s}</span>)}</div>
+              <div>{ef.compensation.map(c=><span key={c} className="tag tag-dim" style={{margin:'2px'}}>{c}</span>)}</div>
             </Section>
             <Section title="Firm Profile">
-              <Row label="Org Type" value={firm.orgType}/>
-              <Row label="State of Formation" value={firm.stateOfFormation}/>
-              <Row label="SEC Status" value={firm.secStatus}/>
-              <Row label="Status Date" value={firm.statusDate}/>
-              <Row label="Latest ADV Filing" value={firm.advDate}/>
-              <Row label="Other Offices" value={fmtN(firm.otherOffices)}/>
+              <Row label="Org Type" value={ef.orgType}/>
+              <Row label="SEC Status" value={ef.secStatus}/>
+              <Row label="Status Date" value={ef.statusDate}/>
+              <Row label="Latest ADV" value={ef.advDate}/>
+              <Row label="Other Offices" value={fmtN(ef.otherOffices)}/>
             </Section>
-            <Section title="Affiliations & Flags">
-              <Row label="BD Affiliate" value={firm.bdAffiliate?'Yes':'No'}/>
-              <Row label="IA Affiliate" value={firm.iaAffiliate?'Yes':'No'}/>
-              <Row label="# IA Affiliates" value={fmtN(firm.iaAffCount)}/>
-              <Row label="# BD Affiliates" value={fmtN(firm.bdAffCount)}/>
-              <Row label="Custody" value={firm.custody?'Yes':'No'}/>
-              {firm.custodyAmt&&<Row label="Custody Amount" value={firm.custodyAmt} money/>}
-              <Row label="Disclosures" value={firm.disclosures?'Yes':'No'}/>
-              <Row label="Wrap Fee" value={firm.wrapFee?'Yes':'No'}/>
+            <Section title="Affiliations &amp; Flags">
+              <Row label="BD Affiliate" value={ef.bdAffiliate?'Yes':'No'}/>
+              <Row label="IA Affiliate" value={ef.iaAffiliate?'Yes':'No'}/>
+              <Row label="Custody" value={ef.custody?'Yes':'No'}/>
+              <Row label="Disclosures" value={ef.disclosures?'Yes':'No'}/>
+              <Row label="Wrap Fee" value={ef.wrapFee?'Yes':'No'}/>
             </Section>
           </div>
         </div>
+
+        {/* Right: intelligence layer */}
+        <div>
+          {ef._hasProfile&&ef._intelligenceFields?(
+            <div className="detail-panel" style={{marginBottom:14}}>
+              <div className="section-head">Transition Intelligence</div>
+              <ProfileFields fields={ef._intelligenceFields} userRole={userRole}/>
+              {(successionScore!==null||acquisitionScore!==null)&&(
+                <div style={{marginTop:16,paddingTop:16,borderTop:'1px solid var(--border)'}}>
+                  <IntelligencePanel ef={ef} userRole={userRole}/>
+                </div>
+              )}
+            </div>
+          ):(
+            <div style={{background:'var(--surface)',border:'1px dashed var(--border2)',borderRadius:14,padding:22,textAlign:'center',height:'100%',display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',gap:10,minHeight:180}}>
+              <div style={{fontSize:28,opacity:.3}}>📋</div>
+              <div style={{fontSize:12,fontWeight:600,color:'var(--text2)'}}>No Intelligence Profile</div>
+              <div style={{fontSize:11,color:'var(--text3)',lineHeight:1.6,maxWidth:200}}>Add a BD or claimed profile to capture structured transition and growth intelligence.</div>
+              <button className="btn-ghost btn-sm" style={{marginTop:4}} onClick={()=>setShowForm(true)}>Add Profile</button>
+            </div>
+          )}
+        </div>
       </div>
+    </div>
+  );
+}
+
+// =============================================================================
+// INTELLIGENCE DASHBOARD (subscriber-only route: /intelligence)
+// Aggregated counts only. No raw personal data exposed.
+// =============================================================================
+function IntelligenceDashboard({profiles, userRole, setView}){
+  if(userRole!=='subscriber'){
+    return(
+      <div className="page" style={{display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',minHeight:'60vh'}}>
+        <div style={{fontSize:48,marginBottom:16,opacity:.3}}>🔒</div>
+        <div className="serif" style={{fontSize:28,marginBottom:10,color:'var(--text2)'}}>Subscriber Intelligence</div>
+        <div style={{fontSize:13,color:'var(--text3)',maxWidth:340,textAlign:'center',lineHeight:1.7}}>Switch to Subscriber role in the nav bar to access the Intelligence Dashboard.</div>
+        <button className="btn-ghost btn-sm" style={{marginTop:16}} onClick={()=>setView('dashboard')}>← Back to Overview</button>
+      </div>
+    );
+  }
+
+  // Compute intelligence engine stats (runtime only, no persistence)
+  const engine = useMemo(()=>intelligenceEngine(profiles),[profiles]);
+  const highVulnerability = useMemo(()=>engine.getHighVulnerabilityFirms(60),[engine]);
+  const aumBreakdown = useMemo(()=>engine.getAumBandBreakdown(),[engine]);
+  const regionalStats = useMemo(()=>['NH','VT','MA','ME'].map(s=>engine.getRegionalSuccessionStats(s)),[engine]);
+  const maxRegCount = Math.max(...regionalStats.map(r=>r.total),1);
+
+  return(
+    <div className="page fade-up">
+      <div style={{marginBottom:24}}>
+        <div style={{display:'flex',alignItems:'center',gap:10,marginBottom:4}}>
+          <span className="tag tag-sub">Subscriber</span>
+          <div className="page-title" style={{fontSize:26}}>Intelligence Dashboard</div>
+        </div>
+        <div className="page-sub">Aggregated transition and growth intelligence · {engine.totalFirms.toLocaleString()} firms · {engine.totalProfiles} enriched profiles</div>
+      </div>
+
+      {engine.totalProfiles===0?(
+        <div className="card" style={{padding:'40px 24px',textAlign:'center'}}>
+          <div style={{fontSize:40,marginBottom:12,opacity:.3}}>📊</div>
+          <div style={{fontSize:16,fontWeight:600,color:'var(--text2)',marginBottom:8}}>No profiles yet</div>
+          <div style={{fontSize:13,color:'var(--text3)',maxWidth:400,margin:'0 auto',lineHeight:1.7}}>
+            Add intelligence profiles to individual firms via Firm Lookup. Once profiles exist, aggregated insights will appear here. This dashboard exposes counts only — no raw personal data.
+          </div>
+          <button className="btn-ghost btn-sm" style={{marginTop:16}} onClick={()=>setView('detail')}>Go to Firm Lookup →</button>
+        </div>
+      ):(
+        <>
+          {/* Summary stats */}
+          <div className="intel-grid">
+            <div className="intel-card">
+              <div className="intel-card-label">Enriched Profiles</div>
+              <div className="intel-card-value" style={{color:'var(--accent)'}}>{engine.totalProfiles}</div>
+              <div style={{fontSize:11,color:'var(--text3)',marginTop:3}}>{Math.round(engine.totalProfiles/engine.totalFirms*100)}% of total firms</div>
+            </div>
+            <div className="intel-card">
+              <div className="intel-card-label">No Internal Successor</div>
+              <div className="intel-card-value" style={{color:'var(--red)'}}>{engine.noSuccessorCount}</div>
+              {engine.noSuccessorPct!==null&&<div style={{fontSize:11,color:'var(--text3)',marginTop:3}}>{engine.noSuccessorPct}% of profiled firms</div>}
+            </div>
+            <div className="intel-card">
+              <div className="intel-card-label">Avg Vulnerability Score</div>
+              <div className="intel-card-value" style={{color:engine.avgVulnerabilityScore>=60?'var(--red)':engine.avgVulnerabilityScore>=35?'var(--amber)':'var(--green)'}}>
+                {engine.avgVulnerabilityScore!==null?engine.avgVulnerabilityScore:'—'}
+              </div>
+              {engine.avgVulnerabilityScore!==null&&(
+                <div style={{marginTop:6}}>
+                  <div className="score-meter"><div className="score-fill" style={{width:engine.avgVulnerabilityScore+'%',background:engine.avgVulnerabilityScore>=60?'var(--red)':engine.avgVulnerabilityScore>=35?'var(--amber)':'var(--green)'}}></div></div>
+                </div>
+              )}
+            </div>
+            <div className="intel-card">
+              <div className="intel-card-label">Actively Exploring</div>
+              <div className="intel-card-value" style={{color:'var(--amber)'}}>{engine.activelyExploringCount}</div>
+              <div style={{fontSize:11,color:'var(--text3)',marginTop:3}}>succession timeline: active</div>
+            </div>
+          </div>
+
+          {/* Regional + AUM breakdown */}
+          <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:16,marginBottom:16}}>
+            <div className="card" style={{padding:'18px 20px'}}>
+              <div className="section-head">Regional Succession Stats</div>
+              {regionalStats.map(r=>(
+                <div key={r.state} style={{display:'flex',alignItems:'center',gap:12,padding:'8px 0',borderBottom:'1px solid var(--border)'}}>
+                  <span className="tag tag-state" style={{width:36,justifyContent:'center'}}>{r.state}</span>
+                  <div style={{flex:1}}>
+                    <div style={{display:'flex',justifyContent:'space-between',fontSize:11,marginBottom:4}}>
+                      <span style={{color:'var(--text3)'}}>{r.total} profiled</span>
+                      {r.avgVulnerabilityScore!==null&&<span style={{color:'var(--text2)',fontFamily:'DM Mono,monospace'}}>avg {r.avgVulnerabilityScore}</span>}
+                    </div>
+                    <div style={{height:4,background:'var(--surface3)',borderRadius:2,overflow:'hidden'}}>
+                      <div style={{width:r.total>0?(r.total/maxRegCount*100)+'%':'0%',height:'100%',background:'var(--accent)',borderRadius:2}}></div>
+                    </div>
+                  </div>
+                  <div style={{display:'flex',gap:12,fontSize:11,fontFamily:'DM Mono,monospace',flexShrink:0}}>
+                    <span style={{color:'var(--red)'}}>{r.noSuccessor} no succ</span>
+                    <span style={{color:'var(--amber)'}}>{r.activelyExploring} active</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className="card" style={{padding:'18px 20px'}}>
+              <div className="section-head">Profile Coverage by AUM Band</div>
+              {aumBreakdown.map(b=>(
+                <div key={b.band} style={{display:'flex',alignItems:'center',gap:10,padding:'7px 0',borderBottom:'1px solid var(--border)'}}>
+                  <span style={{width:76,fontSize:11,color:'var(--text3)',textAlign:'right',flexShrink:0}}>{b.band}</span>
+                  <div style={{flex:1,display:'flex',gap:4,alignItems:'center'}}>
+                    <div style={{flex:1,height:6,background:'var(--surface3)',borderRadius:3,overflow:'hidden'}}>
+                      <div style={{width:b.total>0?(b.withProfiles/b.total*100)+'%':'0%',height:'100%',background:'var(--purple)',borderRadius:3}}></div>
+                    </div>
+                  </div>
+                  <span style={{fontFamily:'DM Mono,monospace',fontSize:11,color:'var(--text3)',flexShrink:0}}>{b.withProfiles}/{b.total}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* High vulnerability firms */}
+          {highVulnerability.length>0&&(
+            <div className="card" style={{padding:'18px 20px'}}>
+              <div className="section-head">High Vulnerability Firms <span style={{color:'var(--text3)',fontWeight:400,textTransform:'none',letterSpacing:'normal',fontSize:10}}>— score ≥60 · aggregated view</span></div>
+              <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(220px,1fr)',gap:10}}>
+                {highVulnerability.sort((a,b)=>b.score-a.score).map(f=>(
+                  <div key={f.crd} style={{background:'var(--surface2)',border:'1px solid var(--border)',borderRadius:10,padding:'12px 14px'}}>
+                    <div style={{fontSize:12,fontWeight:600,marginBottom:4,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{f.name}</div>
+                    <div style={{fontSize:10,color:'var(--text3)',marginBottom:8}}>{f.state}</div>
+                    <ScoreMeter score={f.score} label="Vulnerability" color={f.score>=80?'var(--red)':'var(--amber)'}/>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </>
+      )}
     </div>
   );
 }
@@ -786,15 +1193,11 @@ function LetterWriter({firm,setFirm,roa}){
   const[sN,setSN]=useState('');const[sT,setST]=useState('');const[sF,setSF]=useState('');const[sA,setSA]=useState('');
   const[purpose,setP]=useState('acquisition');const[tone,setTo]=useState('professional');const[ctx,setCtx]=useState('');
   const[prompt,setPrompt]=useState('');const[copied,setCopied]=useState(false);const[settOpen,setSettOpen]=useState(true);
-
   const pMap={acquisition:'exploring a potential acquisition or merger of their firm',partnership:'exploring a strategic partnership or affiliation',recruiting:'recruiting their advisors or team to join your firm',services:'offering professional services (compliance, technology, operations)',referral:'establishing a referral relationship'};
   const tMap={professional:'calm, credible, understated sophistication',warm:'friendly, approachable, relationship-focused',direct:'concise, to the point, respect their time',strategic:'measured, confident, emphasizing mutual benefit'};
-
   const generate=()=>{
-    if(!firm)return;
-    const rev=(firm.aum||0)*roa;
-    const lines=['Write a personalized physical letter to be mailed to an RIA firm. Tailor it using their SEC Form ADV data below.','',
-      'SENDER:','Name: '+sN,'Title: '+sT,'Firm: '+sF,'Address: '+sA,'',
+    if(!firm)return;const rev=(firm.aum||0)*roa;
+    const lines=['Write a personalized physical letter to be mailed to an RIA firm. Tailor it using their SEC Form ADV data below.','','SENDER:','Name: '+sN,'Title: '+sT,'Firm: '+sF,'Address: '+sA,'',
       'RECIPIENT FIRM (from SEC Form ADV):','Firm: '+firm.name+' (CRD #'+firm.crd+')','Address: '+firm.addr1+(firm.addr2?', '+firm.addr2:'')+', '+firm.city+', '+firm.state+' '+firm.zip,
       'Total RAUM: $'+Math.round(firm.aum||0).toLocaleString(),'Discretionary RAUM: $'+Math.round(firm.aumDisc||0).toLocaleString(),
       'Est Revenue (at '+(roa*100).toFixed(2)+'% ROA): $'+Math.round(rev).toLocaleString(),'Employees: '+(firm.employees||'N/A'),
@@ -802,8 +1205,7 @@ function LetterWriter({firm,setFirm,roa}){
       'Services: '+firm.services.join(', '),'Compensation: '+firm.compensation.join(', '),'Org Type: '+firm.orgType,
       'BD Affiliate: '+(firm.bdAffiliate?'Yes':'No')+', Custody: '+(firm.custody?'Yes':'No')+', Wrap Fee: '+(firm.wrapFee?'Yes':'No'),'',
       'PURPOSE: '+pMap[purpose],'TONE: '+tMap[tone],'ADDITIONAL CONTEXT: '+(ctx||'None'),'',
-      'INSTRUCTIONS:',
-      '- Professional letter for physical mail (date, addresses, salutation, body, closing)',
+      'INSTRUCTIONS:','- Professional letter for physical mail (date, addresses, salutation, body, closing)',
       '- Reference their ADV data naturally (client mix, services) to show homework, not heavy-handed',
       '- 250-350 word body, one page','- No hype, buzzwords, or marketing language',
       '- Do NOT mention dollar amounts of AUM or revenue — reference scale indirectly',
@@ -811,16 +1213,10 @@ function LetterWriter({firm,setFirm,roa}){
       '- End with a specific, low-pressure call to action'];
     setPrompt(lines.join('\n'));
   };
-
   const copyPrompt=()=>{navigator.clipboard.writeText(prompt);setCopied(true);setTimeout(()=>setCopied(false),2000)};
-
   return(
     <div className="page fade-up">
-      <div style={{marginBottom:20}}>
-        <div className="page-title">Letter Writer</div>
-        <div className="page-sub">Generate a tailored outreach prompt for any firm in the dataset</div>
-      </div>
-
+      <div style={{marginBottom:20}}><div className="page-title">Letter Writer</div><div className="page-sub">Generate a tailored outreach prompt for any firm in the dataset</div></div>
       {settOpen?(
         <div className="card" style={{padding:'18px 20px',marginBottom:16}}>
           <div className="section-head">Your Information <span style={{textTransform:'none',letterSpacing:'normal',color:'var(--text3)',fontWeight:400,fontSize:11}}>— fill once, reuse for all letters</span></div>
@@ -838,71 +1234,50 @@ function LetterWriter({firm,setFirm,roa}){
           <button className="btn-ghost btn-sm" onClick={()=>setSettOpen(true)}>Edit</button>
         </div>
       )}
-
       <div style={{display:'grid',gridTemplateColumns:'340px 1fr',gap:20}}>
         <div>
           <div className="card" style={{padding:'18px 20px',marginBottom:14}}>
             <div className="section-head">Recipient Firm</div>
             <select value={firm?.crd||''} onChange={e=>{const f=FIRMS.find(x=>x.crd===e.target.value);setFirm(f||null)}} style={{marginBottom:12}}>
               <option value="">Choose a firm…</option>
-              {FIRMS.sort((a,b)=>a.name.localeCompare(b.name)).map(f=><option key={f.crd} value={f.crd}>{f.name} ({f.state}) — {fmtM(f.aum)}</option>)}
+              {FIRMS.slice().sort((a,b)=>a.name.localeCompare(b.name)).map(f=><option key={f.crd} value={f.crd}>{f.name} ({f.state}) — {fmtM(f.aum)}</option>)}
             </select>
-            {firm&&(
-              <div style={{fontSize:12,color:'var(--text2)',lineHeight:1.7}}>
-                <div style={{fontWeight:600,color:'var(--text)',marginBottom:2}}>{firm.name}</div>
-                <div style={{color:'var(--text3)'}}>{firm.addr1}{firm.addr2?', '+firm.addr2:''}, {firm.city}, {firm.state}</div>
-                <div style={{marginTop:6,fontFamily:'DM Mono,monospace',fontSize:11}}>
-                  <span>RAUM {fmtM(firm.aum)}</span><span style={{color:'var(--border2)',margin:'0 8px'}}>|</span>
-                  <span style={{color:'var(--accent)'}}>Rev {fmtM((firm.aum||0)*roa)}</span><span style={{color:'var(--border2)',margin:'0 8px'}}>|</span>
-                  <span>{fmtN(firm.employees)} emp</span>
-                </div>
+            {firm&&(<div style={{fontSize:12,color:'var(--text2)',lineHeight:1.7}}>
+              <div style={{fontWeight:600,color:'var(--text)',marginBottom:2}}>{firm.name}</div>
+              <div style={{color:'var(--text3)'}}>{firm.addr1}{firm.addr2?', '+firm.addr2:''}, {firm.city}, {firm.state}</div>
+              <div style={{marginTop:6,fontFamily:'DM Mono,monospace',fontSize:11}}>
+                <span>RAUM {fmtM(firm.aum)}</span><span style={{color:'var(--border2)',margin:'0 8px'}}>|</span>
+                <span style={{color:'var(--accent)'}}>Rev {fmtM((firm.aum||0)*roa)}</span><span style={{color:'var(--border2)',margin:'0 8px'}}>|</span>
+                <span>{fmtN(firm.employees)} emp</span>
               </div>
-            )}
+            </div>)}
           </div>
           <div className="card" style={{padding:'18px 20px',marginBottom:14}}>
-            <div style={{marginBottom:12}}>
-              <div className="filter-group"><label>Purpose</label>
-                <select value={purpose} onChange={e=>setP(e.target.value)}>
-                  <option value="acquisition">Acquisition / Merger</option>
-                  <option value="partnership">Strategic Partnership</option>
-                  <option value="recruiting">Recruiting</option>
-                  <option value="services">Professional Services</option>
-                  <option value="referral">Referral Relationship</option>
-                </select>
-              </div>
-            </div>
-            <div style={{marginBottom:12}}>
-              <div className="filter-group"><label>Tone</label>
-                <select value={tone} onChange={e=>setTo(e.target.value)}>
-                  <option value="professional">Professional / Understated</option>
-                  <option value="warm">Warm / Relationship-Focused</option>
-                  <option value="direct">Direct / Respect Their Time</option>
-                  <option value="strategic">Strategic / Mutual Benefit</option>
-                </select>
-              </div>
-            </div>
+            <div style={{marginBottom:12}}><div className="filter-group"><label>Purpose</label>
+              <select value={purpose} onChange={e=>setP(e.target.value)}>
+                <option value="acquisition">Acquisition / Merger</option><option value="partnership">Strategic Partnership</option>
+                <option value="recruiting">Recruiting</option><option value="services">Professional Services</option><option value="referral">Referral Relationship</option>
+              </select></div></div>
+            <div style={{marginBottom:12}}><div className="filter-group"><label>Tone</label>
+              <select value={tone} onChange={e=>setTo(e.target.value)}>
+                <option value="professional">Professional / Understated</option><option value="warm">Warm / Relationship-Focused</option>
+                <option value="direct">Direct / Respect Their Time</option><option value="strategic">Strategic / Mutual Benefit</option>
+              </select></div></div>
             <div className="filter-group"><label>Additional Context</label>
               <textarea rows={3} value={ctx} onChange={e=>setCtx(e.target.value)} style={{resize:'vertical'}} placeholder="Shared connection, specific angle, timing…"/>
             </div>
           </div>
           <button className="btn-gold" style={{width:'100%',padding:12}} onClick={generate}>Generate Prompt →</button>
         </div>
-
         <div>
           {prompt?(
             <div className="fade-in">
               <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:12}}>
                 <div style={{fontSize:13,fontWeight:600}}>Prompt Ready</div>
-                <button className={'btn-gold btn-sm'+(copied?' copy-flash':'')} onClick={copyPrompt}>
-                  {copied?'✓ Copied':'Copy to Clipboard'}
-                </button>
+                <button className={'btn-gold btn-sm'+(copied?' copy-flash':'')} onClick={copyPrompt}>{copied?'✓ Copied':'Copy to Clipboard'}</button>
               </div>
-              <div style={{fontSize:12,color:'var(--text3)',marginBottom:12}}>
-                Paste into <a href="https://claude.ai" target="_blank" rel="noopener" style={{color:'var(--accent)'}}>Claude</a> or any AI to generate the tailored letter.
-              </div>
-              <div className="card" style={{padding:20,maxHeight:'calc(100vh - 320px)',overflow:'auto'}}>
-                <pre className="prompt-box">{prompt}</pre>
-              </div>
+              <div style={{fontSize:12,color:'var(--text3)',marginBottom:12}}>Paste into <a href="https://claude.ai" target="_blank" rel="noopener" style={{color:'var(--accent)'}}>Claude</a> or any AI to generate the tailored letter.</div>
+              <div className="card" style={{padding:20,maxHeight:'calc(100vh - 320px)',overflow:'auto'}}><pre className="prompt-box">{prompt}</pre></div>
             </div>
           ):(
             <div style={{display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',height:'100%',minHeight:300,color:'var(--text3)'}}>
@@ -919,11 +1294,8 @@ function LetterWriter({firm,setFirm,roa}){
 
 function SavedTargets({saved,setSaved,notes,setNotes,roa,onSelect,onLetter}){
   const firms=useMemo(()=>FIRMS.filter(f=>saved.has(f.crd)).sort((a,b)=>a.name.localeCompare(b.name)),[saved]);
-  const totAum=firms.reduce((s,f)=>s+(f.aum||0),0);
-  const totRev=totAum*roa;
-  const[editCrd,setEditCrd]=useState(null);
-  const[editText,setEditText]=useState('');
-
+  const totAum=firms.reduce((s,f)=>s+(f.aum||0),0),totRev=totAum*roa;
+  const[editCrd,setEditCrd]=useState(null);const[editText,setEditText]=useState('');
   const startEdit=(crd)=>{setEditCrd(crd);setEditText(notes[crd]||'')};
   const saveNote=(crd)=>{const n={...notes};if(editText.trim())n[crd]=editText.trim();else delete n[crd];setNotes(n);try{localStorage.setItem('ria_notes',JSON.stringify(n))}catch(e){};setEditCrd(null)};
   const remove=(crd)=>{const s=new Set(saved);s.delete(crd);setSaved(s);try{localStorage.setItem('ria_saved',JSON.stringify([...s]))}catch(e){};const n={...notes};delete n[crd];setNotes(n);try{localStorage.setItem('ria_notes',JSON.stringify(n))}catch(e){}};
@@ -934,7 +1306,6 @@ function SavedTargets({saved,setSaved,notes,setNotes,roa,onSelect,onLetter}){
     const csv=[hdr.join(','),...rows.map(r=>r.join(','))].join('\n');
     const blob=new Blob([csv],{type:'text/csv'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='ria_targets_'+new Date().toISOString().slice(0,10)+'.csv';a.click();
   };
-
   if(!firms.length)return(
     <div className="page" style={{display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',minHeight:'60vh'}}>
       <div style={{fontSize:48,marginBottom:16,opacity:.3}}>☆</div>
@@ -942,69 +1313,54 @@ function SavedTargets({saved,setSaved,notes,setNotes,roa,onSelect,onLetter}){
       <div style={{fontSize:13,color:'var(--text3)',maxWidth:340,textAlign:'center',lineHeight:1.7}}>Use the ★ button anywhere in the platform to save firms to your target list. They persist across sessions.</div>
     </div>
   );
-
   return(
     <div className="page fade-up">
       <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-end',marginBottom:24}}>
         <div>
           <div className="page-title">{firms.length} Saved Target{firms.length!==1?'s':''}</div>
-          <div className="page-sub">
-            <span style={{fontFamily:'DM Mono,monospace',fontSize:12}}>
-              RAUM {fmtM(totAum)} · Est Rev {fmtM(totRev)}
-            </span>
-          </div>
+          <div className="page-sub"><span style={{fontFamily:'DM Mono,monospace',fontSize:12}}>RAUM {fmtM(totAum)} · Est Rev {fmtM(totRev)}</span></div>
         </div>
         <div style={{display:'flex',gap:8}}>
           <button className="btn-gold btn-sm" onClick={exportCSV}>↓ Export CSV</button>
           <button className="btn-ghost btn-sm" style={{color:'var(--red)'}} onClick={clearAll}>Clear all</button>
         </div>
       </div>
-
       <div style={{display:'flex',flexDirection:'column',gap:10}}>
-        {firms.map((f,idx)=>{
-          const rev=(f.aum||0)*roa,wurl=wu(f.website);
-          return(
-            <div key={f.crd} className="saved-card" style={{animationDelay:(idx*.03)+'s'}} >
-              <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start'}}>
-                <div style={{flex:1,minWidth:0}}>
-                  <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:6}}>
-                    <span style={{fontFamily:'Instrument Serif,serif',fontSize:18,letterSpacing:'-.01em',cursor:'pointer'}} onClick={()=>onSelect(f)}>{f.name}</span>
-                    <span className="tag tag-state">{f.state}</span>
-                  </div>
-                  <div style={{fontSize:11,color:'var(--text3)',marginBottom:10}}>
-                    {f.city}, {f.state} {f.zip}
-                    {f.phone&&<span> · {f.phone}</span>}
-                    {wurl&&<span> · <a href={wurl} target="_blank" rel="noopener" style={{color:'var(--accent)'}}>Website ↗</a></span>}
-                  </div>
-                  <div style={{display:'flex',gap:20,fontFamily:'DM Mono,monospace',fontSize:12}}>
-                    <span>RAUM <b>{fmtM(f.aum)}</b></span>
-                    <span style={{color:'var(--accent)'}}>Rev <b>{fmtM(rev)}</b></span>
-                    <span>Accts <b>{fmtN(f.accounts)}</b></span>
-                    <span>Emp <b>{fmtN(f.employees)}</b></span>
-                    <span>HNW <b>{fmtN(f.clientsHNW)}</b></span>
-                  </div>
-                  {editCrd===f.crd?(
-                    <div style={{marginTop:12,display:'flex',gap:8,alignItems:'flex-start'}}>
-                      <textarea value={editText} onChange={e=>setEditText(e.target.value)} rows={2} style={{flex:1,resize:'vertical',fontSize:12}} placeholder="Notes on this firm…"/>
-                      <button className="btn-gold btn-sm" onClick={()=>saveNote(f.crd)}>Save</button>
-                      <button className="btn-ghost btn-sm" onClick={()=>setEditCrd(null)}>Cancel</button>
-                    </div>
-                  ):notes[f.crd]?(
-                    <div style={{marginTop:10,fontSize:12,color:'var(--text2)',background:'var(--surface2)',padding:'8px 14px',borderRadius:8,borderLeft:'2px solid var(--accent)',cursor:'pointer'}} onClick={()=>startEdit(f.crd)}>
-                      {notes[f.crd]}
-                    </div>
-                  ):null}
+        {firms.map(f=>{const rev=(f.aum||0)*roa,wurl=wu(f.website);return(
+          <div key={f.crd} className="saved-card">
+            <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start'}}>
+              <div style={{flex:1,minWidth:0}}>
+                <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:6}}>
+                  <span style={{fontFamily:'Instrument Serif,serif',fontSize:18,letterSpacing:'-.01em',cursor:'pointer'}} onClick={()=>onSelect(f)}>{f.name}</span>
+                  <span className="tag tag-state">{f.state}</span>
                 </div>
-                <div style={{display:'flex',gap:6,marginLeft:16,flexShrink:0}}>
-                  <button className="btn-ghost btn-sm btn-icon" onClick={()=>startEdit(f.crd)} title="Add note">✎</button>
-                  <button className="btn-ghost btn-sm" onClick={()=>onSelect(f)}>View</button>
-                  <button className="btn-ghost btn-sm" onClick={()=>onLetter(f)}>✉</button>
-                  <button className="btn-ghost btn-sm" style={{color:'var(--red)'}} onClick={()=>remove(f.crd)}>✕</button>
+                <div style={{fontSize:11,color:'var(--text3)',marginBottom:10}}>{f.city}, {f.state} {f.zip}{f.phone&&<span> · {f.phone}</span>}{wurl&&<span> · <a href={wurl} target="_blank" rel="noopener" style={{color:'var(--accent)'}}>Website ↗</a></span>}</div>
+                <div style={{display:'flex',gap:20,fontFamily:'DM Mono,monospace',fontSize:12}}>
+                  <span>RAUM <b>{fmtM(f.aum)}</b></span>
+                  <span style={{color:'var(--accent)'}}>Rev <b>{fmtM(rev)}</b></span>
+                  <span>Accts <b>{fmtN(f.accounts)}</b></span>
+                  <span>Emp <b>{fmtN(f.employees)}</b></span>
+                  <span>HNW <b>{fmtN(f.clientsHNW)}</b></span>
                 </div>
+                {editCrd===f.crd?(
+                  <div style={{marginTop:12,display:'flex',gap:8,alignItems:'flex-start'}}>
+                    <textarea value={editText} onChange={e=>setEditText(e.target.value)} rows={2} style={{flex:1,resize:'vertical',fontSize:12}} placeholder="Notes on this firm…"/>
+                    <button className="btn-gold btn-sm" onClick={()=>saveNote(f.crd)}>Save</button>
+                    <button className="btn-ghost btn-sm" onClick={()=>setEditCrd(null)}>Cancel</button>
+                  </div>
+                ):notes[f.crd]?(
+                  <div style={{marginTop:10,fontSize:12,color:'var(--text2)',background:'var(--surface2)',padding:'8px 14px',borderRadius:8,borderLeft:'2px solid var(--accent)',cursor:'pointer'}} onClick={()=>startEdit(f.crd)}>{notes[f.crd]}</div>
+                ):null}
+              </div>
+              <div style={{display:'flex',gap:6,marginLeft:16,flexShrink:0}}>
+                <button className="btn-ghost btn-sm btn-icon" onClick={()=>startEdit(f.crd)} title="Add note">✎</button>
+                <button className="btn-ghost btn-sm" onClick={()=>onSelect(f)}>View</button>
+                <button className="btn-ghost btn-sm" onClick={()=>onLetter(f)}>✉</button>
+                <button className="btn-ghost btn-sm" style={{color:'var(--red)'}} onClick={()=>remove(f.crd)}>✕</button>
               </div>
             </div>
-          );
-        })}
+          </div>
+        );})}
       </div>
     </div>
   );
@@ -1014,21 +1370,28 @@ function App(){
   const[view,setView]=useState('dashboard');
   const[firm,setFirm]=useState(null);
   const[roa,setRoa]=useState(0.0065);
+  const[userRole,setUserRole]=useState('public'); // 'public' | 'subscriber'
   const[saved,setSaved]=useState(()=>{try{const s=JSON.parse(localStorage.getItem('ria_saved')||'[]');return new Set(s)}catch(e){return new Set()}});
   const[notes,setNotes]=useState(()=>{try{return JSON.parse(localStorage.getItem('ria_notes')||'{}')}catch(e){return {}}});
+  const[profiles,setProfiles]=useState(()=>loadProfiles());
+
   const toggleSave=(crd)=>{const s=new Set(saved);if(s.has(crd))s.delete(crd);else s.add(crd);setSaved(s);try{localStorage.setItem('ria_saved',JSON.stringify([...s]))}catch(e){}};
   const sel=f=>{setFirm(f);setView('detail')};
   const wl=f=>{setFirm(f);setView('letter')};
 
+  // Guard intelligence route — redirect public users to dashboard
+  useEffect(()=>{if(view==='intelligence'&&userRole!=='subscriber')setView('intelligence');},[userRole]);
+
   return(
     <div style={{minHeight:'100vh',display:'flex',flexDirection:'column'}}>
-      <Nav view={view} setView={setView} savedCount={saved.size}/>
+      <Nav view={view} setView={setView} savedCount={saved.size} userRole={userRole} setUserRole={setUserRole}/>
       <div style={{flex:1,overflow:'auto'}}>
-        {view==='dashboard'&&<Dashboard roa={roa} onSelect={sel} saved={saved} toggleSave={toggleSave}/>}
+        {view==='dashboard'&&<Dashboard roa={roa} onSelect={sel} saved={saved} toggleSave={toggleSave} profiles={profiles}/>}
         {view==='explorer'&&<Explorer roa={roa} setRoa={setRoa} onSelect={sel} saved={saved} toggleSave={toggleSave}/>}
-        {view==='detail'&&<FirmDetail firm={firm} setFirm={setFirm} onLetter={wl} roa={roa} saved={saved} toggleSave={toggleSave}/>}
+        {view==='detail'&&<FirmDetail firm={firm} setFirm={setFirm} onLetter={wl} roa={roa} saved={saved} toggleSave={toggleSave} profiles={profiles} setProfiles={setProfiles} userRole={userRole}/>}
         {view==='letter'&&<LetterWriter firm={firm} setFirm={setFirm} roa={roa}/>}
         {view==='saved'&&<SavedTargets saved={saved} setSaved={setSaved} notes={notes} setNotes={setNotes} roa={roa} onSelect={sel} onLetter={wl}/>}
+        {view==='intelligence'&&<IntelligenceDashboard profiles={profiles} userRole={userRole} setView={setView}/>}
       </div>
     </div>
   );
