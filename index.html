@@ -150,6 +150,18 @@ pre.prompt-box{white-space:pre-wrap;font-family:'DM Mono',monospace;font-size:12
 .match-card{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:14px 16px;transition:border-color .2s;cursor:pointer}
 .match-card:hover{border-color:var(--border2)}
 .match-score-pill{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600}
+
+/* Tooltip */
+.tt{position:relative;display:inline-block;cursor:help;border-bottom:1px dotted var(--text3)}
+.tt-box{visibility:hidden;opacity:0;position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);background:#1e2128;border:1px solid var(--border2);border-radius:9px;padding:9px 13px;font-size:11px;line-height:1.6;color:var(--text2);width:230px;z-index:200;pointer-events:none;transition:opacity .15s,visibility .15s;box-shadow:0 8px 28px rgba(0,0,0,.5);font-style:normal;font-weight:400;text-transform:none;letter-spacing:normal}
+.tt:hover .tt-box{visibility:visible;opacity:1}
+.tt-box::after{content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);border:5px solid transparent;border-top-color:#1e2128}
+
+/* Rank badge */
+.rank-tile{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:12px 14px;display:flex;flex-direction:column;gap:4px}
+.rank-tile-label{font-size:10px;text-transform:uppercase;letter-spacing:.07em;color:var(--text3);font-weight:500}
+.rank-tile-value{font-family:'Instrument Serif',serif;font-size:22px;line-height:1}
+.rank-tile-sub{font-size:11px;color:var(--text3)}
 </style>
 </head>
 <body>
@@ -310,9 +322,37 @@ function matchFirms(profile, roa, mode) {
     .slice(0, 10);
 }
 
-// =============================================================================
-// SHARED UI COMPONENTS
-// =============================================================================
+// Derive approximate lat/lng for a BD profile by finding the closest city match
+// in the existing COORDS dataset. Falls back to state centroid if no match.
+// This is client-side only — no external geocoding API needed.
+const STATE_CENTROIDS = {
+  NH:{lat:43.97,lng:-71.57},VT:{lat:44.00,lng:-72.70},MA:{lat:42.26,lng:-71.81},
+  ME:{lat:45.25,lng:-69.44},CT:{lat:41.60,lng:-72.69},RI:{lat:41.68,lng:-71.51},
+  NY:{lat:42.17,lng:-74.95},NJ:{lat:40.22,lng:-74.76},PA:{lat:40.59,lng:-77.21},
+  FL:{lat:27.77,lng:-81.69},TX:{lat:31.05,lng:-97.56},CA:{lat:36.78,lng:-119.42},
+  IL:{lat:40.35,lng:-88.99},WA:{lat:47.38,lng:-120.45},CO:{lat:39.11,lng:-105.36},
+  GA:{lat:32.16,lng:-82.90},NC:{lat:35.63,lng:-79.81},VA:{lat:37.77,lng:-78.17},
+  OH:{lat:40.19,lng:-82.67},AZ:{lat:34.05,lng:-111.09},MN:{lat:46.39,lng:-94.64},
+  WI:{lat:44.27,lng:-89.62},MO:{lat:38.46,lng:-92.29},OR:{lat:43.94,lng:-120.56},
+  IN:{lat:39.85,lng:-86.26},MD:{lat:39.05,lng:-76.64},TN:{lat:35.86,lng:-86.66},
+  MI:{lat:44.18,lng:-84.51},SC:{lat:33.84,lng:-80.90},
+};
+
+function geocodeUserFirm(profile) {
+  if (!profile || profile.type !== 'bd') return null;
+  // Try to find an existing firm in the same city/state to borrow coordinates
+  const city = (profile.city || '').toLowerCase().trim();
+  const state = profile.state;
+  if (!state) return null;
+  const cityMatch = FIRMS.find(f =>
+    f.state === state && f.city && f.city.toLowerCase().trim() === city && COORDS[f.crd]
+  );
+  if (cityMatch) return { ...profile, lat: COORDS[cityMatch.crd].lat, lng: COORDS[cityMatch.crd].lng };
+  // Fall back to state centroid
+  const c = STATE_CENTROIDS[state];
+  if (c) return { ...profile, lat: c.lat, lng: c.lng };
+  return null;
+}
 function StarBtn({ crd, saved, toggleSave }) {
   return (
     <button className={'star-btn' + (saved.has(crd) ? ' starred' : '')}
@@ -350,6 +390,55 @@ function GateBanner({ onOpenOnboarding }) {
         <div className="gate-banner-sub">AUM, revenue, client counts, and intelligence are hidden until you create your firm profile. Takes about 2 minutes.</div>
       </div>
       <button className="btn-gold" onClick={onOpenOnboarding}>Create Profile →</button>
+    </div>
+  );
+}
+
+// =============================================================================
+// FORM PRIMITIVES — defined at module level so React never remounts them
+// on parent re-render (which would kill input focus mid-typing)
+// =============================================================================
+const INTEL_TOOLTIPS = {
+  teamSize:                   'Total number of people working at or for the firm, including advisors, support staff, and partners.',
+  aumBand:                    'Approximate range of total assets you manage. Used for peer comparisons and match scoring.',
+  ownershipStructure:         'How ownership is distributed. Affects succession complexity and deal structuring.',
+  founderAgeBand:             'Age range of the founding principal(s). A key input to succession vulnerability scoring.',
+  internalSuccessorIdentified:'Whether a specific person inside the firm has been identified to take over leadership.',
+  successionTimeline:         'How soon you anticipate a principal transition or ownership change occurring.',
+  openToMinorityCapital:      'Whether you would consider a partial equity investment, typically 20–49%, while retaining control.',
+  openToFullSale:             'Whether you would consider selling the firm outright to a larger acquirer or partner.',
+  seekingAcquisitions:        'Whether you are actively looking to acquire other RIA firms or advisory teams.',
+  hiringJuniorAdvisors:       'Whether you are currently hiring or planning to hire junior advisors or associates.',
+  geographicFlexibility:      'How far outside your current market you are willing to look for acquisitions or partnerships.',
+  growthIntent:               'Your primary growth strategy — organic client growth, buying other firms, or partnering.',
+};
+
+function FormField({ label, required, err, hint, children, span }) {
+  return (
+    <div style={{ gridColumn: span ? '1 / -1' : undefined }}>
+      <label className={'form-field-label' + (err ? ' err' : '')}>
+        {label}{required && <span className="req">*</span>}
+        {err && <span style={{ fontWeight: 400, textTransform: 'none', letterSpacing: 'normal', marginLeft: 6 }}>{err}</span>}
+      </label>
+      {children}
+      {hint && <div className="field-hint">{hint}</div>}
+    </div>
+  );
+}
+
+function IntelFormField({ label, field, errors, children }) {
+  const tip = INTEL_TOOLTIPS[field];
+  return (
+    <div>
+      <label className={'form-field-label' + (errors[field] ? ' err' : '')}>
+        {tip
+          ? <span className="tt">{label}<span className="tt-box">{tip}</span></span>
+          : label
+        }
+        <span className="req">*</span>
+        {errors[field] && <span style={{ fontWeight: 400, textTransform: 'none', letterSpacing: 'normal', marginLeft: 6, color: 'var(--red)' }}>Required</span>}
+      </label>
+      {children}
     </div>
   );
 }
@@ -443,26 +532,9 @@ function OnboardingModal({ onComplete, onClose }) {
     }
   };
 
-  const F = ({ label, required, err, hint, children, span }) => (
-    <div style={{ gridColumn: span ? '1 / -1' : undefined }}>
-      <label className={'form-field-label' + (err ? ' err' : '')}>
-        {label}{required && <span className="req">*</span>}
-        {err && <span style={{ fontWeight: 400, textTransform: 'none', letterSpacing: 'normal', marginLeft: 6 }}>{err}</span>}
-      </label>
-      {children}
-      {hint && <div className="field-hint">{hint}</div>}
-    </div>
-  );
-
-  const IntelField = ({ label, field, children }) => (
-    <div>
-      <label className={'form-field-label' + (errors[field] ? ' err' : '')}>
-        {label}<span className="req">*</span>
-        {errors[field] && <span style={{ fontWeight: 400, textTransform: 'none', letterSpacing: 'normal', marginLeft: 6, color: 'var(--red)' }}>Required</span>}
-      </label>
-      {children}
-    </div>
-  );
+  // Use module-level FormField / IntelFormField — avoids remount-on-render focus loss
+  const F = (props) => <FormField {...props} />;
+  const IntelField = ({ label, field, children }) => <IntelFormField label={label} field={field} errors={errors}>{children}</IntelFormField>;
 
   const steps = ['Profile type', profileType === 'claimed' ? 'Claim your firm' : 'Firm details', 'Growth intelligence'];
 
@@ -682,8 +754,63 @@ function MyProfile({ profile, roa, onOpenOnboarding, onClearProfile, onSelect })
   const matches = useMemo(() => matchFirms(profile, roa, matchMode), [profile, roa, matchMode]);
 
   const claimedBase = profile.type === 'claimed' ? FIRMS.find(f => f.crd === profile.crd) : null;
-  const aum      = profile.type === 'claimed' ? claimedBase?.aum     : profile.aum;
-  const accounts = profile.type === 'claimed' ? claimedBase?.accounts : profile.accounts;
+  const aum      = profile.type === 'claimed' ? claimedBase?.aum      : profile.aum;
+  const accounts = profile.type === 'claimed' ? claimedBase?.accounts  : profile.accounts;
+  const employees = profile.type === 'claimed' ? claimedBase?.employees : (intel.teamSize || null);
+  const firmState = profile.type === 'claimed' ? claimedBase?.state : profile.state;
+
+  // Runtime peer rankings — never persisted
+  const rankings = useMemo(() => {
+    if (!aum) return null;
+    const allWithAum = FIRMS.filter(f => f.aum > 0);
+    const stateWithAum = allWithAum.filter(f => f.state === firmState);
+
+    const pctRank = (arr, val, key = 'aum') => {
+      const sorted = [...arr].sort((a, b) => a[key] - b[key]);
+      const pos = sorted.findIndex(f => f[key] >= val);
+      if (pos === -1) return 99;
+      return Math.round((pos / sorted.length) * 100);
+    };
+
+    const nationalRankByAum = allWithAum.filter(f => f.aum < aum).length + 1;
+    const stateRankByAum    = stateWithAum.filter(f => f.aum < aum).length + 1;
+    const nationalPct       = Math.round((1 - (nationalRankByAum / allWithAum.length)) * 100);
+    const statePct          = Math.round((1 - (stateRankByAum / stateWithAum.length)) * 100);
+
+    // Revenue band peers
+    const rev = aum * roa;
+    const revPeers = allWithAum.filter(f => {
+      const fr = f.aum * roa;
+      return fr >= rev * 0.5 && fr <= rev * 2;
+    });
+
+    // AUM band peers in state
+    const bandLow = aum * 0.5, bandHigh = aum * 2;
+    const stateBandPeers = stateWithAum.filter(f => f.aum >= bandLow && f.aum <= bandHigh);
+
+    // Employee count percentile
+    const empPct = employees && employees > 0
+      ? Math.round((allWithAum.filter(f => (f.employees || 0) < employees).length / allWithAum.length) * 100)
+      : null;
+
+    return {
+      nationalRank: nationalRankByAum,
+      nationalTotal: allWithAum.length,
+      nationalPct,
+      stateRank: stateRankByAum,
+      stateTotal: stateWithAum.length,
+      statePct,
+      revPeerCount: revPeers.length,
+      stateBandPeerCount: stateBandPeers.length,
+      empPct,
+    };
+  }, [aum, roa, firmState, employees]);
+
+  const MATCH_MODE_TIPS = {
+    acquire: 'Scores firms on: geographic proximity to you, smaller AUM (70% or less of yours), lean teams (≤5 people), and overlap in services and compensation model. Higher score = stronger fit as an acquisition candidate.',
+    partner: 'Scores firms on: similar AUM size (within 50% of yours), different state (complementary geography), and overlap in services and compensation. Favors firms that could extend your reach without direct competition.',
+    sell:    'Scores firms on: significantly larger AUM (at least 1.5× yours), geographic proximity, and service overlap. These are firms with the scale to be a credible acquirer or capital partner.',
+  };
 
   return (
     <div className="page fade-up">
@@ -717,13 +844,66 @@ function MyProfile({ profile, roa, onOpenOnboarding, onClearProfile, onSelect })
         <div className="stat-card"><div className="stat-label">Team Size</div><div className="stat-value">{intel.teamSize ?? '—'}</div><div className="stat-sub">{intel.ownershipStructure || ''}</div></div>
       </div>
 
+      {/* Peer Rankings */}
+      {rankings && (
+        <div style={{ marginBottom: 20 }}>
+          <div style={{ fontSize: 10, textTransform: 'uppercase', letterSpacing: '.1em', color: 'var(--accent)', fontWeight: 600, marginBottom: 10 }}>
+            How You Compare <span style={{ color: 'var(--text3)', fontWeight: 400, textTransform: 'none', letterSpacing: 'normal', fontSize: 11 }}>— ranked by AUM against SEC-registered RIAs in the database</span>
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 10 }}>
+            <div className="rank-tile">
+              <div className="rank-tile-label">National Rank (AUM)</div>
+              <div className="rank-tile-value" style={{ color: 'var(--accent)' }}>#{rankings.nationalRank.toLocaleString()}</div>
+              <div className="rank-tile-sub">of {rankings.nationalTotal.toLocaleString()} firms · top {100 - rankings.nationalPct}%</div>
+            </div>
+            <div className="rank-tile">
+              <div className="rank-tile-label">{firmState} State Rank (AUM)</div>
+              <div className="rank-tile-value" style={{ color: 'var(--accent)' }}>#{rankings.stateRank}</div>
+              <div className="rank-tile-sub">of {rankings.stateTotal} firms in {firmState} · top {100 - rankings.statePct}%</div>
+            </div>
+            <div className="rank-tile">
+              <div className="rank-tile-label">Revenue-Band Peers</div>
+              <div className="rank-tile-value">{rankings.revPeerCount.toLocaleString()}</div>
+              <div className="rank-tile-sub">firms within 2× your est. revenue</div>
+            </div>
+            <div className="rank-tile">
+              <div className="rank-tile-label">Size Peers in {firmState}</div>
+              <div className="rank-tile-value">{rankings.stateBandPeerCount}</div>
+              <div className="rank-tile-sub">similar-AUM firms in your state</div>
+            </div>
+          </div>
+          {rankings.empPct !== null && (
+            <div style={{ marginTop: 10, background: 'var(--surface2)', border: '1px solid var(--border)', borderRadius: 10, padding: '10px 16px', fontSize: 12, color: 'var(--text3)' }}>
+              Your team of <span style={{ color: 'var(--text)', fontWeight: 600 }}>{intel.teamSize}</span> puts you in the <span style={{ color: 'var(--accent)', fontWeight: 600 }}>top {100 - rankings.empPct}%</span> of firms by headcount nationally.
+            </div>
+          )}
+        </div>
+      )}
+
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 16 }}>
         {/* Intelligence summary */}
         <div className="detail-panel">
-          <div className="section-head">Your Intelligence Profile <span style={{ color: 'var(--purple)', fontSize: 9, letterSpacing: '.05em' }}>PRIVATE</span></div>
+          <div className="section-head">
+            Your Intelligence Profile&nbsp;
+            <span style={{ color: 'var(--purple)', fontSize: 9, letterSpacing: '.05em' }}>PRIVATE</span>
+          </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 16 }}>
-            {successionScore !== null && <ScoreMeter score={successionScore} label="Succession Vulnerability" color={successionScore >= 70 ? 'var(--red)' : successionScore >= 40 ? 'var(--amber)' : 'var(--green)'} />}
-            {acquisitionScore !== null && <ScoreMeter score={acquisitionScore} label="Acquisition Appetite" color={acquisitionScore >= 60 ? 'var(--green)' : acquisitionScore >= 30 ? 'var(--accent)' : 'var(--text3)'} />}
+            {successionScore !== null && (
+              <div>
+                <ScoreMeter score={successionScore} label="Succession Vulnerability" color={successionScore >= 70 ? 'var(--red)' : successionScore >= 40 ? 'var(--amber)' : 'var(--green)'} />
+                <div style={{ fontSize: 10, color: 'var(--text3)', marginTop: 3, lineHeight: 1.5 }}>
+                  <span className="tt">How is this calculated?<span className="tt-box">Weighted from: founder age band, whether a successor is identified, ownership structure, succession timeline, and team size. Higher score = more vulnerable to disruption if a transition event occurs unexpectedly.</span></span>
+                </div>
+              </div>
+            )}
+            {acquisitionScore !== null && (
+              <div>
+                <ScoreMeter score={acquisitionScore} label="Acquisition Appetite" color={acquisitionScore >= 60 ? 'var(--green)' : acquisitionScore >= 30 ? 'var(--accent)' : 'var(--text3)'} />
+                <div style={{ fontSize: 10, color: 'var(--text3)', marginTop: 3, lineHeight: 1.5 }}>
+                  <span className="tt">How is this calculated?<span className="tt-box">Weighted from: whether you are seeking acquisitions, your growth intent, team size, hiring plans, and geographic flexibility. Higher score = more likely to be an active buyer.</span></span>
+                </div>
+              </div>
+            )}
           </div>
           {[
             ['Growth Intent', intel.growthIntent],
@@ -735,28 +915,39 @@ function MyProfile({ profile, roa, onOpenOnboarding, onClearProfile, onSelect })
             ['Seeking Acquisitions', intel.seekingAcquisitions != null ? (intel.seekingAcquisitions ? 'Yes' : 'No') : null],
             ['Hiring Junior Advisors', intel.hiringJuniorAdvisors != null ? (intel.hiringJuniorAdvisors ? 'Yes' : 'No') : null],
           ].filter(([, v]) => v).map(([l, v]) => (
-            <div key={l} className="detail-row"><span className="detail-label">{l}</span><span className="detail-value">{v}</span></div>
+            <div key={l} className="detail-row">
+              <span className="detail-label">
+                {INTEL_TOOLTIPS[Object.keys(INTEL_TOOLTIPS).find(k => l.toLowerCase().includes(k.toLowerCase().slice(0,6)) || k.toLowerCase().includes(l.toLowerCase().replace(/ /g,'').slice(0,6)))]
+                  ? <span className="tt">{l}<span className="tt-box">{INTEL_TOOLTIPS[Object.keys(INTEL_TOOLTIPS).find(k => k.toLowerCase().includes(l.toLowerCase().replace(/ /g,'').slice(0,6)))]||l}</span></span>
+                  : l}
+              </span>
+              <span className="detail-value">{v}</span>
+            </div>
           ))}
         </div>
 
         {/* Matched firms */}
         <div className="detail-panel">
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
-            <div className="section-head" style={{ marginBottom: 0 }}>Private Matches <span style={{ color: 'var(--purple)', fontSize: 9 }}>PRIVATE</span></div>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+              <div className="section-head" style={{ marginBottom: 0 }}>Private Matches</div>
+              <span style={{ color: 'var(--purple)', fontSize: 9, letterSpacing: '.05em' }}>PRIVATE</span>
+              <span className="tt" style={{ fontSize: 11, color: 'var(--text3)', cursor: 'help', marginLeft: 4 }}>ⓘ<span className="tt-box" style={{ width: 260 }}>{MATCH_MODE_TIPS[matchMode]}</span></span>
+            </div>
             <div style={{ display: 'flex', gap: 6 }}>
               {[['acquire','To Acquire'],['partner','To Partner'],['sell','Find Buyers']].map(([m, l]) => (
                 <button key={m} className={matchMode === m ? 'btn-gold btn-sm' : 'btn-ghost btn-sm'} style={{ fontSize: 11, padding: '4px 10px' }} onClick={() => setMatchMode(m)}>{l}</button>
               ))}
             </div>
           </div>
-          <div style={{ fontSize: 11, color: 'var(--text3)', marginBottom: 12 }}>
-            {matchMode === 'acquire' && 'RIA firms that fit your acquisition profile — smaller size, geographic alignment, service overlap.'}
-            {matchMode === 'partner' && 'Similar-sized firms in complementary markets for potential strategic partnership.'}
-            {matchMode === 'sell' && 'Larger RIAs that may have the scale and appetite to be a buyer or capital partner.'}
+          <div style={{ fontSize: 11, color: 'var(--text3)', marginBottom: 12, lineHeight: 1.5 }}>
+            {matchMode === 'acquire' && 'RIA firms that fit your acquisition profile — smaller, nearby, aligned services.'}
+            {matchMode === 'partner' && 'Similar-sized firms in complementary markets for strategic partnership.'}
+            {matchMode === 'sell' && 'Larger RIAs with scale to be a credible acquirer or capital partner.'}
           </div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 8, maxHeight: 340, overflow: 'auto' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 8, maxHeight: 380, overflow: 'auto' }}>
             {matches.length === 0 ? (
-              <div style={{ fontSize: 12, color: 'var(--text3)', padding: '16px 0', textAlign: 'center' }}>No strong matches yet — refine your intelligence profile.</div>
+              <div style={{ fontSize: 12, color: 'var(--text3)', padding: '16px 0', textAlign: 'center' }}>No strong matches yet — add more detail to your profile.</div>
             ) : matches.map((m, i) => (
               <div key={m.firm.crd} className="match-card" onClick={() => onSelect(m.firm)}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 4 }}>
@@ -836,7 +1027,7 @@ function Nav({ view, setView, savedCount, profile, onOpenOnboarding }) {
 // =============================================================================
 // MAP
 // =============================================================================
-function FirmMap({ firms, roa, rMin, rMax, onSelect, onBounds }) {
+function FirmMap({ firms, roa, rMin, rMax, onSelect, onBounds, userFirm }) {
   const ref = useRef(null), mRef = useRef(null), lRef = useRef(null);
   useEffect(() => {
     if (!ref.current || mRef.current) return;
@@ -851,6 +1042,8 @@ function FirmMap({ firms, roa, rMin, rMax, onSelect, onBounds }) {
     if (!mRef.current || !lRef.current) return;
     lRef.current.clearLayers();
     window.__rvf = crd => { const f = FIRMS.find(x => x.crd === crd); if (f) onSelect(f); };
+
+    // Render RIA firms
     firms.forEach(f => {
       const co = COORDS[f.crd]; if (!co) return;
       const rev = (f.aum || 0) * roa, hit = rev >= rMin && rev <= rMax;
@@ -859,7 +1052,21 @@ function FirmMap({ firms, roa, rMin, rMax, onSelect, onBounds }) {
       c.bindPopup('<div style="min-width:200px"><div style="font-family:Instrument Serif,serif;font-size:14px;margin-bottom:2px">' + f.name + '</div><div style="color:#9aa0ad;font-size:11px;margin-bottom:8px">' + f.city + ', ' + f.state + '</div><div style="font-family:DM Mono,monospace;font-size:11px">RAUM&nbsp;<b>' + fmtM(f.aum) + '</b><br/>Rev&nbsp;&nbsp;<b style="color:' + (hit ? '#4ade80' : '#f0f1f3') + '">' + fmtM(rev) + '</b></div>' + (hit ? '<div style="margin-top:6px;font-size:10px;color:#4ade80;font-weight:600;text-transform:uppercase">In target range</div>' : '') + '<div onclick="window.__rvf(\'' + f.crd + '\')" class="pvb">View details →</div></div>', { className: 'mp' });
       lRef.current.addLayer(c);
     });
-  }, [firms, roa, rMin, rMax]);
+
+    // Render user's BD firm as a distinct gold star marker
+    if (userFirm && userFirm.lat && userFirm.lng) {
+      const starIcon = L.divIcon({
+        html: '<div style="width:28px;height:28px;background:linear-gradient(135deg,#c8a96e,#7c5c2e);border-radius:50%;border:2px solid #c8a96e;display:flex;align-items:center;justify-content:center;font-size:14px;box-shadow:0 0 12px rgba(200,169,110,.6);line-height:28px;text-align:center">★</div>',
+        className: '',
+        iconSize: [28, 28],
+        iconAnchor: [14, 14],
+      });
+      const userMarker = L.marker([userFirm.lat, userFirm.lng], { icon: starIcon, zIndexOffset: 1000 });
+      const userAum = userFirm.aum || null;
+      userMarker.bindPopup('<div style="min-width:180px"><div style="display:flex;align-items:center;gap:6px;margin-bottom:4px"><span style="font-size:11px;background:rgba(200,169,110,.15);color:#c8a96e;border:1px solid rgba(200,169,110,.3);border-radius:10px;padding:2px 8px;font-weight:600">Your Firm</span></div><div style="font-family:Instrument Serif,serif;font-size:14px;margin-bottom:6px">' + userFirm.firmName + '</div><div style="color:#9aa0ad;font-size:11px;margin-bottom:8px">' + (userFirm.city || '') + (userFirm.state ? ', ' + userFirm.state : '') + '</div>' + (userAum ? '<div style="font-family:DM Mono,monospace;font-size:11px">RAUM&nbsp;<b style="color:#c8a96e">' + fmtM(userAum) + '</b></div>' : '') + '</div>', { className: 'mp' });
+      lRef.current.addLayer(userMarker);
+    }
+  }, [firms, roa, rMin, rMax, userFirm]);
   return <div ref={ref} style={{ width: '100%', height: '100%', borderRadius: 10 }} />;
 }
 
@@ -868,6 +1075,7 @@ function FirmMap({ firms, roa, rMin, rMax, onSelect, onBounds }) {
 // =============================================================================
 function Dashboard({ roa, onSelect, saved, toggleSave, profile, onOpenOnboarding }) {
   const hasProfile = !!profile;
+  const userFirm = useMemo(() => geocodeUserFirm(profile), [profile]);
   const ST = ['NH', 'VT', 'MA', 'ME'];
   const BUCKETS = [{ l: '< $100M', lo: 0, hi: 100e6 }, { l: '$100–250M', lo: 100e6, hi: 250e6 }, { l: '$250–500M', lo: 250e6, hi: 500e6 }, { l: '$500M–1B', lo: 500e6, hi: 1e9 }, { l: '$1–5B', lo: 1e9, hi: 5e9 }, { l: '$5–50B', lo: 5e9, hi: 50e9 }, { l: '$50B+', lo: 50e9, hi: Infinity }];
   const [fState, setFState] = useState(null);
@@ -1038,6 +1246,7 @@ function Dashboard({ roa, onSelect, saved, toggleSave, profile, onOpenOnboarding
 // =============================================================================
 function Explorer({ roa, setRoa, onSelect, saved, toggleSave, profile, onOpenOnboarding }) {
   const hasProfile = !!profile;
+  const userFirm = useMemo(() => geocodeUserFirm(profile), [profile]);
   const [search, setSearch] = useState('');
   const [stF, setStF] = useState('ALL');
   const [rMin, setRMin] = useState(1000000);
@@ -1091,13 +1300,14 @@ function Explorer({ roa, setRoa, onSelect, saved, toggleSave, profile, onOpenOnb
       {showMap && hasProfile && (
         <div style={{ marginBottom: 16 }}>
           <div className="card" style={{ height: 380, padding: 0, overflow: 'hidden' }}>
-            <FirmMap firms={base} roa={roa} rMin={rMin} rMax={rMax} onSelect={onSelect} onBounds={setBounds} />
+            <FirmMap firms={base} roa={roa} rMin={rMin} rMax={rMax} onSelect={onSelect} onBounds={setBounds} userFirm={userFirm} />
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 8 }}>
             <button onClick={() => setFByMap(!fByMap)} className={fByMap ? 'btn-gold btn-sm' : 'btn-ghost btn-sm'}>{fByMap ? '✓ Filtering by map' : 'Filter by map view'}</button>
             <span style={{ fontSize: 11, color: 'var(--text3)', display: 'flex', gap: 12, marginLeft: 'auto' }}>
               <span><span style={{ display: 'inline-block', width: 9, height: 9, borderRadius: '50%', background: '#4ade80', marginRight: 5, verticalAlign: 'middle' }} />Target range</span>
               <span><span style={{ display: 'inline-block', width: 7, height: 7, borderRadius: '50%', background: '#60a5fa', marginRight: 5, verticalAlign: 'middle' }} />Other</span>
+              {userFirm && <span><span style={{ marginRight: 5 }}>★</span><span style={{ color: 'var(--accent)' }}>Your firm</span></span>}
             </span>
           </div>
         </div>
