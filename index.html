@@ -163,6 +163,119 @@ pre.prompt-box{white-space:pre-wrap;font-family:'DM Mono',monospace;font-size:12
 .rank-tile-value{font-family:'Instrument Serif',serif;font-size:22px;line-height:1}
 .rank-tile-sub{font-size:11px;color:var(--text3)}
 </style>
+/* =====================================================================
+   NEW ONBOARDING — Full-screen Lemonade-style flow
+   ===================================================================== */
+/* Fullscreen gate */
+.ob-overlay{position:fixed;inset:0;background:var(--bg);z-index:200;display:flex;overflow:hidden}
+.ob-left{width:340px;min-width:340px;background:linear-gradient(160deg,#0e0f11 0%,#13100a 100%);border-right:1px solid var(--border);display:flex;flex-direction:column;padding:40px 36px;position:relative;overflow:hidden;flex-shrink:0}
+.ob-left::before{content:'';position:absolute;bottom:-80px;left:-60px;width:260px;height:260px;background:radial-gradient(circle,rgba(200,169,110,.18) 0%,transparent 70%);pointer-events:none}
+.ob-left::after{content:'';position:absolute;top:30px;right:-40px;width:120px;height:120px;background:radial-gradient(circle,rgba(200,169,110,.08) 0%,transparent 70%);pointer-events:none}
+.ob-right{flex:1;display:flex;flex-direction:column;overflow:hidden;position:relative}
+.ob-right-inner{flex:1;overflow-y:auto;padding:52px 60px 40px;display:flex;flex-direction:column}
+.ob-right-inner::-webkit-scrollbar{width:4px}
+.ob-right-inner::-webkit-scrollbar-thumb{background:var(--border2);border-radius:10px}
+
+/* Left panel elements */
+.ob-logo{display:flex;align-items:center;gap:10px;margin-bottom:48px}
+.ob-logo-mark{width:32px;height:32px;background:linear-gradient(135deg,var(--accent),#7c5c2e);border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:'Instrument Serif',serif;font-size:15px;color:#0e0f11}
+.ob-logo-name{font-family:'Instrument Serif',serif;font-size:16px;letter-spacing:-.01em;color:var(--text2)}
+.ob-steps-list{display:flex;flex-direction:column;gap:2px;flex:1}
+.ob-step-item{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:10px;transition:background .2s;cursor:default;position:relative}
+.ob-step-item.clickable{cursor:pointer}
+.ob-step-item.clickable:hover{background:rgba(200,169,110,.06)}
+.ob-step-item.active{background:rgba(200,169,110,.1)}
+.ob-step-num{width:26px;height:26px;border-radius:50%;border:1.5px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;color:var(--text3);flex-shrink:0;transition:all .25s}
+.ob-step-item.active .ob-step-num{border-color:var(--accent);background:var(--accent);color:#0e0f11}
+.ob-step-item.done .ob-step-num{border-color:var(--green);background:var(--green-dim);color:var(--green)}
+.ob-step-label{font-size:12px;color:var(--text3);transition:color .2s;font-weight:400;line-height:1.3}
+.ob-step-sublabel{font-size:10px;color:var(--text3);opacity:.6;line-height:1.2;margin-top:1px}
+.ob-step-item.active .ob-step-label{color:var(--text);font-weight:500}
+.ob-step-item.done .ob-step-label{color:var(--text3)}
+
+.ob-progress-bar{position:absolute;bottom:0;left:0;right:0;height:2px;background:var(--border)}
+.ob-progress-fill{height:100%;background:linear-gradient(90deg,var(--accent2),var(--accent));transition:width .4s cubic-bezier(.22,.68,0,1.2)}
+
+/* Right panel */
+.ob-phase-title{font-family:'Instrument Serif',serif;font-size:32px;letter-spacing:-.025em;line-height:1.15;margin-bottom:8px;color:var(--text)}
+.ob-phase-sub{font-size:14px;color:var(--text3);line-height:1.6;margin-bottom:36px;max-width:560px}
+.ob-content{flex:1;min-height:0}
+.ob-footer{display:flex;justify-content:space-between;align-items:center;padding-top:28px;margin-top:28px;border-top:1px solid var(--border);flex-shrink:0}
+.ob-footer-hint{font-size:11px;color:var(--text3)}
+.ob-footer-btns{display:flex;gap:10px;align-items:center}
+
+/* Choice cards */
+.choice-card{border:1.5px solid var(--border);border-radius:14px;padding:20px 22px;cursor:pointer;transition:all .2s;display:flex;align-items:flex-start;gap:16px}
+.choice-card:hover{border-color:var(--border2);background:var(--surface2)}
+.choice-card.selected{border-color:var(--accent);background:rgba(200,169,110,.07)}
+.choice-card-icon{font-size:26px;flex-shrink:0;margin-top:2px}
+.choice-card-body{flex:1}
+.choice-card-title{font-size:15px;font-weight:600;margin-bottom:4px;color:var(--text)}
+.choice-card-desc{font-size:12px;color:var(--text3);line-height:1.55}
+.choice-check{width:20px;height:20px;border-radius:50%;border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .2s;margin-top:3px}
+.choice-card.selected .choice-check{border-color:var(--accent);background:var(--accent);color:#0e0f11}
+
+/* Chip toggles */
+.chip{padding:7px 14px;border-radius:20px;border:1px solid var(--border);font-size:12px;cursor:pointer;transition:all .15s;color:var(--text3);background:transparent;font-weight:400;white-space:nowrap}
+.chip:hover{border-color:var(--border2);color:var(--text2)}
+.chip.on{border-color:var(--accent);background:rgba(200,169,110,.1);color:var(--accent);font-weight:500}
+.chip-row{display:flex;flex-wrap:wrap;gap:7px}
+
+/* Inline input groups */
+.ob-field{margin-bottom:18px}
+.ob-label{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.07em;color:var(--text3);font-weight:500;margin-bottom:6px}
+.ob-label.err{color:var(--red)}
+.ob-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.ob-grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+
+/* Profile page redesign */
+.profile-hero{background:linear-gradient(135deg,var(--surface) 0%,var(--surface2) 100%);border:1px solid var(--border);border-radius:20px;padding:36px 40px;margin-bottom:24px;position:relative;overflow:hidden}
+.profile-hero::before{content:'';position:absolute;top:-60px;right:-60px;width:240px;height:240px;background:radial-gradient(circle,rgba(200,169,110,.1) 0%,transparent 70%);pointer-events:none}
+.profile-hero::after{content:'';position:absolute;bottom:-80px;left:-40px;width:200px;height:200px;background:radial-gradient(circle,rgba(96,165,250,.05) 0%,transparent 70%);pointer-events:none}
+.profile-avatar-lg{width:64px;height:64px;border-radius:16px;background:linear-gradient(135deg,var(--accent),#7c5c2e);display:flex;align-items:center;justify-content:center;font-family:'Instrument Serif',serif;font-size:28px;color:#0e0f11;flex-shrink:0;position:relative}
+.profile-avatar-lg::after{content:'';position:absolute;inset:-2px;border-radius:18px;border:1px solid rgba(200,169,110,.3)}
+.profile-section{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:24px 28px;margin-bottom:16px}
+.profile-section-title{font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--accent);font-weight:600;margin-bottom:16px;padding-bottom:8px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px}
+.profile-kv{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px}
+.profile-kv-item{background:var(--surface2);border-radius:10px;padding:12px 14px}
+.profile-kv-label{font-size:10px;text-transform:uppercase;letter-spacing:.07em;color:var(--text3);margin-bottom:5px;font-weight:500}
+.profile-kv-value{font-size:14px;font-weight:500;color:var(--text);line-height:1.3}
+.profile-kv-mono{font-family:'DM Mono',monospace;font-size:13px;font-weight:600}
+.culture-pill{display:inline-flex;align-items:center;padding:5px 12px;border-radius:20px;font-size:12px;font-weight:400;background:var(--surface2);border:1px solid var(--border);color:var(--text2);margin:3px}
+
+/* Blur gate */
+.blur-cell{filter:blur(5px);user-select:none;pointer-events:none}
+.lock-overlay{position:relative}
+.lock-overlay::after{content:'';position:absolute;inset:0;background:linear-gradient(to bottom,transparent 30%,rgba(14,15,17,.95) 100%);pointer-events:none;border-radius:14px}
+.gate-banner{background:linear-gradient(135deg,rgba(200,169,110,.12),rgba(200,169,110,.06));border:1px solid rgba(200,169,110,.3);border-radius:14px;padding:20px 24px;display:flex;align-items:center;gap:20px;margin-bottom:20px}
+.gate-banner-icon{font-size:32px;flex-shrink:0}
+.gate-banner-title{font-family:'Instrument Serif',serif;font-size:18px;margin-bottom:4px}
+.gate-banner-sub{font-size:12px;color:var(--text3);line-height:1.6}
+.form-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.form-grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.form-section{margin-bottom:22px}
+.form-section-title{font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--accent);font-weight:600;margin-bottom:12px;padding-bottom:6px;border-bottom:1px solid var(--border)}
+.form-field-label{display:block;font-size:11px;font-weight:500;color:var(--text3);margin-bottom:5px;text-transform:uppercase;letter-spacing:.06em}
+.form-field-label.err{color:var(--red)}
+.field-hint{font-size:11px;color:var(--text3);margin-top:4px}
+.req{color:var(--red);margin-left:2px}
+.score-meter{height:5px;border-radius:3px;background:var(--surface3);overflow:hidden;margin-top:5px}
+.score-fill{height:100%;border-radius:3px;transition:width .6s cubic-bezier(.22,.68,0,1.2)}
+.tt{position:relative;display:inline-block;cursor:help;border-bottom:1px dotted var(--text3)}
+.tt-box{visibility:hidden;opacity:0;position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);background:#1e2128;border:1px solid var(--border2);border-radius:9px;padding:9px 13px;font-size:11px;line-height:1.6;color:var(--text2);width:230px;z-index:200;pointer-events:none;transition:opacity .15s,visibility .15s;box-shadow:0 8px 28px rgba(0,0,0,.5);font-style:normal;font-weight:400;text-transform:none;letter-spacing:normal}
+.tt:hover .tt-box{visibility:visible;opacity:1}
+.tt-box::after{content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);border:5px solid transparent;border-top-color:#1e2128}
+.match-card{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:14px 16px;transition:border-color .2s;cursor:pointer}
+.match-card:hover{border-color:var(--border2)}
+.match-score-pill{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600}
+.rank-tile{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:12px 14px;display:flex;flex-direction:column;gap:4px}
+.rank-tile-label{font-size:10px;text-transform:uppercase;letter-spacing:.07em;color:var(--text3);font-weight:500}
+.rank-tile-value{font-family:'Instrument Serif',serif;font-size:22px;line-height:1}
+.rank-tile-sub{font-size:11px;color:var(--text3)}
+@keyframes obSlideIn{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
+@keyframes obSlideOut{from{opacity:1;transform:translateX(0)}to{opacity:0;transform:translateX(-20px)}}
+.ob-slide-in{animation:obSlideIn .28s cubic-bezier(.22,.68,0,1.1) both}
+</style>
 </head>
 <body>
 <div id="root"></div>
@@ -172,23 +285,9 @@ const {useState,useMemo,useRef,useEffect,useCallback} = React;
 
 // =============================================================================
 // DATA ARCHITECTURE
-// =============================================================================
-// BASE LAYER:  FIRMS[] — from ria-data.js (FR). FROZEN. Never mutated.
-//              Replaced monthly as a complete dataset swap.
-//              No writes, no patches, no merges back into this array.
-//
-// PROFILE LAYER: localStorage('ria_user_profile') — the logged-in user's
-//              own profile. Either a BD/non-RIA firm (type:'bd') or a
-//              claimed RIA (type:'claimed'). Completely separate from FIRMS.
-//              When the monthly dataset is replaced, this is untouched.
-//
-// ENHANCEMENT LAYER: intelligence fields captured during profiling.
-//              Private to this user's session. Not shared. Not exposed.
-//              Merged with base ADV data AT RENDER TIME only (getEnrichedFirm).
-//              Derived scores calculated in memory, never persisted.
-//
-// GATE:        Users without a profile see blurred/locked data.
-//              Profile creation (A or B) unlocks full access.
+// BASE LAYER: FIRMS[] — from ria-data.js (FR). FROZEN. Never mutated.
+// PROFILE LAYER: localStorage('ria_user_profile') — completely separate.
+// BD FIRMS: Injected into runtime search pool (getBDFirm) at render time only.
 // =============================================================================
 
 const FIRMS = Object.freeze(FR.map(f => Object.freeze({
@@ -205,6 +304,43 @@ const FIRMS = Object.freeze(FR.map(f => Object.freeze({
   stateOfFormation:f.sf, cpoAffiliate:f.cpo, fax:f.fx,
 })));
 
+// Build a synthetic firm record from a BD profile — injected at runtime
+// into search/map pools. Never stored back into FIRMS.
+function buildBDFirmRecord(profile) {
+  if (!profile || profile.type !== 'bd') return null;
+  return {
+    _isBD: true, _profileId: 'user',
+    name: profile.firmName || 'My Firm',
+    legal: profile.firmLegal || '',
+    crd: '__bd__',
+    addr1: profile.addr1 || '', addr2: profile.addr2 || '',
+    city: profile.city || '', state: profile.state || '', zip: profile.zip || '',
+    phone: profile.phone || '', website: profile.website || '',
+    orgType: profile.employmentType || 'BD Team',
+    secStatus: 'Non-RIA', statusDate: '', advDate: '',
+    aum: profile.aum || 0,
+    aumDisc: profile.aumDisc || null,
+    aumNonDisc: null,
+    accounts: profile.accounts || null,
+    employees: profile.intel?.teamSize || null,
+    clientsInd: profile.clientsInd || null,
+    aumInd: null, clientsHNW: profile.clientsHNW || null, aumHNW: null,
+    clientsPension: null, clientsCharitable: null, clientsCorp: null, clientsPooled: null,
+    services: profile.services || [], compensation: profile.compensation || [],
+    clientTypes: [], custody: false, custodyAmt: null, disclosures: false,
+    bdAffiliate: true, iaAffiliate: false, iaAffCount: 0, bdAffCount: 0,
+    wrapFee: false, privateRes: false, otherOffices: 0,
+    aumPension: null, aumCharitable: null, aumCorp: null, aumPooled: null,
+    stateOfFormation: '', cpoAffiliate: false, fax: '',
+  };
+}
+
+// Runtime pool — FIRMS + optional BD record for search/map/dashboard
+function getFirmPool(profile) {
+  const bd = buildBDFirmRecord(profile);
+  return bd ? [...FIRMS, bd] : [...FIRMS];
+}
+
 // Formatters
 const fmt  = v => v != null ? '$' + Math.round(v).toLocaleString() : '-';
 const fmtM = v => { if(v==null) return '-'; if(v>=1e12) return '$'+(v/1e12).toFixed(1)+'T'; if(v>=1e9) return '$'+(v/1e9).toFixed(2).replace(/\.?0+$/,'')+'B'; if(v>=1e6) return '$'+(v/1e6).toFixed(1).replace(/\.0$/,'')+'M'; if(v>=1e3) return '$'+Math.round(v/1e3).toLocaleString()+'K'; return '$'+Math.round(v).toLocaleString(); };
@@ -213,7 +349,7 @@ const wu   = r => { if(!r) return null; const u=r.trim(); if(!u) return null; re
 window.__rvf = null;
 
 // =============================================================================
-// PROFILE SCHEMA
+// SCHEMA CONSTANTS
 // =============================================================================
 const AUM_BANDS            = ['0–100M','100–250M','250–500M','500M–1B','1B+'];
 const OWNERSHIP_STRUCTS    = ['Solo owner','2 partners','3+ partners','Corporate owned'];
@@ -223,35 +359,53 @@ const GEO_FLEXIBILITIES    = ['None — local only','Regional','National'];
 const GROWTH_INTENTS       = ['Organic only','Acquisitive','Strategic partnership','Undecided'];
 const SERVICES_OPTS        = ['Financial Planning','Portfolio Management','Tax Advisory','Estate Planning','Retirement Planning','Business Planning','Insurance','Other'];
 const COMP_OPTS            = ['AUM-based fee','Flat fee','Hourly','Commission','Performance-based','Other'];
-const ORG_TYPES            = ['Sole Proprietorship','Partnership','LLC','S-Corp','C-Corp','Other'];
+const EMPLOYMENT_TYPES     = ['W2 — wirehouse (UBS, Merrill, Morgan Stanley, etc.)','W2 — independent (LPL, Raymond James, Steward, etc.)','1099 — independent contractor','Hybrid / Other'];
+const CLIENT_APPROACH_OPTS = ['Planning-focused','Investment-focused','Insurance / annuity-focused','Tax-integrated','Holistic / comprehensive'];
+const REVIEW_OPTS          = ['Annual','Semi-annual','Quarterly','On-request only','Tax-return review included'];
+const CRM_OPTS             = ['Salesforce','Redtail','Wealthbox','Junxure','HubSpot','Proprietary/custom','Other'];
+const FP_OPTS              = ['eMoney','MoneyGuidePro','RightCapital','NaviPlan','Proprietary/custom','None'];
+const PMS_OPTS             = ['Black Diamond','Orion','Tamarac','Advent','Charles River','Proprietary/custom','Other'];
+const CUSTODIANS           = ['Schwab','Fidelity','Pershing','Raymond James','LPL','Ameriprise','Other'];
+const CULTURE_OPTS         = ['Office lunch provided','Weekly team meetings','Monthly firm outings','Remote-first culture','In-person first','Strong mentorship','Flat hierarchy','Formal review structure','Client-event culture','Charity / community focus'];
 
 const EMPTY_INTEL = {
-  teamSize: null, aumBand: null, ownershipStructure: null, founderAgeBand: null,
+  // Quantitative
+  teamSize: null, supportStaff: null, numAdvisors: null,
+  aumBand: null, aumDiscPct: null,
+  clientsHNW: null, clientsInd: null,
+  advisorAgeBands: [], // array: e.g. ['40–49','50–59']
+  ownershipStructure: null,
   internalSuccessorIdentified: null, successionTimeline: null,
   openToMinorityCapital: null, openToFullSale: null,
   seekingAcquisitions: null, hiringJuniorAdvisors: null,
   geographicFlexibility: null, growthIntent: null,
+  // Qualitative culture
+  clientApproach: [], reviewCadence: [],
+  reviewTaxReturns: null,
+  officeEnvironment: null, // 'Remote','Hybrid','In-person'
+  cultureTraits: [],
+  // Qualitative operations
+  crm: [], financialPlanning: [], portfolioMgmt: [], custodians: [],
+  techNotes: '',
 };
 
-// Profile storage — completely independent of FIRMS
-function loadProfile()   { try { return JSON.parse(localStorage.getItem('ria_user_profile') || 'null'); } catch(e) { return null; } }
-function saveProfile(p)  { try { localStorage.setItem('ria_user_profile', JSON.stringify(p)); } catch(e) {} }
-function clearProfile()  { try { localStorage.removeItem('ria_user_profile'); } catch(e) {} }
-
-// Saved targets / notes (unchanged)
-function loadSaved()  { try { return new Set(JSON.parse(localStorage.getItem('ria_saved') || '[]')); } catch(e) { return new Set(); } }
-function saveSaved(s) { try { localStorage.setItem('ria_saved', JSON.stringify([...s])); } catch(e) {} }
-function loadNotes()  { try { return JSON.parse(localStorage.getItem('ria_notes') || '{}'); } catch(e) { return {}; } }
-function saveNotes(n) { try { localStorage.setItem('ria_notes', JSON.stringify(n)); } catch(e) {} }
+// Profile storage
+function loadProfile()  { try { return JSON.parse(localStorage.getItem('ria_user_profile') || 'null'); } catch(e) { return null; } }
+function saveProfile(p) { try { localStorage.setItem('ria_user_profile', JSON.stringify(p)); } catch(e) {} }
+function clearProfile() { try { localStorage.removeItem('ria_user_profile'); } catch(e) {} }
+function loadSaved()    { try { return new Set(JSON.parse(localStorage.getItem('ria_saved') || '[]')); } catch(e) { return new Set(); } }
+function saveSaved(s)   { try { localStorage.setItem('ria_saved', JSON.stringify([...s])); } catch(e) {} }
+function loadNotes()    { try { return JSON.parse(localStorage.getItem('ria_notes') || '{}'); } catch(e) { return {}; } }
+function saveNotes(n)   { try { localStorage.setItem('ria_notes', JSON.stringify(n)); } catch(e) {} }
 
 // =============================================================================
-// INTELLIGENCE ENGINE — runtime only, no persistence
+// INTELLIGENCE ENGINE
 // =============================================================================
 function calcSuccessionScore(intel) {
   if (!intel) return null;
   let s = 0;
-  if (intel.founderAgeBand === '60–64') s += 20;
-  if (intel.founderAgeBand === '65+')   s += 30;
+  if (intel.advisorAgeBands?.includes('60–64')) s += 20;
+  if (intel.advisorAgeBands?.includes('65+'))   s += 30;
   if (intel.internalSuccessorIdentified === false) s += 25;
   if (intel.ownershipStructure === 'Solo owner') s += 15;
   if (intel.successionTimeline === 'Actively exploring') s += 10;
@@ -268,8 +422,21 @@ function calcAcquisitionScore(intel) {
   if (intel.geographicFlexibility === 'Regional' || intel.geographicFlexibility === 'National') s += 10;
   return Math.min(100, s);
 }
+function calcFitScore(profile, targetFirm) {
+  // Goodness-of-fit matching beyond size/geo
+  if (!profile?.intel) return 0;
+  const intel = profile.intel;
+  let s = 0;
+  // Service overlap
+  const svc = profile.services || [];
+  const overlap = svc.filter(x => targetFirm.services?.includes(x)).length;
+  s += overlap * 8;
+  // Comp model overlap
+  const comp = profile.compensation || [];
+  s += comp.filter(x => targetFirm.compensation?.includes(x)).length * 6;
+  return Math.min(40, s);
+}
 
-// Derive AUM band from raw number
 function derivedAumBand(aum) {
   if (!aum || aum < 100e6) return '0–100M';
   if (aum < 250e6) return '100–250M';
@@ -278,43 +445,25 @@ function derivedAumBand(aum) {
   return '1B+';
 }
 
-// Match RIA firms against a user profile (runtime, private)
-// Returns firms sorted by compatibility — never persisted or exposed
 function matchFirms(profile, roa, mode) {
-  // mode: 'acquire' (find targets to buy), 'partner', 'sell' (find buyers)
   const intel = profile.intel || {};
   return FIRMS
     .filter(f => f.aum > 0)
     .map(f => {
       let score = 0;
-      const fBand = derivedAumBand(f.aum);
-      // Geographic affinity
       if (profile.state && f.state === profile.state) score += 20;
-      // Size compatibility
       if (mode === 'acquire') {
-        // Looking to acquire: target should be smaller
         if (profile.aum && f.aum < profile.aum * 0.7) score += 15;
         if (f.employees <= 5) score += 10;
       }
       if (mode === 'sell') {
-        // Looking to sell: target acquirer should be larger
         if (profile.aum && f.aum > profile.aum * 1.5) score += 15;
       }
       if (mode === 'partner') {
-        // Similar size, different geography
         if (profile.aum && Math.abs(f.aum - profile.aum) / profile.aum < 0.5) score += 15;
         if (profile.state && f.state !== profile.state) score += 10;
       }
-      // Service overlap
-      if (profile.services && f.services) {
-        const overlap = (profile.services || []).filter(s => f.services.includes(s)).length;
-        score += overlap * 5;
-      }
-      // Compensation model overlap
-      if (profile.compensation && f.compensation) {
-        const overlap = (profile.compensation || []).filter(c => f.compensation.includes(c)).length;
-        score += overlap * 5;
-      }
+      score += calcFitScore(profile, f);
       return { firm: f, score, rev: (f.aum || 0) * roa };
     })
     .filter(m => m.score > 0)
@@ -322,9 +471,6 @@ function matchFirms(profile, roa, mode) {
     .slice(0, 10);
 }
 
-// Derive approximate lat/lng for a BD profile by finding the closest city match
-// in the existing COORDS dataset. Falls back to state centroid if no match.
-// This is client-side only — no external geocoding API needed.
 const STATE_CENTROIDS = {
   NH:{lat:43.97,lng:-71.57},VT:{lat:44.00,lng:-72.70},MA:{lat:42.26,lng:-71.81},
   ME:{lat:45.25,lng:-69.44},CT:{lat:41.60,lng:-72.69},RI:{lat:41.68,lng:-71.51},
@@ -340,7 +486,6 @@ const STATE_CENTROIDS = {
 
 function geocodeUserFirm(profile) {
   if (!profile || profile.type !== 'bd') return null;
-  // Try to find an existing firm in the same city/state to borrow coordinates
   const city = (profile.city || '').toLowerCase().trim();
   const state = profile.state;
   if (!state) return null;
@@ -348,11 +493,14 @@ function geocodeUserFirm(profile) {
     f.state === state && f.city && f.city.toLowerCase().trim() === city && COORDS[f.crd]
   );
   if (cityMatch) return { ...profile, lat: COORDS[cityMatch.crd].lat, lng: COORDS[cityMatch.crd].lng };
-  // Fall back to state centroid
   const c = STATE_CENTROIDS[state];
   if (c) return { ...profile, lat: c.lat, lng: c.lng };
   return null;
 }
+
+// =============================================================================
+// SHARED PRIMITIVES
+// =============================================================================
 function StarBtn({ crd, saved, toggleSave }) {
   return (
     <button className={'star-btn' + (saved.has(crd) ? ' starred' : '')}
@@ -362,7 +510,6 @@ function StarBtn({ crd, saved, toggleSave }) {
     </button>
   );
 }
-
 function ScoreMeter({ score, color, label }) {
   const c = color || 'var(--accent)';
   return (
@@ -375,44 +522,21 @@ function ScoreMeter({ score, color, label }) {
     </div>
   );
 }
-
 function BlurredCell({ children }) {
   return <span className="blur-cell">{children}</span>;
 }
-
-// Gate banner shown at top of pages when not profiled
 function GateBanner({ onOpenOnboarding }) {
   return (
     <div className="gate-banner">
       <div className="gate-banner-icon">🔒</div>
       <div style={{ flex: 1 }}>
         <div className="gate-banner-title">Create a profile to unlock full data</div>
-        <div className="gate-banner-sub">AUM, revenue, client counts, and intelligence are hidden until you create your firm profile. Takes about 2 minutes.</div>
+        <div className="gate-banner-sub">AUM, revenue, client counts, and intelligence are hidden until you create your firm profile. Takes about 3 minutes.</div>
       </div>
       <button className="btn-gold" onClick={onOpenOnboarding}>Create Profile →</button>
     </div>
   );
 }
-
-// =============================================================================
-// FORM PRIMITIVES — defined at module level so React never remounts them
-// on parent re-render (which would kill input focus mid-typing)
-// =============================================================================
-const INTEL_TOOLTIPS = {
-  teamSize:                   'Total number of people working at or for the firm, including advisors, support staff, and partners.',
-  aumBand:                    'Approximate range of total assets you manage. Used for peer comparisons and match scoring.',
-  ownershipStructure:         'How ownership is distributed. Affects succession complexity and deal structuring.',
-  founderAgeBand:             'Age range of the founding principal(s). A key input to succession vulnerability scoring.',
-  internalSuccessorIdentified:'Whether a specific person inside the firm has been identified to take over leadership.',
-  successionTimeline:         'How soon you anticipate a principal transition or ownership change occurring.',
-  openToMinorityCapital:      'Whether you would consider a partial equity investment, typically 20–49%, while retaining control.',
-  openToFullSale:             'Whether you would consider selling the firm outright to a larger acquirer or partner.',
-  seekingAcquisitions:        'Whether you are actively looking to acquire other RIA firms or advisory teams.',
-  hiringJuniorAdvisors:       'Whether you are currently hiring or planning to hire junior advisors or associates.',
-  geographicFlexibility:      'How far outside your current market you are willing to look for acquisitions or partnerships.',
-  growthIntent:               'Your primary growth strategy — organic client growth, buying other firms, or partnering.',
-};
-
 function FormField({ label, required, err, hint, children, span }) {
   return (
     <div style={{ gridColumn: span ? '1 / -1' : undefined }}>
@@ -425,305 +549,423 @@ function FormField({ label, required, err, hint, children, span }) {
     </div>
   );
 }
-
-function IntelFormField({ label, field, errors, children }) {
-  const tip = INTEL_TOOLTIPS[field];
+function Chips({ options, selected, onToggle, size }) {
   return (
-    <div>
-      <label className={'form-field-label' + (errors[field] ? ' err' : '')}>
-        {tip
-          ? <span className="tt">{label}<span className="tt-box">{tip}</span></span>
-          : label
-        }
-        <span className="req">*</span>
-        {errors[field] && <span style={{ fontWeight: 400, textTransform: 'none', letterSpacing: 'normal', marginLeft: 6, color: 'var(--red)' }}>Required</span>}
-      </label>
-      {children}
+    <div className="chip-row">
+      {options.map(o => (
+        <div key={o} className={'chip' + (selected.includes(o) ? ' on' : '')}
+          onClick={() => onToggle(o)}
+          style={size === 'sm' ? { padding: '5px 11px', fontSize: 11 } : {}}>
+          {o}
+        </div>
+      ))}
     </div>
   );
 }
 
 // =============================================================================
-// ONBOARDING MODAL
+// ONBOARDING — Full-screen Lemonade-style flow
+// 4 Phases: (0) Who are you, (1) Firm basics + quant, (2) Culture & fit, (3) Operations
 // =============================================================================
 function OnboardingModal({ onComplete, onClose }) {
-  const [step, setStep]       = useState(0); // 0=choose type, 1=firm details, 2=intelligence
-  const [profileType, setProfileType] = useState(null); // 'bd' | 'claimed'
-  const [claimCrd, setClaimCrd]       = useState('');
-  const [errors, setErrors]           = useState({});
+  const [phase, setPhase] = useState(0);
+  const [animKey, setAnimKey] = useState(0);
+  const [errors, setErrors] = useState({});
 
-  // BD firm fields
-  const [firmName, setFirmName]         = useState('');
-  const [firmLegal, setFirmLegal]       = useState('');
-  const [orgType, setOrgType]           = useState('');
-  const [addr1, setAddr1]               = useState('');
-  const [addr2, setAddr2]               = useState('');
-  const [city, setCity]                 = useState('');
-  const [state, setState]               = useState('');
-  const [zip, setZip]                   = useState('');
-  const [phone, setPhone]               = useState('');
-  const [website, setWebsite]           = useState('');
-  const [selfAum, setSelfAum]           = useState('');
+  // Phase 0 — Identity
+  const [profileType, setProfileType] = useState(null); // 'bd' | 'claimed'
+  const [claimCrd, setClaimCrd] = useState('');
+
+  // Phase 1 — Firm basics (BD only)
+  const [firmName, setFirmName] = useState('');
+  const [firmLegal, setFirmLegal] = useState('');
+  const [employmentType, setEmploymentType] = useState('');
+  const [addr1, setAddr1] = useState('');
+  const [addr2, setAddr2] = useState('');
+  const [city, setCity] = useState('');
+  const [state, setState] = useState('');
+  const [zip, setZip] = useState('');
+  const [phone, setPhone] = useState('');
+  const [website, setWebsite] = useState('');
+  const [selfAum, setSelfAum] = useState('');
+  const [selfAumDisc, setSelfAumDisc] = useState('');
   const [selfAccounts, setSelfAccounts] = useState('');
   const [selfIndClients, setSelfIndClients] = useState('');
   const [selfHNWClients, setSelfHNWClients] = useState('');
   const [selectedServices, setSelectedServices] = useState([]);
-  const [selectedComp, setSelectedComp]         = useState([]);
+  const [selectedComp, setSelectedComp] = useState([]);
 
-  // Intelligence fields (step 2 — required for both types)
+  // Intelligence/qualitative (both types, phase 2–3)
   const [intel, setIntel] = useState({ ...EMPTY_INTEL });
-
   const setI = (k, v) => setIntel(prev => ({ ...prev, [k]: v }));
   const setBoolI = (k, v) => setI(k, v === '' ? null : v === 'true');
-  const setIntI  = (k, v) => setI(k, v === '' ? null : (parseInt(v, 10) || null));
+  const setIntI = (k, v) => setI(k, v === '' ? null : (parseInt(v, 10) || null));
+  const toggleArr = (k, v) => setIntel(prev => {
+    const arr = prev[k] || [];
+    return { ...prev, [k]: arr.includes(v) ? arr.filter(x => x !== v) : [...arr, v] };
+  });
   const toggleSvc = (v, arr, setArr) => setArr(prev => prev.includes(v) ? prev.filter(x => x !== v) : [...prev, v]);
 
   const claimedFirm = FIRMS.find(f => f.crd === claimCrd);
 
-  const validateStep1 = () => {
+  const PHASES = [
+    { label: 'Who you are', sublabel: 'RIA or BD team' },
+    { label: 'Your firm', sublabel: 'Quantitative data' },
+    { label: 'Culture & fit', sublabel: 'Qualitative profile' },
+    { label: 'Operations', sublabel: 'Tech & workflow' },
+  ];
+
+  const progressPct = ((phase) / PHASES.length) * 100;
+
+  const goPhase = (n) => {
+    setPhase(n);
+    setAnimKey(k => k + 1);
+    setErrors({});
+  };
+
+  const validatePhase0 = () => {
     const e = {};
-    if (profileType === 'bd') {
-      if (!firmName.trim())  e.firmName = 'Required';
-      if (!addr1.trim())     e.addr1    = 'Required';
-      if (!city.trim())      e.city     = 'Required';
-      if (!state.trim())     e.state    = 'Required';
-      if (!zip.trim())       e.zip      = 'Required';
-    } else {
-      if (!claimCrd)         e.claimCrd = 'Select a firm to claim';
-    }
+    if (!profileType) e.profileType = 'Select a profile type';
+    if (profileType === 'claimed' && !claimCrd) e.claimCrd = 'Select your firm';
     setErrors(e);
     return Object.keys(e).length === 0;
   };
 
-  const validateStep2 = () => {
-    const required = ['teamSize','aumBand','ownershipStructure','founderAgeBand',
-      'internalSuccessorIdentified','successionTimeline','openToMinorityCapital',
-      'openToFullSale','seekingAcquisitions','hiringJuniorAdvisors','geographicFlexibility','growthIntent'];
+  const validatePhase1 = () => {
+    if (profileType === 'claimed') return true; // claimed data comes from ADV
     const e = {};
-    required.forEach(k => { if (intel[k] === null || intel[k] === '') e[k] = true; });
+    if (!firmName.trim()) e.firmName = 'Required';
+    if (!city.trim()) e.city = 'Required';
+    if (!state) e.state = 'Required';
+    if (!zip.trim()) e.zip = 'Required';
     setErrors(e);
     return Object.keys(e).length === 0;
   };
 
-  const next = () => {
-    if (step === 0 && profileType) { setStep(1); setErrors({}); return; }
-    if (step === 1 && validateStep1()) { setStep(2); setErrors({}); return; }
-    if (step === 2 && validateStep2()) {
-      const profile = profileType === 'bd'
-        ? {
-            type: 'bd', createdAt: new Date().toISOString(),
-            firmName: firmName.trim(), firmLegal: firmLegal.trim(), orgType,
-            addr1: addr1.trim(), addr2: addr2.trim(), city: city.trim(), state, zip: zip.trim(),
-            phone: phone.trim(), website: website.trim(),
-            aum: parseFloat(selfAum) * 1e6 || null,
-            accounts: parseInt(selfAccounts) || null,
-            clientsInd: parseInt(selfIndClients) || null,
-            clientsHNW: parseInt(selfHNWClients) || null,
-            services: selectedServices, compensation: selectedComp,
-            intel: { ...intel },
-          }
-        : {
-            type: 'claimed', createdAt: new Date().toISOString(),
-            crd: claimCrd, firmName: claimedFirm?.name || '',
-            intel: { ...intel },
-          };
-      saveProfile(profile);
-      onComplete(profile);
-    }
+  const handleNext = () => {
+    if (phase === 0 && !validatePhase0()) return;
+    if (phase === 1 && !validatePhase1()) return;
+    if (phase < PHASES.length - 1) { goPhase(phase + 1); return; }
+    // Complete
+    const base = profileType === 'claimed'
+      ? { type: 'claimed', crd: claimCrd, firmName: claimedFirm?.name || '', createdAt: new Date().toISOString() }
+      : {
+          type: 'bd', createdAt: new Date().toISOString(),
+          firmName: firmName.trim(), firmLegal: firmLegal.trim(),
+          employmentType,
+          addr1: addr1.trim(), addr2: addr2.trim(), city: city.trim(), state, zip: zip.trim(),
+          phone: phone.trim(), website: website.trim(),
+          aum: parseFloat(selfAum) * 1e6 || null,
+          aumDisc: parseFloat(selfAumDisc) * 1e6 || null,
+          accounts: parseInt(selfAccounts) || null,
+          clientsInd: parseInt(selfIndClients) || null,
+          clientsHNW: parseInt(selfHNWClients) || null,
+          services: selectedServices, compensation: selectedComp,
+        };
+    const profile = { ...base, intel: { ...intel } };
+    saveProfile(profile);
+    onComplete(profile);
   };
 
-  // Use module-level FormField / IntelFormField — avoids remount-on-render focus loss
-  const F = (props) => <FormField {...props} />;
-  const IntelField = ({ label, field, children }) => <IntelFormField label={label} field={field} errors={errors}>{children}</IntelFormField>;
-
-  const steps = ['Profile type', profileType === 'claimed' ? 'Claim your firm' : 'Firm details', 'Growth intelligence'];
+  const canGoBack = phase > 0;
 
   return (
-    <div className="modal-overlay" onClick={e => e.target === e.currentTarget && onClose && onClose()}>
-      <div className="modal slide-down">
-        <div className="modal-header">
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 16 }}>
-            <div className="logo-mark" style={{ width: 38, height: 38 }}>RI</div>
-            {onClose && <button className="btn-ghost btn-sm" onClick={onClose} style={{ fontSize: 16 }}>✕</button>}
-          </div>
-          <div className="modal-title">Set up your profile</div>
-          <div className="modal-sub">Your profile unlocks full platform access and enables private intelligence matching against the RIA database.</div>
-
-          {/* Step indicators */}
-          <div className="steps">
-            {steps.map((label, i) => (
-              <div key={i} className={'step' + (i === step ? ' active' : '')}>
-                <div className={'step-dot' + (i < step ? ' done' : i === step ? ' active' : '')}>{i < step ? '✓' : i + 1}</div>
-                <div className="step-label">{label}</div>
-              </div>
-            ))}
-          </div>
+    <div className="ob-overlay">
+      {/* Left panel */}
+      <div className="ob-left">
+        <div className="ob-logo">
+          <div className="ob-logo-mark">RI</div>
+          <span className="ob-logo-name">RIA Intelligence</span>
         </div>
-
-        <div className="modal-body">
-          {/* STEP 0 — Choose type */}
-          {step === 0 && (
-            <div className="fade-in">
-              <div style={{ display: 'flex', gap: 12, marginBottom: 20 }}>
-                <div className={'profile-type-card' + (profileType === 'bd' ? ' selected' : '')} onClick={() => setProfileType('bd')}>
-                  <div className="profile-type-icon">🏢</div>
-                  <div className="profile-type-title">Add my firm</div>
-                  <div className="profile-type-desc">My firm isn't in the RIA database — e.g. Steward Partners, LPL, Raymond James team, or independent practice. I'll enter my firm's details manually.</div>
-                </div>
-                <div className={'profile-type-card' + (profileType === 'claimed' ? ' selected' : '')} onClick={() => setProfileType('claimed')}>
-                  <div className="profile-type-icon">📋</div>
-                  <div className="profile-type-title">Claim an existing RIA</div>
-                  <div className="profile-type-desc">My firm appears in the SEC Form ADV database. I'll claim it and add private intelligence fields — AUM and client data carry over automatically.</div>
-                </div>
-              </div>
-              {!profileType && <div style={{ fontSize: 12, color: 'var(--text3)', textAlign: 'center' }}>Select a profile type to continue</div>}
-            </div>
-          )}
-
-          {/* STEP 1 — BD Firm Details */}
-          {step === 1 && profileType === 'bd' && (
-            <div className="fade-in">
-              <div className="form-section">
-                <div className="form-section-title">Firm identity</div>
-                <div className="form-grid-2" style={{ gap: 12 }}>
-                  <F label="Firm Name" required err={errors.firmName}><input value={firmName} onChange={e => setFirmName(e.target.value)} placeholder="e.g. Steward Partners — Northeast Team" style={{ borderColor: errors.firmName ? 'var(--red)' : '' }}/></F>
-                  <F label="Legal Entity Name"><input value={firmLegal} onChange={e => setFirmLegal(e.target.value)} placeholder="If different from above"/></F>
-                  <F label="Organization Type"><select value={orgType} onChange={e => setOrgType(e.target.value)}><option value="">Select...</option>{ORG_TYPES.map(o => <option key={o}>{o}</option>)}</select></F>
-                  <F label="Phone"><input value={phone} onChange={e => setPhone(e.target.value)} placeholder="(603) 555-0100"/></F>
-                  <F label="Website"><input value={website} onChange={e => setWebsite(e.target.value)} placeholder="https://"/></F>
-                </div>
-              </div>
-              <div className="form-section">
-                <div className="form-section-title">Address <span style={{ color: 'var(--text3)', fontWeight: 400, textTransform: 'none', letterSpacing: 'normal', fontSize: 10 }}>— required for map placement</span></div>
-                <div className="form-grid-2" style={{ gap: 12 }}>
-                  <F label="Street Address" required err={errors.addr1} span><input value={addr1} onChange={e => setAddr1(e.target.value)} placeholder="123 Main St" style={{ borderColor: errors.addr1 ? 'var(--red)' : '' }}/></F>
-                  <F label="Suite / Unit"><input value={addr2} onChange={e => setAddr2(e.target.value)} placeholder="Suite 400"/></F>
-                  <F label="City" required err={errors.city}><input value={city} onChange={e => setCity(e.target.value)} style={{ borderColor: errors.city ? 'var(--red)' : '' }}/></F>
-                  <F label="State" required err={errors.state}><select value={state} onChange={e => setState(e.target.value)} style={{ borderColor: errors.state ? 'var(--red)' : '' }}><option value="">Select...</option>{'NH,VT,MA,ME,CT,RI,NY,NJ,PA,FL,TX,CA,IL,WA,CO,GA,NC,VA,OH,AZ,MN,WI,MO,OR,IN,MD,TN,MI,SC,KY,AL,LA,OK,UT,NV,MS,AR,KS,NM,NE,WV,ID,HI,NH,DE,MT,WY,ND,SD,AK'.split(',').map(s => <option key={s}>{s}</option>)}</select></F>
-                  <F label="ZIP Code" required err={errors.zip}><input value={zip} onChange={e => setZip(e.target.value)} placeholder="03101" style={{ borderColor: errors.zip ? 'var(--red)' : '' }}/></F>
-                </div>
-              </div>
-              <div className="form-section">
-                <div className="form-section-title">Assets & Clients <span style={{ color: 'var(--text3)', fontWeight: 400, textTransform: 'none', letterSpacing: 'normal', fontSize: 10 }}>— self-reported, in $M</span></div>
-                <div className="form-grid-2" style={{ gap: 12 }}>
-                  <F label="AUM ($M)" hint="e.g. 250 = $250M"><input type="number" value={selfAum} onChange={e => setSelfAum(e.target.value)} placeholder="e.g. 250"/></F>
-                  <F label="Total Accounts"><input type="number" value={selfAccounts} onChange={e => setSelfAccounts(e.target.value)} placeholder="e.g. 180"/></F>
-                  <F label="Individual Clients"><input type="number" value={selfIndClients} onChange={e => setSelfIndClients(e.target.value)} placeholder="e.g. 140"/></F>
-                  <F label="HNW Clients"><input type="number" value={selfHNWClients} onChange={e => setSelfHNWClients(e.target.value)} placeholder="e.g. 60"/></F>
-                </div>
-              </div>
-              <div className="form-section" style={{ marginBottom: 0 }}>
-                <div className="form-section-title">Services & Compensation</div>
-                <div style={{ marginBottom: 12 }}>
-                  <label className="form-field-label">Services Offered</label>
-                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
-                    {SERVICES_OPTS.map(s => (
-                      <div key={s} onClick={() => toggleSvc(s, selectedServices, setSelectedServices)}
-                        style={{ padding: '6px 12px', borderRadius: 20, border: '1px solid', fontSize: 12, cursor: 'pointer', transition: 'all .15s',
-                          borderColor: selectedServices.includes(s) ? 'var(--accent)' : 'var(--border)',
-                          background: selectedServices.includes(s) ? 'rgba(200,169,110,.12)' : 'transparent',
-                          color: selectedServices.includes(s) ? 'var(--accent)' : 'var(--text3)' }}>
-                        {s}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-                <div>
-                  <label className="form-field-label">Compensation Model</label>
-                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
-                    {COMP_OPTS.map(c => (
-                      <div key={c} onClick={() => toggleSvc(c, selectedComp, setSelectedComp)}
-                        style={{ padding: '6px 12px', borderRadius: 20, border: '1px solid', fontSize: 12, cursor: 'pointer', transition: 'all .15s',
-                          borderColor: selectedComp.includes(c) ? 'var(--accent)' : 'var(--border)',
-                          background: selectedComp.includes(c) ? 'rgba(200,169,110,.12)' : 'transparent',
-                          color: selectedComp.includes(c) ? 'var(--accent)' : 'var(--text3)' }}>
-                        {c}
-                      </div>
-                    ))}
-                  </div>
-                </div>
+        <div className="ob-steps-list">
+          {PHASES.map((ph, i) => (
+            <div key={i} className={'ob-step-item' + (i < phase ? ' done clickable' : i === phase ? ' active' : '')}
+              onClick={() => i < phase ? goPhase(i) : null}>
+              <div className="ob-step-num">{i < phase ? '✓' : i + 1}</div>
+              <div>
+                <div className="ob-step-label">{ph.label}</div>
+                <div className="ob-step-sublabel">{ph.sublabel}</div>
               </div>
             </div>
-          )}
+          ))}
+        </div>
+        <div style={{ marginTop: 'auto', paddingTop: 32 }}>
+          <div style={{ fontSize: 10, color: 'var(--text3)', textTransform: 'uppercase', letterSpacing: '.08em', marginBottom: 8, fontWeight: 500 }}>Progress</div>
+          <div style={{ height: 3, background: 'var(--border)', borderRadius: 3, overflow: 'hidden' }}>
+            <div style={{ height: '100%', background: 'linear-gradient(90deg,var(--accent2),var(--accent))', width: (progressPct + 25) + '%', transition: 'width .4s cubic-bezier(.22,.68,0,1.2)', borderRadius: 3 }} />
+          </div>
+          <div style={{ fontSize: 11, color: 'var(--text3)', marginTop: 8 }}>Step {phase + 1} of {PHASES.length}</div>
+        </div>
+        {onClose && (
+          <button className="btn-ghost btn-sm" onClick={onClose} style={{ marginTop: 20, fontSize: 11, color: 'var(--text3)', border: 'none', padding: '6px 0' }}>✕ Exit</button>
+        )}
+      </div>
 
-          {/* STEP 1 — Claim RIA */}
-          {step === 1 && profileType === 'claimed' && (
-            <div className="fade-in">
-              <div style={{ marginBottom: 16 }}>
-                <label className={'form-field-label' + (errors.claimCrd ? ' err' : '')}>Find your firm in the SEC database<span className="req">*</span></label>
-                <select value={claimCrd} onChange={e => setClaimCrd(e.target.value)} style={{ borderColor: errors.claimCrd ? 'var(--red)' : '' }}>
-                  <option value="">Search by name...</option>
-                  {FIRMS.slice().sort((a, b) => a.name.localeCompare(b.name)).map(f => <option key={f.crd} value={f.crd}>{f.name} — {f.city}, {f.state} — {fmtM(f.aum)}</option>)}
-                </select>
-                {errors.claimCrd && <div style={{ fontSize: 11, color: 'var(--red)', marginTop: 4 }}>{errors.claimCrd}</div>}
+      {/* Right panel */}
+      <div className="ob-right">
+        <div className="ob-right-inner">
+          {/* PHASE 0 — Identity */}
+          {phase === 0 && (
+            <div key={animKey} className="ob-slide-in" style={{ flex: 1 }}>
+              <div className="ob-phase-title">How are you registered?</div>
+              <div className="ob-phase-sub">This determines how your firm is set up in the platform. Both options give you full access to the RIA database and private intelligence tools.</div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginBottom: 28 }}>
+                <div className={'choice-card' + (profileType === 'bd' ? ' selected' : '')} onClick={() => setProfileType('bd')}>
+                  <div className="choice-card-icon">🏢</div>
+                  <div className="choice-card-body">
+                    <div className="choice-card-title">BD / Non-RIA team</div>
+                    <div className="choice-card-desc">I'm affiliated with a broker-dealer or wirehouse — e.g. Jones Group at UBS, Smith Team at Merrill Lynch, or an LPL / Raymond James practice. My firm isn't independently SEC-registered.</div>
+                  </div>
+                  <div className="choice-check">{profileType === 'bd' ? '✓' : ''}</div>
+                </div>
+                <div className={'choice-card' + (profileType === 'claimed' ? ' selected' : '')} onClick={() => setProfileType('claimed')}>
+                  <div className="choice-card-icon">📋</div>
+                  <div className="choice-card-body">
+                    <div className="choice-card-title">Claim an SEC-registered RIA</div>
+                    <div className="choice-card-desc">My firm is independently registered and appears in the SEC Form ADV database. I'll claim it — AUM, accounts, and employee data carry over automatically from the public filing.</div>
+                  </div>
+                  <div className="choice-check">{profileType === 'claimed' ? '✓' : ''}</div>
+                </div>
               </div>
-              {claimedFirm && (
-                <div style={{ background: 'var(--surface2)', border: '1px solid var(--green)', borderRadius: 12, padding: '16px 18px' }} className="fade-in">
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
-                    <span style={{ color: 'var(--green)', fontSize: 16 }}>✓</span>
-                    <span style={{ fontWeight: 600, fontFamily: 'Instrument Serif,serif', fontSize: 16 }}>{claimedFirm.name}</span>
-                    <span className="tag tag-state">{claimedFirm.state}</span>
-                  </div>
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 12 }}>
-                    {[['RAUM', fmtM(claimedFirm.aum)], ['Accounts', fmtN(claimedFirm.accounts)], ['Employees', fmtN(claimedFirm.employees)]].map(([l, v]) => (
-                      <div key={l} style={{ background: 'var(--surface)', borderRadius: 8, padding: '10px 14px' }}>
-                        <div style={{ fontSize: 10, color: 'var(--text3)', textTransform: 'uppercase', letterSpacing: '.06em', marginBottom: 3 }}>{l}</div>
-                        <div style={{ fontFamily: 'DM Mono,monospace', fontSize: 14, fontWeight: 600 }}>{v}</div>
+              {profileType === 'claimed' && (
+                <div className="ob-slide-in ob-field">
+                  <label className={'ob-label' + (errors.claimCrd ? ' err' : '')}>Find your firm in the SEC database <span className="req">*</span></label>
+                  <select value={claimCrd} onChange={e => setClaimCrd(e.target.value)} style={{ borderColor: errors.claimCrd ? 'var(--red)' : '' }}>
+                    <option value="">Search by name...</option>
+                    {FIRMS.slice().sort((a, b) => a.name.localeCompare(b.name)).map(f => <option key={f.crd} value={f.crd}>{f.name} — {f.city}, {f.state} — {fmtM(f.aum)}</option>)}
+                  </select>
+                  {claimedFirm && (
+                    <div style={{ background: 'var(--surface2)', border: '1px solid var(--green)', borderRadius: 10, padding: '14px 16px', marginTop: 10 }} className="ob-slide-in">
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
+                        <span style={{ color: 'var(--green)', fontSize: 14 }}>✓</span>
+                        <span style={{ fontWeight: 600, fontSize: 15 }}>{claimedFirm.name}</span>
+                        <span className="tag tag-state">{claimedFirm.state}</span>
                       </div>
-                    ))}
-                  </div>
-                  <div style={{ fontSize: 12, color: 'var(--text3)', marginTop: 12 }}>
-                    This ADV data carries over automatically. On the next step you'll add private intelligence fields — succession, growth intent, and transition data — visible only to you.
-                  </div>
+                      <div style={{ display: 'flex', gap: 16, fontFamily: 'DM Mono,monospace', fontSize: 12 }}>
+                        <span>RAUM <b style={{ color: 'var(--accent)' }}>{fmtM(claimedFirm.aum)}</b></span>
+                        <span>Accts <b>{fmtN(claimedFirm.accounts)}</b></span>
+                        <span>Emp <b>{fmtN(claimedFirm.employees)}</b></span>
+                      </div>
+                    </div>
+                  )}
                 </div>
               )}
             </div>
           )}
 
-          {/* STEP 2 — Intelligence */}
-          {step === 2 && (
-            <div className="fade-in">
-              <div style={{ background: 'var(--purple-dim)', border: '1px solid rgba(167,139,250,.2)', borderRadius: 10, padding: '12px 16px', marginBottom: 20, fontSize: 12, color: 'var(--text3)', lineHeight: 1.6 }}>
-                🔒 <span style={{ color: 'var(--purple)', fontWeight: 600 }}>Private.</span> These fields are visible only to you. They power private matching against the RIA database to surface acquisition targets, ideal partners, and similar firms.
+          {/* PHASE 1 — Firm basics */}
+          {phase === 1 && (
+            <div key={animKey} className="ob-slide-in" style={{ flex: 1 }}>
+              {profileType === 'claimed' ? (
+                <>
+                  <div className="ob-phase-title">Your quantitative profile</div>
+                  <div className="ob-phase-sub">Add intelligence fields for your claimed RIA. The ADV data carries over automatically — this is private context that powers matching.</div>
+                  <QuantFields intel={intel} setI={setI} setBoolI={setBoolI} setIntI={setIntI} toggleArr={toggleArr} errors={errors} />
+                </>
+              ) : (
+                <>
+                  <div className="ob-phase-title">Tell us about your practice</div>
+                  <div className="ob-phase-sub">This is your firm's public-facing data — it will appear on the map and in searches alongside SEC-registered RIAs.</div>
+                  <div className="ob-field">
+                    <label className={'ob-label' + (errors.firmName ? ' err' : '')}>Team / Practice name <span className="req">*</span></label>
+                    <input value={firmName} onChange={e => setFirmName(e.target.value)} placeholder="e.g. Jones Group at UBS" style={{ borderColor: errors.firmName ? 'var(--red)' : '' }} />
+                    <div style={{ fontSize: 11, color: 'var(--text3)', marginTop: 5 }}>Use the format "Team Name at Parent Firm" — this is how you'll appear in the database.</div>
+                  </div>
+                  <div className="ob-field">
+                    <label className="ob-label">Legal entity name (if different)</label>
+                    <input value={firmLegal} onChange={e => setFirmLegal(e.target.value)} placeholder="Optional" />
+                  </div>
+                  <div className="ob-field">
+                    <label className="ob-label">Employment type</label>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 7, marginTop: 4 }}>
+                      {EMPLOYMENT_TYPES.map(et => (
+                        <div key={et} className={'choice-card' + (employmentType === et ? ' selected' : '')}
+                          style={{ padding: '12px 16px', gap: 12 }}
+                          onClick={() => setEmploymentType(et)}>
+                          <div className="choice-check" style={{ width: 16, height: 16 }}>{employmentType === et ? '✓' : ''}</div>
+                          <span style={{ fontSize: 13 }}>{et}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                  <div style={{ marginBottom: 20 }}>
+                    <div style={{ fontSize: 12, textTransform: 'uppercase', letterSpacing: '.08em', color: 'var(--accent)', fontWeight: 600, marginBottom: 12 }}>Address</div>
+                    <div className="ob-grid-2" style={{ gap: 12, marginBottom: 12 }}>
+                      <div className="ob-field" style={{ gridColumn: '1/-1', marginBottom: 0 }}>
+                        <label className={'ob-label' + (errors.addr1 ? ' err' : '')}>Street address</label>
+                        <input value={addr1} onChange={e => setAddr1(e.target.value)} placeholder="123 Main St" style={{ borderColor: errors.addr1 ? 'var(--red)' : '' }} />
+                      </div>
+                      <div className="ob-field" style={{ marginBottom: 0 }}>
+                        <label className="ob-label">Suite / Unit</label>
+                        <input value={addr2} onChange={e => setAddr2(e.target.value)} placeholder="Suite 400" />
+                      </div>
+                      <div className="ob-field" style={{ marginBottom: 0 }}>
+                        <label className={'ob-label' + (errors.city ? ' err' : '')}>City <span className="req">*</span></label>
+                        <input value={city} onChange={e => setCity(e.target.value)} style={{ borderColor: errors.city ? 'var(--red)' : '' }} />
+                      </div>
+                      <div className="ob-field" style={{ marginBottom: 0 }}>
+                        <label className={'ob-label' + (errors.state ? ' err' : '')}>State <span className="req">*</span></label>
+                        <select value={state} onChange={e => setState(e.target.value)} style={{ borderColor: errors.state ? 'var(--red)' : '' }}>
+                          <option value="">Select...</option>
+                          {'NH,VT,MA,ME,CT,RI,NY,NJ,PA,FL,TX,CA,IL,WA,CO,GA,NC,VA,OH,AZ,MN,WI,MO,OR,IN,MD,TN,MI,SC,KY,AL,LA,OK,UT,NV,MS,AR,KS,NM,NE,WV,ID,HI,DE,MT,WY,ND,SD,AK'.split(',').map(s => <option key={s}>{s}</option>)}
+                        </select>
+                      </div>
+                      <div className="ob-field" style={{ marginBottom: 0 }}>
+                        <label className={'ob-label' + (errors.zip ? ' err' : '')}>ZIP <span className="req">*</span></label>
+                        <input value={zip} onChange={e => setZip(e.target.value)} placeholder="03101" style={{ borderColor: errors.zip ? 'var(--red)' : '' }} />
+                      </div>
+                    </div>
+                  </div>
+                  <div style={{ marginBottom: 20 }}>
+                    <div style={{ fontSize: 12, textTransform: 'uppercase', letterSpacing: '.08em', color: 'var(--accent)', fontWeight: 600, marginBottom: 12 }}>Contact</div>
+                    <div className="ob-grid-2" style={{ gap: 12 }}>
+                      <div className="ob-field" style={{ marginBottom: 0 }}>
+                        <label className="ob-label">Phone</label>
+                        <input value={phone} onChange={e => setPhone(e.target.value)} placeholder="(603) 555-0100" />
+                      </div>
+                      <div className="ob-field" style={{ marginBottom: 0 }}>
+                        <label className="ob-label">Website</label>
+                        <input value={website} onChange={e => setWebsite(e.target.value)} placeholder="https://" />
+                      </div>
+                    </div>
+                  </div>
+                  <div style={{ marginBottom: 20 }}>
+                    <div style={{ fontSize: 12, textTransform: 'uppercase', letterSpacing: '.08em', color: 'var(--accent)', fontWeight: 600, marginBottom: 12 }}>Assets & Clients <span style={{ color: 'var(--text3)', fontWeight: 400, textTransform: 'none', letterSpacing: 'normal', fontSize: 11 }}>self-reported, in $M</span></div>
+                    <div className="ob-grid-3" style={{ gap: 12 }}>
+                      <div className="ob-field" style={{ marginBottom: 0 }}>
+                        <label className="ob-label">AUM ($M)</label>
+                        <input type="number" value={selfAum} onChange={e => setSelfAum(e.target.value)} placeholder="e.g. 250" />
+                      </div>
+                      <div className="ob-field" style={{ marginBottom: 0 }}>
+                        <label className="ob-label">Discretionary AUM ($M)</label>
+                        <input type="number" value={selfAumDisc} onChange={e => setSelfAumDisc(e.target.value)} placeholder="e.g. 200" />
+                      </div>
+                      <div className="ob-field" style={{ marginBottom: 0 }}>
+                        <label className="ob-label">Total accounts</label>
+                        <input type="number" value={selfAccounts} onChange={e => setSelfAccounts(e.target.value)} placeholder="e.g. 180" />
+                      </div>
+                      <div className="ob-field" style={{ marginBottom: 0 }}>
+                        <label className="ob-label">Individual clients</label>
+                        <input type="number" value={selfIndClients} onChange={e => setSelfIndClients(e.target.value)} placeholder="e.g. 140" />
+                      </div>
+                      <div className="ob-field" style={{ marginBottom: 0 }}>
+                        <label className="ob-label">HNW clients</label>
+                        <input type="number" value={selfHNWClients} onChange={e => setSelfHNWClients(e.target.value)} placeholder="e.g. 60" />
+                      </div>
+                    </div>
+                  </div>
+                  <QuantFields intel={intel} setI={setI} setBoolI={setBoolI} setIntI={setIntI} toggleArr={toggleArr} errors={errors} />
+                  <div style={{ marginBottom: 20 }}>
+                    <div style={{ fontSize: 12, textTransform: 'uppercase', letterSpacing: '.08em', color: 'var(--accent)', fontWeight: 600, marginBottom: 12 }}>Services & Compensation</div>
+                    <div className="ob-field">
+                      <label className="ob-label">Services offered</label>
+                      <Chips options={SERVICES_OPTS} selected={selectedServices} onToggle={v => toggleSvc(v, selectedServices, setSelectedServices)} />
+                    </div>
+                    <div className="ob-field">
+                      <label className="ob-label">Compensation model</label>
+                      <Chips options={COMP_OPTS} selected={selectedComp} onToggle={v => toggleSvc(v, selectedComp, setSelectedComp)} />
+                    </div>
+                  </div>
+                </>
+              )}
+            </div>
+          )}
+
+          {/* PHASE 2 — Culture & Fit */}
+          {phase === 2 && (
+            <div key={animKey} className="ob-slide-in" style={{ flex: 1 }}>
+              <div className="ob-phase-title">How do you work with clients?</div>
+              <div className="ob-phase-sub">Culture and client approach are the most underweighted factors in M&A fit. This is what acquirers actually care about — and what makes one deal work while another falls apart.</div>
+              <div style={{ background: 'var(--purple-dim)', border: '1px solid rgba(167,139,250,.2)', borderRadius: 10, padding: '12px 16px', marginBottom: 24, fontSize: 12, color: 'var(--text3)', lineHeight: 1.6 }}>
+                🔒 <span style={{ color: 'var(--purple)', fontWeight: 600 }}>Private.</span> These answers are visible only to you and power goodness-of-fit matching. They are never shown to other firms or included in public data.
               </div>
-              <div className="form-section">
-                <div className="form-section-title">Firm Structure</div>
-                <div className="form-grid-2" style={{ gap: 12 }}>
-                  <IntelField label="Team Size (total headcount)" field="teamSize"><input type="number" min="1" value={intel.teamSize ?? ''} onChange={e => setIntI('teamSize', e.target.value)} style={{ borderColor: errors.teamSize ? 'var(--red)' : '' }}/></IntelField>
-                  <IntelField label="AUM Band" field="aumBand"><select value={intel.aumBand ?? ''} onChange={e => setI('aumBand', e.target.value || null)} style={{ borderColor: errors.aumBand ? 'var(--red)' : '' }}><option value="">Select...</option>{AUM_BANDS.map(b => <option key={b}>{b}</option>)}</select></IntelField>
-                  <IntelField label="Ownership Structure" field="ownershipStructure"><select value={intel.ownershipStructure ?? ''} onChange={e => setI('ownershipStructure', e.target.value || null)} style={{ borderColor: errors.ownershipStructure ? 'var(--red)' : '' }}><option value="">Select...</option>{OWNERSHIP_STRUCTS.map(o => <option key={o}>{o}</option>)}</select></IntelField>
-                  <IntelField label="Founder / Principal Age Band" field="founderAgeBand"><select value={intel.founderAgeBand ?? ''} onChange={e => setI('founderAgeBand', e.target.value || null)} style={{ borderColor: errors.founderAgeBand ? 'var(--red)' : '' }}><option value="">Select...</option>{FOUNDER_AGE_BANDS.map(a => <option key={a}>{a}</option>)}</select></IntelField>
+              <div className="ob-field">
+                <label className="ob-label">Primary client approach</label>
+                <div style={{ fontSize: 11, color: 'var(--text3)', marginBottom: 8 }}>Select all that apply — most firms blend two or three.</div>
+                <Chips options={CLIENT_APPROACH_OPTS} selected={intel.clientApproach || []} onToggle={v => toggleArr('clientApproach', v)} />
+              </div>
+              <div className="ob-field">
+                <label className="ob-label">Client review cadence</label>
+                <Chips options={REVIEW_OPTS} selected={intel.reviewCadence || []} onToggle={v => toggleArr('reviewCadence', v)} />
+              </div>
+              <div className="ob-field">
+                <label className="ob-label">Do you review client tax returns?</label>
+                <div style={{ display: 'flex', gap: 8 }}>
+                  {['Yes, routinely','Yes, on request','No'].map(opt => (
+                    <div key={opt} className={'chip' + (intel.reviewTaxReturns === opt ? ' on' : '')}
+                      onClick={() => setI('reviewTaxReturns', intel.reviewTaxReturns === opt ? null : opt)}>
+                      {opt}
+                    </div>
+                  ))}
                 </div>
               </div>
-              <div className="form-section">
-                <div className="form-section-title">Succession & Transition</div>
-                <div className="form-grid-2" style={{ gap: 12 }}>
-                  <IntelField label="Internal Successor Identified" field="internalSuccessorIdentified"><select value={intel.internalSuccessorIdentified == null ? '' : String(intel.internalSuccessorIdentified)} onChange={e => setBoolI('internalSuccessorIdentified', e.target.value)} style={{ borderColor: errors.internalSuccessorIdentified ? 'var(--red)' : '' }}><option value="">Select...</option><option value="true">Yes</option><option value="false">No</option></select></IntelField>
-                  <IntelField label="Succession Timeline" field="successionTimeline"><select value={intel.successionTimeline ?? ''} onChange={e => setI('successionTimeline', e.target.value || null)} style={{ borderColor: errors.successionTimeline ? 'var(--red)' : '' }}><option value="">Select...</option>{SUCCESSION_TIMELINES.map(t => <option key={t}>{t}</option>)}</select></IntelField>
-                  <IntelField label="Open to Minority Capital" field="openToMinorityCapital"><select value={intel.openToMinorityCapital == null ? '' : String(intel.openToMinorityCapital)} onChange={e => setBoolI('openToMinorityCapital', e.target.value)} style={{ borderColor: errors.openToMinorityCapital ? 'var(--red)' : '' }}><option value="">Select...</option><option value="true">Yes</option><option value="false">No</option></select></IntelField>
-                  <IntelField label="Open to Full Sale" field="openToFullSale"><select value={intel.openToFullSale == null ? '' : String(intel.openToFullSale)} onChange={e => setBoolI('openToFullSale', e.target.value)} style={{ borderColor: errors.openToFullSale ? 'var(--red)' : '' }}><option value="">Select...</option><option value="true">Yes</option><option value="false">No</option></select></IntelField>
+              <div className="ob-field">
+                <label className="ob-label">Office environment</label>
+                <div style={{ display: 'flex', gap: 8 }}>
+                  {['Remote-first','Hybrid','In-person first'].map(opt => (
+                    <div key={opt} className={'chip' + (intel.officeEnvironment === opt ? ' on' : '')}
+                      onClick={() => setI('officeEnvironment', intel.officeEnvironment === opt ? null : opt)}>
+                      {opt}
+                    </div>
+                  ))}
                 </div>
               </div>
-              <div className="form-section" style={{ marginBottom: 0 }}>
-                <div className="form-section-title">Growth Intent</div>
-                <div className="form-grid-2" style={{ gap: 12 }}>
-                  <IntelField label="Seeking Acquisitions" field="seekingAcquisitions"><select value={intel.seekingAcquisitions == null ? '' : String(intel.seekingAcquisitions)} onChange={e => setBoolI('seekingAcquisitions', e.target.value)} style={{ borderColor: errors.seekingAcquisitions ? 'var(--red)' : '' }}><option value="">Select...</option><option value="true">Yes</option><option value="false">No</option></select></IntelField>
-                  <IntelField label="Hiring Junior Advisors" field="hiringJuniorAdvisors"><select value={intel.hiringJuniorAdvisors == null ? '' : String(intel.hiringJuniorAdvisors)} onChange={e => setBoolI('hiringJuniorAdvisors', e.target.value)} style={{ borderColor: errors.hiringJuniorAdvisors ? 'var(--red)' : '' }}><option value="">Select...</option><option value="true">Yes</option><option value="false">No</option></select></IntelField>
-                  <IntelField label="Geographic Flexibility" field="geographicFlexibility"><select value={intel.geographicFlexibility ?? ''} onChange={e => setI('geographicFlexibility', e.target.value || null)} style={{ borderColor: errors.geographicFlexibility ? 'var(--red)' : '' }}><option value="">Select...</option>{GEO_FLEXIBILITIES.map(g => <option key={g}>{g}</option>)}</select></IntelField>
-                  <IntelField label="Growth Intent" field="growthIntent"><select value={intel.growthIntent ?? ''} onChange={e => setI('growthIntent', e.target.value || null)} style={{ borderColor: errors.growthIntent ? 'var(--red)' : '' }}><option value="">Select...</option>{GROWTH_INTENTS.map(g => <option key={g}>{g}</option>)}</select></IntelField>
-                </div>
+              <div className="ob-field">
+                <label className="ob-label">Culture traits</label>
+                <div style={{ fontSize: 11, color: 'var(--text3)', marginBottom: 8 }}>What best describes your team's culture? Select all that apply.</div>
+                <Chips options={CULTURE_OPTS} selected={intel.cultureTraits || []} onToggle={v => toggleArr('cultureTraits', v)} />
+              </div>
+              <div className="ob-field">
+                <label className="ob-label">Briefly describe your office culture <span style={{ fontWeight: 400, textTransform: 'none', letterSpacing: 'normal', fontSize: 11 }}>(optional)</span></label>
+                <textarea rows={3} value={intel.techNotes || ''} onChange={e => setI('cultureNotes', e.target.value)} placeholder="e.g. Close-knit team, we do a monthly lunch and an annual firm retreat. Partners are very accessible. Clients know everyone by name..." style={{ resize: 'vertical', lineHeight: 1.6 }} />
               </div>
             </div>
           )}
 
-          {/* Nav buttons */}
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 24, paddingTop: 20, borderTop: '1px solid var(--border)' }}>
-            <button className="btn-ghost btn-sm" onClick={() => step > 0 ? setStep(s => s - 1) : onClose && onClose()} style={{ visibility: step === 0 && !onClose ? 'hidden' : 'visible' }}>
-              {step === 0 ? 'Cancel' : '← Back'}
-            </button>
-            <button className="btn-gold" onClick={next} disabled={step === 0 && !profileType} style={{ opacity: step === 0 && !profileType ? .4 : 1 }}>
-              {step === 2 ? 'Complete Profile' : 'Continue →'}
-            </button>
+          {/* PHASE 3 — Operations & Technology */}
+          {phase === 3 && (
+            <div key={animKey} className="ob-slide-in" style={{ flex: 1 }}>
+              <div className="ob-phase-title">Your tech stack & operations</div>
+              <div className="ob-phase-sub">Technology compatibility is a real integration risk in acquisitions. Shared software platforms signal operational alignment — and mismatched stacks signal friction.</div>
+              <div style={{ background: 'rgba(200,169,110,.08)', border: '1px solid rgba(200,169,110,.2)', borderRadius: 10, padding: '12px 16px', marginBottom: 24, fontSize: 12, color: 'var(--text3)', lineHeight: 1.6 }}>
+                🔒 <span style={{ color: 'var(--accent)', fontWeight: 600 }}>Private.</span> Technology and operational data is never shared. It's used only in your private goodness-of-fit scoring.
+              </div>
+              <div className="ob-field">
+                <label className="ob-label">CRM</label>
+                <Chips options={CRM_OPTS} selected={intel.crm || []} onToggle={v => toggleArr('crm', v)} />
+              </div>
+              <div className="ob-field">
+                <label className="ob-label">Financial planning software</label>
+                <Chips options={FP_OPTS} selected={intel.financialPlanning || []} onToggle={v => toggleArr('financialPlanning', v)} />
+              </div>
+              <div className="ob-field">
+                <label className="ob-label">Portfolio management / reporting</label>
+                <Chips options={PMS_OPTS} selected={intel.portfolioMgmt || []} onToggle={v => toggleArr('portfolioMgmt', v)} />
+              </div>
+              <div className="ob-field">
+                <label className="ob-label">Primary custodian(s)</label>
+                <Chips options={CUSTODIANS} selected={intel.custodians || []} onToggle={v => toggleArr('custodians', v)} />
+              </div>
+              <div className="ob-field">
+                <label className="ob-label">Other tools or notes <span style={{ fontWeight: 400, textTransform: 'none', letterSpacing: 'normal', fontSize: 11 }}>(optional)</span></label>
+                <textarea rows={3} value={intel.techNotes || ''} onChange={e => setI('techNotes', e.target.value)} placeholder="e.g. We also use Holistiplan for tax planning, Nitrogen for risk, and HealthView for healthcare cost projections..." style={{ resize: 'vertical', lineHeight: 1.6 }} />
+              </div>
+            </div>
+          )}
+
+          {/* Footer nav */}
+          <div className="ob-footer">
+            <div className="ob-footer-hint">
+              {phase === 3 ? 'All fields optional — add what you\'re comfortable with.' : ''}
+            </div>
+            <div className="ob-footer-btns">
+              {canGoBack && (
+                <button className="btn-ghost" onClick={() => goPhase(phase - 1)}>← Back</button>
+              )}
+              <button className="btn-gold" onClick={handleNext} style={{ padding: '10px 28px', fontSize: 14 }}>
+                {phase === PHASES.length - 1 ? 'Complete Profile ✓' : 'Continue →'}
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -731,8 +973,106 @@ function OnboardingModal({ onComplete, onClose }) {
   );
 }
 
+// Shared quantitative intelligence fields used in phase 1
+function QuantFields({ intel, setI, setBoolI, setIntI, toggleArr, errors }) {
+  return (
+    <>
+      <div style={{ marginBottom: 20 }}>
+        <div style={{ fontSize: 12, textTransform: 'uppercase', letterSpacing: '.08em', color: 'var(--accent)', fontWeight: 600, marginBottom: 12 }}>Team Structure</div>
+        <div className="ob-grid-3" style={{ gap: 12 }}>
+          <div className="ob-field" style={{ marginBottom: 0 }}>
+            <label className="ob-label">Total headcount</label>
+            <input type="number" min="1" value={intel.teamSize ?? ''} onChange={e => setIntI('teamSize', e.target.value)} placeholder="e.g. 6" />
+          </div>
+          <div className="ob-field" style={{ marginBottom: 0 }}>
+            <label className="ob-label">Advisors / producers</label>
+            <input type="number" min="0" value={intel.numAdvisors ?? ''} onChange={e => setIntI('numAdvisors', e.target.value)} placeholder="e.g. 3" />
+          </div>
+          <div className="ob-field" style={{ marginBottom: 0 }}>
+            <label className="ob-label">Support staff</label>
+            <input type="number" min="0" value={intel.supportStaff ?? ''} onChange={e => setIntI('supportStaff', e.target.value)} placeholder="e.g. 2" />
+          </div>
+        </div>
+      </div>
+      <div style={{ marginBottom: 20 }}>
+        <div style={{ fontSize: 12, textTransform: 'uppercase', letterSpacing: '.08em', color: 'var(--accent)', fontWeight: 600, marginBottom: 12 }}>Advisor Age Profile</div>
+        <div style={{ fontSize: 11, color: 'var(--text3)', marginBottom: 10 }}>Check all age bands that apply to your producing advisors. This is the single biggest driver of succession vulnerability scoring.</div>
+        <Chips options={['<40','40–49','50–59','60–64','65+']} selected={intel.advisorAgeBands || []} onToggle={v => toggleArr('advisorAgeBands', v)} />
+      </div>
+      <div style={{ marginBottom: 20 }}>
+        <div style={{ fontSize: 12, textTransform: 'uppercase', letterSpacing: '.08em', color: 'var(--accent)', fontWeight: 600, marginBottom: 12 }}>Ownership & Succession</div>
+        <div className="ob-grid-2" style={{ gap: 12 }}>
+          <div className="ob-field" style={{ marginBottom: 0 }}>
+            <label className="ob-label">Ownership structure</label>
+            <select value={intel.ownershipStructure ?? ''} onChange={e => setI('ownershipStructure', e.target.value || null)}>
+              <option value="">Select...</option>
+              {['Solo owner','2 partners','3+ partners','Corporate owned'].map(o => <option key={o}>{o}</option>)}
+            </select>
+          </div>
+          <div className="ob-field" style={{ marginBottom: 0 }}>
+            <label className="ob-label">Succession timeline</label>
+            <select value={intel.successionTimeline ?? ''} onChange={e => setI('successionTimeline', e.target.value || null)}>
+              <option value="">Select...</option>
+              {['None / not considering','5+ years','3–5 years','1–3 years','Actively exploring'].map(t => <option key={t}>{t}</option>)}
+            </select>
+          </div>
+          <div className="ob-field" style={{ marginBottom: 0 }}>
+            <label className="ob-label">Internal successor identified?</label>
+            <select value={intel.internalSuccessorIdentified == null ? '' : String(intel.internalSuccessorIdentified)} onChange={e => setBoolI('internalSuccessorIdentified', e.target.value)}>
+              <option value="">Select...</option><option value="true">Yes</option><option value="false">No</option>
+            </select>
+          </div>
+          <div className="ob-field" style={{ marginBottom: 0 }}>
+            <label className="ob-label">Open to minority capital?</label>
+            <select value={intel.openToMinorityCapital == null ? '' : String(intel.openToMinorityCapital)} onChange={e => setBoolI('openToMinorityCapital', e.target.value)}>
+              <option value="">Select...</option><option value="true">Yes</option><option value="false">No</option>
+            </select>
+          </div>
+          <div className="ob-field" style={{ marginBottom: 0 }}>
+            <label className="ob-label">Open to full sale?</label>
+            <select value={intel.openToFullSale == null ? '' : String(intel.openToFullSale)} onChange={e => setBoolI('openToFullSale', e.target.value)}>
+              <option value="">Select...</option><option value="true">Yes</option><option value="false">No</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div style={{ marginBottom: 20 }}>
+        <div style={{ fontSize: 12, textTransform: 'uppercase', letterSpacing: '.08em', color: 'var(--accent)', fontWeight: 600, marginBottom: 12 }}>Growth Intent</div>
+        <div className="ob-grid-2" style={{ gap: 12 }}>
+          <div className="ob-field" style={{ marginBottom: 0 }}>
+            <label className="ob-label">Growth intent</label>
+            <select value={intel.growthIntent ?? ''} onChange={e => setI('growthIntent', e.target.value || null)}>
+              <option value="">Select...</option>
+              {['Organic only','Acquisitive','Strategic partnership','Undecided'].map(g => <option key={g}>{g}</option>)}
+            </select>
+          </div>
+          <div className="ob-field" style={{ marginBottom: 0 }}>
+            <label className="ob-label">Geographic flexibility</label>
+            <select value={intel.geographicFlexibility ?? ''} onChange={e => setI('geographicFlexibility', e.target.value || null)}>
+              <option value="">Select...</option>
+              {['None — local only','Regional','National'].map(g => <option key={g}>{g}</option>)}
+            </select>
+          </div>
+          <div className="ob-field" style={{ marginBottom: 0 }}>
+            <label className="ob-label">Seeking acquisitions?</label>
+            <select value={intel.seekingAcquisitions == null ? '' : String(intel.seekingAcquisitions)} onChange={e => setBoolI('seekingAcquisitions', e.target.value)}>
+              <option value="">Select...</option><option value="true">Yes</option><option value="false">No</option>
+            </select>
+          </div>
+          <div className="ob-field" style={{ marginBottom: 0 }}>
+            <label className="ob-label">Hiring junior advisors?</label>
+            <select value={intel.hiringJuniorAdvisors == null ? '' : String(intel.hiringJuniorAdvisors)} onChange={e => setBoolI('hiringJuniorAdvisors', e.target.value)}>
+              <option value="">Select...</option><option value="true">Yes</option><option value="false">No</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+}
+
 // =============================================================================
-// MY PROFILE PAGE
+// MY PROFILE PAGE — Full rich profile view
 // =============================================================================
 function MyProfile({ profile, roa, onOpenOnboarding, onClearProfile, onSelect }) {
   const [matchMode, setMatchMode] = useState('acquire');
@@ -740,10 +1080,12 @@ function MyProfile({ profile, roa, onOpenOnboarding, onClearProfile, onSelect })
   if (!profile) {
     return (
       <div className="page" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '60vh' }}>
-        <div style={{ fontSize: 48, marginBottom: 16, opacity: .3 }}>👤</div>
-        <div className="serif" style={{ fontSize: 28, marginBottom: 10, color: 'var(--text2)' }}>No profile yet</div>
-        <div style={{ fontSize: 13, color: 'var(--text3)', maxWidth: 360, textAlign: 'center', lineHeight: 1.7, marginBottom: 20 }}>Create a profile to unlock full platform access and private intelligence matching.</div>
-        <button className="btn-gold" onClick={onOpenOnboarding}>Create Profile →</button>
+        <div style={{ fontSize: 52, marginBottom: 20, opacity: .25 }}>◎</div>
+        <div style={{ fontFamily: 'Instrument Serif,serif', fontSize: 30, marginBottom: 10, color: 'var(--text2)', letterSpacing: '-.02em' }}>No profile yet</div>
+        <div style={{ fontSize: 13, color: 'var(--text3)', maxWidth: 380, textAlign: 'center', lineHeight: 1.7, marginBottom: 24 }}>
+          Create a profile to unlock full platform access, appear in the map and search, and run private intelligence matching.
+        </div>
+        <button className="btn-gold" style={{ padding: '11px 28px', fontSize: 14 }} onClick={onOpenOnboarding}>Create Profile →</button>
       </div>
     );
   }
@@ -755,226 +1097,239 @@ function MyProfile({ profile, roa, onOpenOnboarding, onClearProfile, onSelect })
 
   const claimedBase = profile.type === 'claimed' ? FIRMS.find(f => f.crd === profile.crd) : null;
   const aum      = profile.type === 'claimed' ? claimedBase?.aum      : profile.aum;
+  const aumDisc  = profile.type === 'claimed' ? claimedBase?.aumDisc   : profile.aumDisc;
   const accounts = profile.type === 'claimed' ? claimedBase?.accounts  : profile.accounts;
-  const employees = profile.type === 'claimed' ? claimedBase?.employees : (intel.teamSize || null);
+  const employees = profile.type === 'claimed' ? claimedBase?.employees : intel.teamSize || null;
   const firmState = profile.type === 'claimed' ? claimedBase?.state : profile.state;
 
-  // Runtime peer rankings — never persisted
   const rankings = useMemo(() => {
     if (!aum) return null;
     const allWithAum = FIRMS.filter(f => f.aum > 0);
     const stateWithAum = allWithAum.filter(f => f.state === firmState);
-
-    const pctRank = (arr, val, key = 'aum') => {
-      const sorted = [...arr].sort((a, b) => a[key] - b[key]);
-      const pos = sorted.findIndex(f => f[key] >= val);
-      if (pos === -1) return 99;
-      return Math.round((pos / sorted.length) * 100);
-    };
-
     const nationalRankByAum = allWithAum.filter(f => f.aum < aum).length + 1;
     const stateRankByAum    = stateWithAum.filter(f => f.aum < aum).length + 1;
     const nationalPct       = Math.round((1 - (nationalRankByAum / allWithAum.length)) * 100);
     const statePct          = Math.round((1 - (stateRankByAum / stateWithAum.length)) * 100);
-
-    // Revenue band peers
     const rev = aum * roa;
-    const revPeers = allWithAum.filter(f => {
-      const fr = f.aum * roa;
-      return fr >= rev * 0.5 && fr <= rev * 2;
-    });
-
-    // AUM band peers in state
-    const bandLow = aum * 0.5, bandHigh = aum * 2;
-    const stateBandPeers = stateWithAum.filter(f => f.aum >= bandLow && f.aum <= bandHigh);
-
-    // Employee count percentile
+    const revPeers = allWithAum.filter(f => { const fr = f.aum * roa; return fr >= rev * 0.5 && fr <= rev * 2; });
+    const stateBandPeers = stateWithAum.filter(f => f.aum >= aum * 0.5 && f.aum <= aum * 2);
     const empPct = employees && employees > 0
       ? Math.round((allWithAum.filter(f => (f.employees || 0) < employees).length / allWithAum.length) * 100)
       : null;
-
-    return {
-      nationalRank: nationalRankByAum,
-      nationalTotal: allWithAum.length,
-      nationalPct,
-      stateRank: stateRankByAum,
-      stateTotal: stateWithAum.length,
-      statePct,
-      revPeerCount: revPeers.length,
-      stateBandPeerCount: stateBandPeers.length,
-      empPct,
-    };
+    return { nationalRank: nationalRankByAum, nationalTotal: allWithAum.length, nationalPct,
+      stateRank: stateRankByAum, stateTotal: stateWithAum.length, statePct,
+      revPeerCount: revPeers.length, stateBandPeerCount: stateBandPeers.length, empPct };
   }, [aum, roa, firmState, employees]);
 
-  const MATCH_MODE_TIPS = {
-    acquire: 'Scores firms on: geographic proximity to you, smaller AUM (70% or less of yours), lean teams (≤5 people), and overlap in services and compensation model. Higher score = stronger fit as an acquisition candidate.',
-    partner: 'Scores firms on: similar AUM size (within 50% of yours), different state (complementary geography), and overlap in services and compensation. Favors firms that could extend your reach without direct competition.',
-    sell:    'Scores firms on: significantly larger AUM (at least 1.5× yours), geographic proximity, and service overlap. These are firms with the scale to be a credible acquirer or capital partner.',
+  const MATCH_TIPS = {
+    acquire: 'Firms scored on: geographic proximity, smaller AUM (<70% of yours), lean teams, and service/comp overlap.',
+    partner: 'Similar-sized firms in complementary markets for strategic partnership.',
+    sell:    'Larger RIAs with sufficient scale to be a credible acquirer or capital partner.',
   };
+
+  const discPct = aum && aumDisc ? ((aumDisc / aum) * 100).toFixed(0) + '%' : null;
 
   return (
     <div className="page fade-up">
-      {/* Header card */}
-      <div className="profile-page-header" style={{ marginBottom: 20 }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-          <div style={{ display: 'flex', gap: 16, alignItems: 'flex-start' }}>
-            <div className="profile-avatar">{(profile.firmName || '?')[0]}</div>
+      {/* Hero */}
+      <div className="profile-hero">
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', position: 'relative', zIndex: 1 }}>
+          <div style={{ display: 'flex', gap: 20, alignItems: 'flex-start' }}>
+            <div className="profile-avatar-lg">{(profile.firmName || '?')[0]}</div>
             <div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
-                <div style={{ fontFamily: 'Instrument Serif,serif', fontSize: 24, letterSpacing: '-.02em' }}>{profile.firmName}</div>
-                <span className={'tag ' + (profile.type === 'claimed' ? 'tag-green' : 'tag-gold')}>{profile.type === 'claimed' ? 'Claimed RIA' : 'BD / Non-RIA'}</span>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 5 }}>
+                <div style={{ fontFamily: 'Instrument Serif,serif', fontSize: 28, letterSpacing: '-.03em', lineHeight: 1.1 }}>{profile.firmName}</div>
+                <span className={'tag ' + (profile.type === 'claimed' ? 'tag-green' : 'tag-gold')}>
+                  {profile.type === 'claimed' ? '✓ Claimed RIA' : 'BD Team'}
+                </span>
               </div>
-              {profile.type === 'bd' && <div style={{ fontSize: 12, color: 'var(--text3)', marginBottom: 6 }}>{profile.addr1}{profile.addr2 ? ', ' + profile.addr2 : ''}, {profile.city}, {profile.state} {profile.zip}</div>}
-              {profile.type === 'claimed' && claimedBase && <div style={{ fontSize: 12, color: 'var(--text3)', marginBottom: 6 }}>{claimedBase.addr1}, {claimedBase.city}, {claimedBase.state}</div>}
-              {profile.type === 'bd' && profile.website && <a href={wu(profile.website)} target="_blank" rel="noopener" style={{ fontSize: 12, color: 'var(--accent)' }}>{profile.website} ↗</a>}
+              {profile.type === 'bd' && (
+                <div style={{ fontSize: 12, color: 'var(--text3)', lineHeight: 1.6, marginBottom: 4 }}>
+                  {profile.addr1}{profile.addr2 ? ', ' + profile.addr2 : ''}, {profile.city}, {profile.state} {profile.zip}
+                </div>
+              )}
+              {profile.type === 'claimed' && claimedBase && (
+                <div style={{ fontSize: 12, color: 'var(--text3)', marginBottom: 4 }}>{claimedBase.addr1}, {claimedBase.city}, {claimedBase.state}</div>
+              )}
+              {profile.employmentType && <div style={{ fontSize: 11, color: 'var(--text3)', marginBottom: 6 }}>{profile.employmentType}</div>}
+              <div style={{ display: 'flex', gap: 12, fontSize: 12 }}>
+                {(profile.phone || claimedBase?.phone) && <span style={{ color: 'var(--text3)' }}>{profile.phone || claimedBase.phone}</span>}
+                {(profile.website || claimedBase?.website) && (() => { const wu2 = wu(profile.website || claimedBase?.website); return wu2 ? <a href={wu2} target="_blank" rel="noopener" style={{ color: 'var(--accent)', textDecoration: 'none' }}>Website ↗</a> : null; })()}
+                {profile.type === 'claimed' && <a href={'https://adviserinfo.sec.gov/firm/summary/' + profile.crd} target="_blank" rel="noopener" style={{ color: 'var(--accent)', textDecoration: 'none' }}>IAPD ↗</a>}
+              </div>
             </div>
           </div>
-          <div style={{ display: 'flex', gap: 8 }}>
+          <div style={{ display: 'flex', gap: 8, zIndex: 2 }}>
             <button className="btn-ghost btn-sm" onClick={onOpenOnboarding}>Edit Profile</button>
-            <button className="btn-danger btn-sm" onClick={() => { if (confirm('Clear profile and return to locked view?')) { onClearProfile(); } }}>Clear</button>
+            <button className="btn-danger btn-sm" onClick={() => { if(confirm('Clear profile?')) onClearProfile(); }}>Clear</button>
           </div>
         </div>
       </div>
 
-      {/* Metrics */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 12, marginBottom: 20 }}>
-        <div className="stat-card"><div className="stat-label">AUM</div><div className="stat-value">{fmtM(aum)}</div><div className="stat-sub">{profile.type === 'claimed' ? 'From SEC Form ADV' : 'Self-reported'}</div></div>
-        <div className="stat-card" style={{ borderColor: 'rgba(200,169,110,.3)' }}><div className="stat-label" style={{ color: 'var(--accent)' }}>Est. Revenue</div><div className="stat-value metric-accent">{fmtM(aum ? aum * roa : null)}</div><div className="stat-sub">at {(roa * 100).toFixed(2)}% ROA</div></div>
-        <div className="stat-card"><div className="stat-label">Accounts</div><div className="stat-value">{fmtN(accounts)}</div></div>
-        <div className="stat-card"><div className="stat-label">Team Size</div><div className="stat-value">{intel.teamSize ?? '—'}</div><div className="stat-sub">{intel.ownershipStructure || ''}</div></div>
+      {/* Key metrics */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5,1fr)', gap: 12, marginBottom: 20 }}>
+        {[
+          { label: 'AUM', value: fmtM(aum), sub: profile.type === 'claimed' ? 'From SEC ADV' : 'Self-reported', gold: true },
+          { label: 'Discretionary', value: discPct || (aumDisc ? fmtM(aumDisc) : '—'), sub: aumDisc ? fmtM(aumDisc) : 'Not reported' },
+          { label: 'Est. Revenue', value: fmtM(aum ? aum * roa : null), sub: `at ${(roa*100).toFixed(2)}% ROA`, accent: true },
+          { label: 'Accounts', value: fmtN(accounts) },
+          { label: 'Team', value: intel.teamSize ? String(intel.teamSize) : (employees ? String(employees) : '—'), sub: intel.numAdvisors ? `${intel.numAdvisors} advisor${intel.numAdvisors !== 1 ? 's' : ''}` : '' },
+        ].map(m => (
+          <div key={m.label} className="stat-card" style={{ borderColor: m.gold ? 'rgba(200,169,110,.35)' : m.accent ? 'rgba(200,169,110,.2)' : '' }}>
+            <div className="stat-label">{m.label}</div>
+            <div className={'stat-value' + (m.gold || m.accent ? ' metric-accent' : '')}>{m.value}</div>
+            {m.sub && <div className="stat-sub">{m.sub}</div>}
+          </div>
+        ))}
       </div>
 
-      {/* Peer Rankings */}
+      {/* Rankings */}
       {rankings && (
-        <div style={{ marginBottom: 20 }}>
-          <div style={{ fontSize: 10, textTransform: 'uppercase', letterSpacing: '.1em', color: 'var(--accent)', fontWeight: 600, marginBottom: 10 }}>
-            How You Compare <span style={{ color: 'var(--text3)', fontWeight: 400, textTransform: 'none', letterSpacing: 'normal', fontSize: 11 }}>— ranked by AUM against SEC-registered RIAs in the database</span>
-          </div>
+        <div className="profile-section" style={{ marginBottom: 16 }}>
+          <div className="profile-section-title">How You Compare <span style={{ color: 'var(--text3)', fontWeight: 400, textTransform: 'none', letterSpacing: 'normal', fontSize: 11 }}>by AUM vs. SEC-registered RIAs in database</span></div>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 10 }}>
             <div className="rank-tile">
               <div className="rank-tile-label">National Rank (AUM)</div>
               <div className="rank-tile-value" style={{ color: 'var(--accent)' }}>#{rankings.nationalRank.toLocaleString()}</div>
-              <div className="rank-tile-sub">of {rankings.nationalTotal.toLocaleString()} firms · top {100 - rankings.nationalPct}%</div>
+              <div className="rank-tile-sub">of {rankings.nationalTotal.toLocaleString()} · top {100-rankings.nationalPct}%</div>
             </div>
             <div className="rank-tile">
-              <div className="rank-tile-label">{firmState} State Rank (AUM)</div>
+              <div className="rank-tile-label">{firmState} State Rank</div>
               <div className="rank-tile-value" style={{ color: 'var(--accent)' }}>#{rankings.stateRank}</div>
-              <div className="rank-tile-sub">of {rankings.stateTotal} firms in {firmState} · top {100 - rankings.statePct}%</div>
+              <div className="rank-tile-sub">of {rankings.stateTotal} in {firmState} · top {100-rankings.statePct}%</div>
             </div>
             <div className="rank-tile">
               <div className="rank-tile-label">Revenue-Band Peers</div>
               <div className="rank-tile-value">{rankings.revPeerCount.toLocaleString()}</div>
-              <div className="rank-tile-sub">firms within 2× your est. revenue</div>
+              <div className="rank-tile-sub">firms within 2× your estimated revenue</div>
             </div>
             <div className="rank-tile">
               <div className="rank-tile-label">Size Peers in {firmState}</div>
               <div className="rank-tile-value">{rankings.stateBandPeerCount}</div>
-              <div className="rank-tile-sub">similar-AUM firms in your state</div>
+              <div className="rank-tile-sub">similar-AUM RIAs in your state</div>
             </div>
           </div>
-          {rankings.empPct !== null && (
-            <div style={{ marginTop: 10, background: 'var(--surface2)', border: '1px solid var(--border)', borderRadius: 10, padding: '10px 16px', fontSize: 12, color: 'var(--text3)' }}>
-              Your team of <span style={{ color: 'var(--text)', fontWeight: 600 }}>{intel.teamSize}</span> puts you in the <span style={{ color: 'var(--accent)', fontWeight: 600 }}>top {100 - rankings.empPct}%</span> of firms by headcount nationally.
-            </div>
-          )}
         </div>
       )}
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 16 }}>
-        {/* Intelligence summary */}
-        <div className="detail-panel">
-          <div className="section-head">
-            Your Intelligence Profile&nbsp;
-            <span style={{ color: 'var(--purple)', fontSize: 9, letterSpacing: '.05em' }}>PRIVATE</span>
+        {/* Intelligence panel */}
+        <div className="profile-section">
+          <div className="profile-section-title">
+            Intelligence Profile
+            <span style={{ fontSize: 9, background: 'var(--purple-dim)', color: 'var(--purple)', padding: '2px 8px', borderRadius: 10, letterSpacing: '.05em' }}>PRIVATE</span>
           </div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 16 }}>
-            {successionScore !== null && (
-              <div>
-                <ScoreMeter score={successionScore} label="Succession Vulnerability" color={successionScore >= 70 ? 'var(--red)' : successionScore >= 40 ? 'var(--amber)' : 'var(--green)'} />
-                <div style={{ fontSize: 10, color: 'var(--text3)', marginTop: 3, lineHeight: 1.5 }}>
-                  <span className="tt">How is this calculated?<span className="tt-box">Weighted from: founder age band, whether a successor is identified, ownership structure, succession timeline, and team size. Higher score = more vulnerable to disruption if a transition event occurs unexpectedly.</span></span>
-                </div>
-              </div>
-            )}
-            {acquisitionScore !== null && (
-              <div>
-                <ScoreMeter score={acquisitionScore} label="Acquisition Appetite" color={acquisitionScore >= 60 ? 'var(--green)' : acquisitionScore >= 30 ? 'var(--accent)' : 'var(--text3)'} />
-                <div style={{ fontSize: 10, color: 'var(--text3)', marginTop: 3, lineHeight: 1.5 }}>
-                  <span className="tt">How is this calculated?<span className="tt-box">Weighted from: whether you are seeking acquisitions, your growth intent, team size, hiring plans, and geographic flexibility. Higher score = more likely to be an active buyer.</span></span>
-                </div>
-              </div>
-            )}
-          </div>
+          {successionScore !== null && (
+            <div style={{ marginBottom: 14 }}>
+              <ScoreMeter score={successionScore} label="Succession Vulnerability"
+                color={successionScore >= 70 ? 'var(--red)' : successionScore >= 40 ? 'var(--amber)' : 'var(--green)'} />
+            </div>
+          )}
+          {acquisitionScore !== null && (
+            <div style={{ marginBottom: 18 }}>
+              <ScoreMeter score={acquisitionScore} label="Acquisition Appetite"
+                color={acquisitionScore >= 60 ? 'var(--green)' : acquisitionScore >= 30 ? 'var(--accent)' : 'var(--text3)'} />
+            </div>
+          )}
+          {/* Key intel rows */}
           {[
             ['Growth Intent', intel.growthIntent],
             ['Succession Timeline', intel.successionTimeline],
-            ['Founder Age Band', intel.founderAgeBand],
-            ['Open to Minority Capital', intel.openToMinorityCapital != null ? (intel.openToMinorityCapital ? 'Yes' : 'No') : null],
-            ['Open to Full Sale', intel.openToFullSale != null ? (intel.openToFullSale ? 'Yes' : 'No') : null],
-            ['Geographic Flexibility', intel.geographicFlexibility],
-            ['Seeking Acquisitions', intel.seekingAcquisitions != null ? (intel.seekingAcquisitions ? 'Yes' : 'No') : null],
-            ['Hiring Junior Advisors', intel.hiringJuniorAdvisors != null ? (intel.hiringJuniorAdvisors ? 'Yes' : 'No') : null],
-          ].filter(([, v]) => v).map(([l, v]) => (
+            ['Advisor Ages', intel.advisorAgeBands?.length ? intel.advisorAgeBands.join(', ') : null],
+            ['Ownership', intel.ownershipStructure],
+            ['Open to Sale', intel.openToFullSale != null ? (intel.openToFullSale ? 'Yes' : 'No') : null],
+            ['Open to Minority Cap.', intel.openToMinorityCapital != null ? (intel.openToMinorityCapital ? 'Yes' : 'No') : null],
+            ['Geographic Flex.', intel.geographicFlexibility],
+            ['Hiring', intel.hiringJuniorAdvisors != null ? (intel.hiringJuniorAdvisors ? 'Yes' : 'No') : null],
+          ].filter(([,v]) => v).map(([l,v]) => (
             <div key={l} className="detail-row">
-              <span className="detail-label">
-                {INTEL_TOOLTIPS[Object.keys(INTEL_TOOLTIPS).find(k => l.toLowerCase().includes(k.toLowerCase().slice(0,6)) || k.toLowerCase().includes(l.toLowerCase().replace(/ /g,'').slice(0,6)))]
-                  ? <span className="tt">{l}<span className="tt-box">{INTEL_TOOLTIPS[Object.keys(INTEL_TOOLTIPS).find(k => k.toLowerCase().includes(l.toLowerCase().replace(/ /g,'').slice(0,6)))]||l}</span></span>
-                  : l}
-              </span>
-              <span className="detail-value">{v}</span>
+              <span style={{ fontSize: 12, color: 'var(--text3)' }}>{l}</span>
+              <span style={{ fontFamily: 'DM Mono,monospace', fontSize: 12 }}>{v}</span>
             </div>
           ))}
+
+          {/* Culture section */}
+          {(intel.clientApproach?.length > 0 || intel.cultureTraits?.length > 0 || intel.officeEnvironment) && (
+            <div style={{ marginTop: 16, paddingTop: 12, borderTop: '1px solid var(--border)' }}>
+              <div style={{ fontSize: 10, textTransform: 'uppercase', letterSpacing: '.1em', color: 'var(--accent)', fontWeight: 600, marginBottom: 10 }}>Culture & Fit</div>
+              {intel.officeEnvironment && (
+                <div style={{ marginBottom: 8 }}>
+                  <span className="culture-pill">{intel.officeEnvironment}</span>
+                  {intel.reviewTaxReturns && <span className="culture-pill">{intel.reviewTaxReturns === 'Yes, routinely' ? 'Reviews tax returns' : intel.reviewTaxReturns}</span>}
+                </div>
+              )}
+              {intel.clientApproach?.length > 0 && (
+                <div style={{ marginBottom: 8 }}>
+                  {intel.clientApproach.map(c => <span key={c} className="culture-pill" style={{ borderColor: 'rgba(200,169,110,.3)', color: 'var(--accent)' }}>{c}</span>)}
+                </div>
+              )}
+              {intel.cultureTraits?.length > 0 && (
+                <div>{intel.cultureTraits.map(c => <span key={c} className="culture-pill">{c}</span>)}</div>
+              )}
+            </div>
+          )}
+
+          {/* Tech stack */}
+          {(intel.crm?.length > 0 || intel.financialPlanning?.length > 0 || intel.portfolioMgmt?.length > 0 || intel.custodians?.length > 0) && (
+            <div style={{ marginTop: 16, paddingTop: 12, borderTop: '1px solid var(--border)' }}>
+              <div style={{ fontSize: 10, textTransform: 'uppercase', letterSpacing: '.1em', color: 'var(--accent)', fontWeight: 600, marginBottom: 10 }}>Operations & Tech</div>
+              {intel.custodians?.length > 0 && <div style={{ marginBottom: 6 }}><span style={{ fontSize: 10, color: 'var(--text3)', marginRight: 6 }}>Custodians:</span>{intel.custodians.map(c => <span key={c} className="tag tag-dim" style={{ margin: '1px 3px' }}>{c}</span>)}</div>}
+              {intel.crm?.length > 0 && <div style={{ marginBottom: 6 }}><span style={{ fontSize: 10, color: 'var(--text3)', marginRight: 6 }}>CRM:</span>{intel.crm.map(c => <span key={c} className="tag tag-dim" style={{ margin: '1px 3px' }}>{c}</span>)}</div>}
+              {intel.financialPlanning?.length > 0 && <div style={{ marginBottom: 6 }}><span style={{ fontSize: 10, color: 'var(--text3)', marginRight: 6 }}>Planning:</span>{intel.financialPlanning.map(c => <span key={c} className="tag tag-dim" style={{ margin: '1px 3px' }}>{c}</span>)}</div>}
+              {intel.portfolioMgmt?.length > 0 && <div><span style={{ fontSize: 10, color: 'var(--text3)', marginRight: 6 }}>Portfolio:</span>{intel.portfolioMgmt.map(c => <span key={c} className="tag tag-dim" style={{ margin: '1px 3px' }}>{c}</span>)}</div>}
+            </div>
+          )}
         </div>
 
-        {/* Matched firms */}
-        <div className="detail-panel">
+        {/* Private matches */}
+        <div className="profile-section">
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-              <div className="section-head" style={{ marginBottom: 0 }}>Private Matches</div>
-              <span style={{ color: 'var(--purple)', fontSize: 9, letterSpacing: '.05em' }}>PRIVATE</span>
-              <span className="tt" style={{ fontSize: 11, color: 'var(--text3)', cursor: 'help', marginLeft: 4 }}>ⓘ<span className="tt-box" style={{ width: 260 }}>{MATCH_MODE_TIPS[matchMode]}</span></span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <div className="profile-section-title" style={{ marginBottom: 0 }}>Private Matches</div>
+              <span style={{ fontSize: 9, background: 'var(--purple-dim)', color: 'var(--purple)', padding: '2px 8px', borderRadius: 10, letterSpacing: '.05em' }}>PRIVATE</span>
+              <span className="tt" style={{ fontSize: 11, color: 'var(--text3)', cursor: 'help' }}>ⓘ<span className="tt-box" style={{ width: 260 }}>{MATCH_TIPS[matchMode]}</span></span>
             </div>
-            <div style={{ display: 'flex', gap: 6 }}>
-              {[['acquire','To Acquire'],['partner','To Partner'],['sell','Find Buyers']].map(([m, l]) => (
-                <button key={m} className={matchMode === m ? 'btn-gold btn-sm' : 'btn-ghost btn-sm'} style={{ fontSize: 11, padding: '4px 10px' }} onClick={() => setMatchMode(m)}>{l}</button>
+            <div style={{ display: 'flex', gap: 5 }}>
+              {[['acquire','Acquire'],['partner','Partner'],['sell','Find Buyers']].map(([m,l]) => (
+                <button key={m} className={matchMode === m ? 'btn-gold btn-sm' : 'btn-ghost btn-sm'}
+                  style={{ fontSize: 11, padding: '4px 9px' }} onClick={() => setMatchMode(m)}>{l}</button>
               ))}
             </div>
           </div>
-          <div style={{ fontSize: 11, color: 'var(--text3)', marginBottom: 12, lineHeight: 1.5 }}>
-            {matchMode === 'acquire' && 'RIA firms that fit your acquisition profile — smaller, nearby, aligned services.'}
-            {matchMode === 'partner' && 'Similar-sized firms in complementary markets for strategic partnership.'}
-            {matchMode === 'sell' && 'Larger RIAs with scale to be a credible acquirer or capital partner.'}
+          <div style={{ fontSize: 11, color: 'var(--text3)', marginBottom: 14, lineHeight: 1.5 }}>
+            {matchMode === 'acquire' && 'Firms that fit your acquisition profile — smaller, nearby, aligned.'}
+            {matchMode === 'partner' && 'Similar-sized firms in complementary markets.'}
+            {matchMode === 'sell' && 'Larger RIAs with scale to be a credible acquirer.'}
           </div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 8, maxHeight: 380, overflow: 'auto' }}>
-            {matches.length === 0 ? (
-              <div style={{ fontSize: 12, color: 'var(--text3)', padding: '16px 0', textAlign: 'center' }}>No strong matches yet — add more detail to your profile.</div>
-            ) : matches.map((m, i) => (
-              <div key={m.firm.crd} className="match-card" onClick={() => onSelect(m.firm)}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 4 }}>
-                  <div style={{ fontSize: 12, fontWeight: 600, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', flex: 1, marginRight: 8 }}>{m.firm.name}</div>
-                  <div className="match-score-pill" style={{ background: i < 3 ? 'var(--green-dim)' : 'var(--surface3)', color: i < 3 ? 'var(--green)' : 'var(--text3)', flexShrink: 0 }}>
-                    {m.score}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 8, maxHeight: 420, overflow: 'auto' }}>
+            {matches.length === 0
+              ? <div style={{ fontSize: 12, color: 'var(--text3)', padding: '20px 0', textAlign: 'center' }}>No strong matches — add more detail to your profile.</div>
+              : matches.map((m, i) => (
+                <div key={m.firm.crd} className="match-card" onClick={() => onSelect(m.firm)}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 3 }}>
+                    <div style={{ fontSize: 12, fontWeight: 600, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', flex: 1, marginRight: 8 }}>{m.firm.name}</div>
+                    <div className="match-score-pill" style={{ background: i < 3 ? 'var(--green-dim)' : 'var(--surface3)', color: i < 3 ? 'var(--green)' : 'var(--text3)', flexShrink: 0 }}>{m.score}</div>
+                  </div>
+                  <div style={{ fontSize: 11, color: 'var(--text3)', marginBottom: 5 }}>{m.firm.city}, {m.firm.state}</div>
+                  <div style={{ fontFamily: 'DM Mono,monospace', fontSize: 11, display: 'flex', gap: 10 }}>
+                    <span>{fmtM(m.firm.aum)}</span>
+                    <span style={{ color: 'var(--accent)' }}>{fmtM(m.rev)} rev</span>
+                    <span>{fmtN(m.firm.employees)} emp</span>
                   </div>
                 </div>
-                <div style={{ fontSize: 11, color: 'var(--text3)', marginBottom: 6 }}>{m.firm.city}, {m.firm.state}</div>
-                <div style={{ fontFamily: 'DM Mono,monospace', fontSize: 11, display: 'flex', gap: 12 }}>
-                  <span>{fmtM(m.firm.aum)}</span>
-                  <span style={{ color: 'var(--accent)' }}>{fmtM(m.rev)} est rev</span>
-                  <span>{fmtN(m.firm.employees)} emp</span>
-                </div>
-              </div>
-            ))}
+              ))
+            }
           </div>
         </div>
       </div>
 
-      {/* Services summary for BD profiles */}
+      {/* Services for BD */}
       {profile.type === 'bd' && (profile.services?.length > 0 || profile.compensation?.length > 0) && (
-        <div className="detail-panel">
-          <div className="section-head">Services & Compensation</div>
-          <div style={{ display: 'flex', gap: 20 }}>
-            {profile.services?.length > 0 && <div><div style={{ fontSize: 11, color: 'var(--text3)', marginBottom: 6 }}>Services</div><div>{profile.services.map(s => <span key={s} className="tag tag-gold" style={{ margin: '2px' }}>{s}</span>)}</div></div>}
-            {profile.compensation?.length > 0 && <div><div style={{ fontSize: 11, color: 'var(--text3)', marginBottom: 6 }}>Compensation</div><div>{profile.compensation.map(c => <span key={c} className="tag tag-dim" style={{ margin: '2px' }}>{c}</span>)}</div></div>}
+        <div className="profile-section">
+          <div className="profile-section-title">Services & Compensation</div>
+          <div style={{ display: 'flex', gap: 24 }}>
+            {profile.services?.length > 0 && <div><div style={{ fontSize: 11, color: 'var(--text3)', marginBottom: 6 }}>Services</div>{profile.services.map(s => <span key={s} className="tag tag-gold" style={{ margin: '2px' }}>{s}</span>)}</div>}
+            {profile.compensation?.length > 0 && <div><div style={{ fontSize: 11, color: 'var(--text3)', marginBottom: 6 }}>Compensation</div>{profile.compensation.map(c => <span key={c} className="tag tag-dim" style={{ margin: '2px' }}>{c}</span>)}</div>}
           </div>
         </div>
       )}
@@ -1082,10 +1437,11 @@ function Dashboard({ roa, onSelect, saved, toggleSave, profile, onOpenOnboarding
   const [fBucket, setFBucket] = useState(null);
   const [aumCap, setAumCap] = useState(10e9);
   const capOpts = [{ l: 'No cap', v: Infinity }, { l: '$50B', v: 50e9 }, { l: '$10B', v: 10e9 }, { l: '$5B', v: 5e9 }, { l: '$1B', v: 1e9 }, { l: '$500M', v: 500e6 }, { l: '$250M', v: 250e6 }];
-  const pool = useMemo(() => { let fs = FIRMS.filter(f => f.aum > 0 && f.aum <= aumCap); if (fState) fs = fs.filter(f => f.state === fState); if (fBucket) fs = fs.filter(f => f.aum >= fBucket.lo && f.aum < fBucket.hi); return fs; }, [fState, fBucket, aumCap]);
+  const allFirms = useMemo(() => getFirmPool(profile), [profile]);
+  const pool = useMemo(() => { let fs = allFirms.filter(f => f.aum > 0 && f.aum <= aumCap); if (fState) fs = fs.filter(f => f.state === fState); if (fBucket) fs = fs.filter(f => f.aum >= fBucket.lo && f.aum < fBucket.hi); return fs; }, [allFirms, fState, fBucket, aumCap]);
   const byState = useMemo(() => { const m = {}; ST.forEach(s => { const fs = pool.filter(f => f.state === s); const aums = fs.map(f => f.aum).sort((a, b) => a - b); const totAum = aums.reduce((s, a) => s + a, 0); m[s] = { count: fs.length, aum: totAum, rev: totAum * roa, med: aums.length ? aums[Math.floor(aums.length / 2)] : 0 }; }); return m; }, [pool, roa]);
   const totals = useMemo(() => { const a = pool.reduce((s, f) => s + f.aum, 0); return { firms: pool.length, aum: a, rev: a * roa, accounts: pool.reduce((s, f) => s + (f.accounts || 0), 0), employees: pool.reduce((s, f) => s + (f.employees || 0), 0) }; }, [pool, roa]);
-  const dist = useMemo(() => { const base = FIRMS.filter(f => f.aum > 0 && f.aum <= aumCap && (!fState || f.state === fState)); return BUCKETS.map(b => ({ ...b, count: base.filter(f => f.aum >= b.lo && f.aum < b.hi).length })); }, [aumCap, fState]);
+  const dist = useMemo(() => { const base = allFirms.filter(f => f.aum > 0 && f.aum <= aumCap && (!fState || f.state === fState)); return BUCKETS.map(b => ({ ...b, count: base.filter(f => f.aum >= b.lo && f.aum < b.hi).length })); }, [allFirms, aumCap, fState]);
   const maxBucket = Math.max(...dist.map(d => d.count), 1);
   const top5 = arr => arr.slice(0, 5);
   const topAum = useMemo(() => top5([...pool].sort((a, b) => b.aum - a.aum)), [pool]);
@@ -1258,7 +1614,8 @@ function Explorer({ roa, setRoa, onSelect, saved, toggleSave, profile, onOpenOnb
   const [bounds, setBounds] = useState(null);
   const [fByMap, setFByMap] = useState(false);
 
-  const base = useMemo(() => FIRMS.filter(f => {
+  const allFirms = useMemo(() => getFirmPool(profile), [profile]);
+  const base = useMemo(() => allFirms.filter(f => {
     if (stF !== 'ALL' && f.state !== stF) return false;
     if (search && !f.name.toLowerCase().includes(search.toLowerCase()) && !f.city.toLowerCase().includes(search.toLowerCase())) return false;
     if (tOnly) { const r = (f.aum || 0) * roa; if (r < rMin || r > rMax) return false; }
@@ -1663,6 +2020,8 @@ function SavedTargets({ saved, setSaved, notes, setNotes, roa, onSelect, onLette
 // =============================================================================
 // APP ROOT
 // =============================================================================
+// APP ROOT
+// =============================================================================
 function App() {
   const [view, setView]       = useState('dashboard');
   const [firm, setFirm]       = useState(null);
@@ -1694,8 +2053,17 @@ function App() {
 
   const sel = f => { setFirm(f); setView('detail'); };
   const wl  = f => { setFirm(f); setView('letter'); };
-
   const openOnboarding = () => setShowOnboarding(true);
+
+  // Full-screen onboarding takes over when shown
+  if (showOnboarding) {
+    return (
+      <OnboardingModal
+        onComplete={handleProfileComplete}
+        onClose={hasProfile ? () => setShowOnboarding(false) : null}
+      />
+    );
+  }
 
   return (
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
@@ -1708,12 +2076,6 @@ function App() {
         {view === 'saved'      && <SavedTargets saved={saved} setSaved={setSaved} notes={notes} setNotes={setNotes} roa={roa} onSelect={sel} onLetter={wl} profile={profile} onOpenOnboarding={openOnboarding} />}
         {view === 'myprofile'  && <MyProfile profile={profile} roa={roa} onOpenOnboarding={openOnboarding} onClearProfile={handleClearProfile} onSelect={sel} />}
       </div>
-      {showOnboarding && (
-        <OnboardingModal
-          onComplete={handleProfileComplete}
-          onClose={hasProfile ? () => setShowOnboarding(false) : null}
-        />
-      )}
     </div>
   );
 }
