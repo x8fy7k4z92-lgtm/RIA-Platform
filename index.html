@@ -408,6 +408,14 @@ function loadSaved()    { try { return new Set(JSON.parse(localStorage.getItem('
 function saveSaved(s)   { try { localStorage.setItem('ria_saved', JSON.stringify([...s])); } catch(e) {} }
 function loadNotes()    { try { return JSON.parse(localStorage.getItem('ria_notes') || '{}'); } catch(e) { return {}; } }
 function saveNotes(n)   { try { localStorage.setItem('ria_notes', JSON.stringify(n)); } catch(e) {} }
+function loadExplorerSettings() {
+  try {
+    const s = JSON.parse(localStorage.getItem('ria_explorer') || 'null');
+    if (!s) return null;
+    return s;
+  } catch(e) { return null; }
+}
+function saveExplorerSettings(s) { try { localStorage.setItem('ria_explorer', JSON.stringify(s)); } catch(e) {} }
 
 // CRM storage
 function loadCRM()  { try { return JSON.parse(localStorage.getItem('ria_crm') || '{}'); } catch(e) { return {}; } }
@@ -1560,7 +1568,7 @@ function Nav({ view, setView, savedCount, profile, onOpenOnboarding }) {
 // =============================================================================
 // MAP
 // =============================================================================
-function FirmMap({ firms, roa, rMin, rMax, onSelect, onBounds, userFirm, contactedCrds }) {
+function FirmMap({ firms, roa, rMin, rMax, onSelect, onBounds, userFirm, contactedCrds, savedCrds }) {
   const ref = useRef(null), mRef = useRef(null), lRef = useRef(null);
   useEffect(() => {
     if (!ref.current || mRef.current) return;
@@ -1581,18 +1589,21 @@ function FirmMap({ firms, roa, rMin, rMax, onSelect, onBounds, userFirm, contact
       const co = COORDS[f.crd]; if (!co) return;
       const rev = (f.aum || 0) * roa, hit = rev >= rMin && rev <= rMax;
       const contacted = contactedCrds && contactedCrds.has(f.crd);
+      const starred   = savedCrds && savedCrds.has(f.crd);
       const br = Math.max(4, Math.min(11, Math.sqrt((f.aum || 0) / 1e8) * 2.5));
-      const r = contacted ? br + 6 : hit ? br + 5 : br;
-      // Colors: contacted = amber/orange, target = green, other = blue
-      const fillColor = contacted ? '#f59e0b' : hit ? '#4ade80' : '#60a5fa';
-      const strokeColor = contacted ? '#92400e' : hit ? '#166534' : '#1d4ed8';
-      const strokeWeight = contacted ? 2.5 : hit ? 2 : 1;
-      const opacity = contacted ? .95 : hit ? .9 : .5;
-      const fillOpacity = contacted ? .75 : hit ? .6 : .3;
+      const r = contacted ? br + 6 : starred ? br + 5 : hit ? br + 5 : br;
+      // Priority order: contacted > starred > target > other
+      const fillColor   = contacted ? '#f59e0b' : starred ? '#a78bfa' : hit ? '#4ade80' : '#60a5fa';
+      const strokeColor = contacted ? '#92400e' : starred ? '#4c1d95' : hit ? '#166534' : '#1d4ed8';
+      const strokeWeight = contacted ? 2.5 : starred ? 2 : hit ? 2 : 1;
+      const opacity      = contacted ? .95 : starred ? .9 : hit ? .9 : .5;
+      const fillOpacity  = contacted ? .75 : starred ? .55 : hit ? .6 : .3;
       const c = L.circleMarker([co.lat, co.lng], { radius: r, fillColor, color: strokeColor, weight: strokeWeight, opacity, fillOpacity });
-      const contactedBadge = contacted ? '<div style="margin-top:6px;font-size:10px;color:#f59e0b;font-weight:600;text-transform:uppercase;letter-spacing:.05em">In Outreach</div>' : '';
-      const targetBadge = hit && !contacted ? '<div style="margin-top:6px;font-size:10px;color:#4ade80;font-weight:600;text-transform:uppercase">In target range</div>' : '';
-      c.bindPopup('<div style="min-width:200px"><div style="font-family:Instrument Serif,serif;font-size:14px;margin-bottom:2px">' + f.name + '</div><div style="color:#9aa0ad;font-size:11px;margin-bottom:8px">' + f.city + ', ' + f.state + '</div><div style="font-family:DM Mono,monospace;font-size:11px">RAUM&nbsp;<b>' + fmtM(f.aum) + '</b><br/>Rev&nbsp;&nbsp;<b style="color:' + (hit ? '#4ade80' : '#f0f1f3') + '">' + fmtM(rev) + '</b></div>' + contactedBadge + targetBadge + '<div onclick="window.__rvf(\'' + f.crd + '\')" class="pvb">View details →</div></div>', { className: 'mp' });
+      const contactedBadge = contacted ? '<div style="margin-top:6px;font-size:10px;color:#f59e0b;font-weight:600;text-transform:uppercase;letter-spacing:.05em">★ In Outreach</div>' : '';
+      const starredBadge   = starred && !contacted ? '<div style="margin-top:6px;font-size:10px;color:#a78bfa;font-weight:600;text-transform:uppercase;letter-spacing:.05em">★ Saved Target</div>' : '';
+      const targetBadge    = hit && !contacted && !starred ? '<div style="margin-top:6px;font-size:10px;color:#4ade80;font-weight:600;text-transform:uppercase">In target range</div>' : '';
+      const revColor = contacted ? '#f59e0b' : starred ? '#a78bfa' : hit ? '#4ade80' : '#f0f1f3';
+      c.bindPopup('<div style="min-width:200px"><div style="font-family:Instrument Serif,serif;font-size:14px;margin-bottom:2px">' + f.name + '</div><div style="color:#9aa0ad;font-size:11px;margin-bottom:8px">' + f.city + ', ' + f.state + '</div><div style="font-family:DM Mono,monospace;font-size:11px">RAUM&nbsp;<b>' + fmtM(f.aum) + '</b><br/>Rev&nbsp;&nbsp;<b style="color:' + revColor + '">' + fmtM(rev) + '</b></div>' + contactedBadge + starredBadge + targetBadge + '<div onclick="window.__rvf(\'' + f.crd + '\')" class="pvb">View details →</div></div>', { className: 'mp' });
       lRef.current.addLayer(c);
     });
 
@@ -1609,7 +1620,7 @@ function FirmMap({ firms, roa, rMin, rMax, onSelect, onBounds, userFirm, contact
       userMarker.bindPopup('<div style="min-width:180px"><div style="display:flex;align-items:center;gap:6px;margin-bottom:4px"><span style="font-size:11px;background:rgba(200,169,110,.15);color:#c8a96e;border:1px solid rgba(200,169,110,.3);border-radius:10px;padding:2px 8px;font-weight:600">Your Firm</span></div><div style="font-family:Instrument Serif,serif;font-size:14px;margin-bottom:6px">' + userFirm.firmName + '</div><div style="color:#9aa0ad;font-size:11px;margin-bottom:8px">' + (userFirm.city || '') + (userFirm.state ? ', ' + userFirm.state : '') + '</div>' + (userAum ? '<div style="font-family:DM Mono,monospace;font-size:11px">RAUM&nbsp;<b style="color:#c8a96e">' + fmtM(userAum) + '</b></div>' : '') + '</div>', { className: 'mp' });
       lRef.current.addLayer(userMarker);
     }
-  }, [firms, roa, rMin, rMax, userFirm, contactedCrds]);
+  }, [firms, roa, rMin, rMax, userFirm, contactedCrds, savedCrds]);
   return <div ref={ref} style={{ width: '100%', height: '100%', borderRadius: 10 }} />;
 }
 
@@ -1791,17 +1802,26 @@ function Dashboard({ roa, onSelect, saved, toggleSave, profile, onOpenOnboarding
 function Explorer({ roa, setRoa, onSelect, saved, toggleSave, profile, onOpenOnboarding, crm }) {
   const hasProfile = !!profile;
   const userFirm = useMemo(() => geocodeUserFirm(profile), [profile]);
+
+  // Restore persisted settings on mount
+  const _s = loadExplorerSettings() || {};
   const [search, setSearch] = useState('');
-  const [stF, setStF] = useState('ALL');
-  const [rMin, setRMin] = useState(1000000);
-  const [rMax, setRMax] = useState(2000000);
-  const [sCol, setSCol] = useState('aum');
-  const [sDir, setSDir] = useState('desc');
-  const [tOnly, setTOnly] = useState(false);
-  const [showMap, setShowMap] = useState(true);
+  const [stF, setStF]       = useState(_s.stF   || 'ALL');
+  const [rMin, setRMin]     = useState(_s.rMin  || 1000000);
+  const [rMax, setRMax]     = useState(_s.rMax  || 2000000);
+  const [sCol, setSCol]     = useState(_s.sCol  || 'aum');
+  const [sDir, setSDir]     = useState(_s.sDir  || 'desc');
+  const [tOnly, setTOnly]   = useState(_s.tOnly || false);
+  const [showMap, setShowMap] = useState(_s.showMap !== undefined ? _s.showMap : true);
   const [bounds, setBounds] = useState(null);
-  const [fByMap, setFByMap] = useState(false);
+  const [fByMap, setFByMap] = useState(_s.fByMap || false);
   const contactedCrds = useMemo(() => new Set(Object.keys(crm || {})), [crm]);
+  const savedCrds = useMemo(() => saved || new Set(), [saved]);
+
+  // Persist settings whenever they change
+  useEffect(() => {
+    saveExplorerSettings({ stF, rMin, rMax, sCol, sDir, tOnly, showMap, fByMap, roa });
+  }, [stF, rMin, rMax, sCol, sDir, tOnly, showMap, fByMap, roa]);
 
   const allFirms = useMemo(() => getFirmPool(profile), [profile]);
   const base = useMemo(() => allFirms.filter(f => {
@@ -1846,15 +1866,16 @@ function Explorer({ roa, setRoa, onSelect, saved, toggleSave, profile, onOpenOnb
       {showMap && hasProfile && (
         <div style={{ marginBottom: 16 }}>
           <div className="card" style={{ height: 380, padding: 0, overflow: 'hidden' }}>
-            <FirmMap firms={base} roa={roa} rMin={rMin} rMax={rMax} onSelect={onSelect} onBounds={setBounds} userFirm={userFirm} contactedCrds={contactedCrds} />
+            <FirmMap firms={base} roa={roa} rMin={rMin} rMax={rMax} onSelect={onSelect} onBounds={setBounds} userFirm={userFirm} contactedCrds={contactedCrds} savedCrds={savedCrds} />
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 8 }}>
             <button onClick={() => setFByMap(!fByMap)} className={fByMap ? 'btn-gold btn-sm' : 'btn-ghost btn-sm'}>{fByMap ? '✓ Filtering by map' : 'Filter by map view'}</button>
-            <span style={{ fontSize: 11, color: 'var(--text3)', display: 'flex', gap: 12, marginLeft: 'auto' }}>
+            <span style={{ fontSize: 11, color: 'var(--text3)', display: 'flex', gap: 12, marginLeft: 'auto', flexWrap: 'wrap' }}>
               <span><span style={{ display: 'inline-block', width: 9, height: 9, borderRadius: '50%', background: '#4ade80', marginRight: 5, verticalAlign: 'middle' }} />Target range</span>
               <span><span style={{ display: 'inline-block', width: 7, height: 7, borderRadius: '50%', background: '#60a5fa', marginRight: 5, verticalAlign: 'middle' }} />Other</span>
+              {saved.size > 0 && <span><span style={{ display: 'inline-block', width: 9, height: 9, borderRadius: '50%', background: '#a78bfa', marginRight: 5, verticalAlign: 'middle' }} />Saved ({saved.size})</span>}
+              {Object.keys(crm || {}).length > 0 && <span><span style={{ display: 'inline-block', width: 9, height: 9, borderRadius: '50%', background: '#f59e0b', marginRight: 5, verticalAlign: 'middle' }} />Outreach ({Object.keys(crm).length})</span>}
               {userFirm && <span><span style={{ marginRight: 5 }}>★</span><span style={{ color: 'var(--accent)' }}>Your firm</span></span>}
-              {Object.keys(crm || {}).length > 0 && <span><span style={{ display: 'inline-block', width: 9, height: 9, borderRadius: '50%', background: '#f59e0b', marginRight: 5, verticalAlign: 'middle' }} />Contacted ({Object.keys(crm).length})</span>}
             </span>
           </div>
         </div>
@@ -2592,7 +2613,7 @@ function SavedTargets({ saved, setSaved, notes, setNotes, roa, onSelect, onLette
 function App() {
   const [view, setView]       = useState('dashboard');
   const [firm, setFirm]       = useState(null);
-  const [roa, setRoa]         = useState(0.0065);
+  const [roa, setRoa]         = useState(() => { const s = loadExplorerSettings(); return s?.roa || 0.0065; });
   const [profile, setProfile] = useState(() => loadProfile());
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [saved, setSaved]     = useState(() => loadSaved());
