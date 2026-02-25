@@ -274,6 +274,18 @@ pre.prompt-box{white-space:pre-wrap;font-family:'DM Mono',monospace;font-size:12
 @keyframes obSlideIn{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
 @keyframes obSlideOut{from{opacity:1;transform:translateX(0)}to{opacity:0;transform:translateX(-20px)}}
 .ob-slide-in{animation:obSlideIn .28s cubic-bezier(.22,.68,0,1.1) both}
+/* CRM / Pipeline */
+.pipeline-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px 20px;transition:border-color .2s}
+.pipeline-card:hover{border-color:var(--border2)}
+.touch-step{display:flex;align-items:center;gap:10px;padding:7px 10px;border-radius:8px;cursor:pointer;transition:all .15s;border:1px solid transparent}
+.touch-step:hover{background:var(--surface2)}
+.touch-step.active{background:rgba(200,169,110,.08);border-color:var(--accent)}
+.touch-step.done{opacity:.6}
+.touch-dot{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0}
+.agg-card{padding:8px 12px;border-radius:8px;border:1px solid var(--border);cursor:pointer;transition:all .15s}
+.agg-card:hover{border-color:var(--border2)}
+.agg-card.selected{border-color:var(--accent);background:rgba(200,169,110,.08)}
+
 </style>
 </head>
 <body>
@@ -396,6 +408,144 @@ function loadSaved()    { try { return new Set(JSON.parse(localStorage.getItem('
 function saveSaved(s)   { try { localStorage.setItem('ria_saved', JSON.stringify([...s])); } catch(e) {} }
 function loadNotes()    { try { return JSON.parse(localStorage.getItem('ria_notes') || '{}'); } catch(e) { return {}; } }
 function saveNotes(n)   { try { localStorage.setItem('ria_notes', JSON.stringify(n)); } catch(e) {} }
+
+// CRM storage
+function loadCRM()  { try { return JSON.parse(localStorage.getItem('ria_crm') || '{}'); } catch(e) { return {}; } }
+function saveCRM(c) { try { localStorage.setItem('ria_crm', JSON.stringify(c)); } catch(e) {} }
+
+// =============================================================================
+// CADENCE ENGINE
+// =============================================================================
+const CADENCE_SEQUENCES = {
+  measured: [
+    { touchNum: 1, type: 'letter', label: 'Initial Letter',           daysAfterPrev: 0,  desc: 'Handwritten or typed physical letter. No hard ask -- just introduction and a clear signal of interest.' },
+    { touchNum: 2, type: 'letter', label: 'Follow-up Letter',         daysAfterPrev: 30, desc: 'Brief second letter. Reference that you reached out previously. Reiterate interest, add one new angle.' },
+    { touchNum: 3, type: 'email',  label: 'Email Introduction',       daysAfterPrev: 21, desc: 'Short email. Reference both prior letters. Single clear ask: 15-minute call.' },
+    { touchNum: 4, type: 'pause',  label: 'Quiet Period (60 days)',   daysAfterPrev: 60, desc: 'No contact. Let the sequence breathe. If they respond at any point, move to active dialogue.' },
+    { touchNum: 5, type: 'letter', label: 'Re-engagement Letter',     daysAfterPrev: 0,  desc: 'Fresh outreach after quiet period. Seasonal or circumstantial hook if possible.' },
+  ],
+  active: [
+    { touchNum: 1, type: 'letter', label: 'Initial Letter',           daysAfterPrev: 0,  desc: 'Physical letter. Clear purpose, specific to their firm, one concrete call to action.' },
+    { touchNum: 2, type: 'email',  label: 'Email Follow-up',          daysAfterPrev: 14, desc: 'Email referencing the letter. Brief, respectful. Offer a specific date/time for a call.' },
+    { touchNum: 3, type: 'letter', label: 'Second Letter',            daysAfterPrev: 21, desc: 'Second physical letter. New angle or updated context. Acknowledge no response -- keep tone positive.' },
+    { touchNum: 4, type: 'phone',  label: 'Phone / Voicemail',        daysAfterPrev: 10, desc: 'Brief voicemail or call. Reference all prior outreach. Keep it under 30 seconds. No pressure.' },
+    { touchNum: 5, type: 'email',  label: 'Break-up Email',           daysAfterPrev: 14, desc: 'Final email. Acknowledge they may not be interested. Leave the door open gracefully.' },
+    { touchNum: 6, type: 'pause',  label: 'Quiet Period (90 days)',   daysAfterPrev: 90, desc: 'Full stop. Re-evaluate after 90 days.' },
+    { touchNum: 7, type: 'letter', label: 'Re-engagement Letter',     daysAfterPrev: 0,  desc: 'Fresh outreach after quiet period. Treat as near-new contact.' },
+  ],
+  persistent: [
+    { touchNum: 1, type: 'letter', label: 'Initial Letter',           daysAfterPrev: 0,  desc: 'Strong opening letter. Clear purpose, specific data points about their firm, direct ask.' },
+    { touchNum: 2, type: 'email',  label: 'Email (Day 7)',            daysAfterPrev: 7,  desc: 'Quick email referencing the letter. One sentence on why this is worth their time.' },
+    { touchNum: 3, type: 'phone',  label: 'Phone (Day 10)',           daysAfterPrev: 3,  desc: 'Call or voicemail. Reference letter and email. Specific value proposition in 20 seconds.' },
+    { touchNum: 4, type: 'email',  label: 'Email with Insight',       daysAfterPrev: 7,  desc: 'Email with a useful data point or market insight. Soft ask -- reply to discuss.' },
+    { touchNum: 5, type: 'letter', label: 'Second Letter',            daysAfterPrev: 14, desc: 'Second physical letter. Updated narrative. Reference market conditions or timing factors.' },
+    { touchNum: 6, type: 'phone',  label: 'Phone Follow-up',          daysAfterPrev: 7,  desc: 'Second call attempt. More direct. Ask for a specific 15-minute window.' },
+    { touchNum: 7, type: 'email',  label: 'Break-up Email',           daysAfterPrev: 7,  desc: 'Final email. Assume no interest but leave door open. Short and graceful.' },
+    { touchNum: 8, type: 'pause',  label: 'Quiet Period (60 days)',   daysAfterPrev: 60, desc: 'Stop all contact. Re-evaluate after 60 days.' },
+    { touchNum: 9, type: 'letter', label: 'Re-engagement Letter',     daysAfterPrev: 0,  desc: 'Fresh start after quiet period. New angle if possible.' },
+  ],
+};
+
+const TYPE_ICON = { letter: '✉', email: '📧', phone: '📞', pause: '⏸' };
+const TYPE_COLOR = { letter: 'var(--accent)', email: 'var(--blue)', phone: 'var(--green)', pause: 'var(--text3)' };
+const AGG_LABELS = { measured: 'Measured', active: 'Active', persistent: 'Persistent' };
+
+function buildTouchPrompt({ touch, firm, roa, profile, purpose, aggressiveness, prevTouches, ctx, sN, sT, sF, sA }) {
+  const rev = (firm.aum || 0) * roa;
+  const pMap = {
+    acquisition: 'exploring a potential acquisition or merger of their firm',
+    partnership: 'exploring a strategic partnership or affiliation',
+    recruiting:  'recruiting their advisors or team to join your firm',
+    services:    'offering professional services (compliance, technology, operations)',
+    referral:    'establishing a referral relationship',
+  };
+  const aggMap = {
+    measured:   'patient and understated -- never pushy, always leaving the door open',
+    active:     'professional and direct -- respectful of their time but clear about intent',
+    persistent: 'confident and persistent -- clear ask, specific timing, outcome-oriented',
+  };
+  const history = prevTouches.length > 0
+    ? 'PRIOR OUTREACH HISTORY:\n' + prevTouches.map(t =>
+        '  Touch ' + t.touchNum + ' (' + t.label + ') -- sent ' + (t.sentAt ? new Date(t.sentAt).toLocaleDateString() : 'date unknown') +
+        (t.notes ? '\n  Note: ' + t.notes : '')
+      ).join('\n')
+    : 'PRIOR OUTREACH: None -- this is the first contact.';
+
+  const isLetter = touch.type === 'letter';
+  const isEmail  = touch.type === 'email';
+  const isPhone  = touch.type === 'phone';
+
+  const lines = [
+    isLetter ? 'Write a personalized physical letter to be mailed to an RIA firm.' :
+    isEmail  ? 'Write a concise, professional outreach email to an RIA firm.' :
+               'Write a brief, natural-sounding voicemail script to leave for an RIA firm principal.',
+    '',
+    'TOUCH: #' + touch.touchNum + ' of the sequence -- ' + touch.label,
+    'TOUCH DESCRIPTION: ' + touch.desc,
+    '',
+    'SENDER:',
+    'Name: ' + (sN || '[Your Name]'),
+    'Title: ' + (sT || '[Your Title]'),
+    'Firm: ' + (sF || '[Your Firm]'),
+    isLetter ? 'Address: ' + (sA || '[Your Address]') : '',
+    '',
+    'RECIPIENT FIRM (from SEC Form ADV):',
+    'Firm: ' + firm.name + ' (CRD #' + firm.crd + ')',
+    'Address: ' + firm.addr1 + (firm.addr2 ? ', ' + firm.addr2 : '') + ', ' + firm.city + ', ' + firm.state + ' ' + firm.zip,
+    'Total RAUM: $' + Math.round(firm.aum || 0).toLocaleString(),
+    'Discretionary RAUM: $' + Math.round(firm.aumDisc || 0).toLocaleString(),
+    'Est Revenue (at ' + (roa * 100).toFixed(2) + '% ROA): $' + Math.round(rev).toLocaleString(),
+    'Employees: ' + (firm.employees || 'N/A'),
+    'Individual Clients: ' + (firm.clientsInd || 'N/A') + ', HNW Clients: ' + (firm.clientsHNW || 'N/A'),
+    'Services: ' + (firm.services || []).join(', '),
+    'Compensation: ' + (firm.compensation || []).join(', '),
+    'Org Type: ' + firm.orgType,
+    'BD Affiliate: ' + (firm.bdAffiliate ? 'Yes' : 'No') + ', Custody: ' + (firm.custody ? 'Yes' : 'No'),
+    '',
+    history,
+    '',
+    'PURPOSE: ' + (pMap[purpose] || purpose),
+    'AGGRESSIVENESS: ' + (aggMap[aggressiveness] || aggressiveness),
+    'ADDITIONAL CONTEXT: ' + (ctx || 'None'),
+    '',
+    'INSTRUCTIONS:',
+  ];
+
+  if (isLetter) {
+    lines.push(
+      '- Professional letter for physical mail (date, addresses, salutation, body, closing)',
+      touch.touchNum === 1 ? '- This is first contact -- no reference to prior outreach' : '- Reference prior outreach naturally',
+      '- Reference their ADV data naturally to show you did homework, not heavy-handed',
+      '- 250-350 word body, one page',
+      '- No hype, buzzwords, or marketing language',
+      '- Do NOT mention dollar amounts of AUM or revenue -- reference scale indirectly',
+      '- Address to The Principals',
+      '- Signal sophistication without being promotional',
+      '- Do NOT use em dashes',
+      '- End with a specific, low-pressure call to action'
+    );
+  } else if (isEmail) {
+    lines.push(
+      '- Short professional email -- 150 words maximum',
+      '- Subject line: specific, non-salesy (not "Quick Question" or "Exciting Opportunity")',
+      touch.touchNum === 1 ? '- This is first contact' : '- Open by briefly referencing prior physical letter(s)',
+      '- Single clear ask -- a call, a reply, or a specific date',
+      '- Do NOT use em dashes',
+      '- Provide: SUBJECT LINE, then EMAIL BODY'
+    );
+  } else {
+    lines.push(
+      '- Voicemail script -- 25-30 seconds when read aloud (approx 60-70 words)',
+      '- Natural, unhurried pacing -- not a sales pitch',
+      '- State name, firm, and reason for calling in one sentence',
+      touch.touchNum <= 2 ? '- Reference the letter you sent' : '- Briefly reference the sequence of prior outreach',
+      '- State your callback number twice',
+      '- Do NOT use em dashes'
+    );
+  }
+
+  return lines.filter(l => l !== '').join('\n');
+}
 
 // =============================================================================
 // INTELLIGENCE ENGINE
@@ -1346,7 +1496,7 @@ function Nav({ view, setView, savedCount, profile, onOpenOnboarding }) {
     ['explorer', 'Explorer'],
     ['detail', 'Firm Lookup'],
     ['saved', 'Targets' + (savedCount ? ` (${savedCount})` : '')],
-    ['letter', 'Letters'],
+    ['letter', 'Outreach'],
     ['myprofile', profile ? (profile.firmName.length > 18 ? profile.firmName.slice(0, 16) + '…' : profile.firmName) : 'My Profile'],
   ];
   return (
@@ -1819,115 +1969,472 @@ function FirmDetail({ firm, setFirm, onLetter, roa, saved, toggleSave, profile, 
 // =============================================================================
 // LETTER WRITER
 // =============================================================================
-function LetterWriter({ firm, setFirm, roa, profile, onOpenOnboarding }) {
+function LetterWriter({ firm, setFirm, roa, profile, onOpenOnboarding, crm, setCrmAndSave }) {
   const hasProfile = !!profile;
-  const [sN, setSN] = useState(profile?.firmName ? '' : '');
+
+  // Sender info
+  const [sN, setSN] = useState('');
   const [sT, setST] = useState('');
   const [sF, setSF] = useState(profile?.firmName || '');
   const [sA, setSA] = useState(profile ? [profile.addr1, profile.city, profile.state, profile.zip].filter(Boolean).join(', ') : '');
+  const [settOpen, setSettOpen] = useState(false);
+
+  // Campaign settings (per-firm, but defaults here)
   const [purpose, setP] = useState('acquisition');
-  const [tone, setTo] = useState('professional');
+  const [aggressiveness, setAgg] = useState('active');
   const [ctx, setCtx] = useState('');
+
+  // Active touch being viewed/prompted
+  const [activeTouchNum, setActiveTouchNum] = useState(null);
   const [prompt, setPrompt] = useState('');
   const [copied, setCopied] = useState(false);
-  const [settOpen, setSettOpen] = useState(!profile);
+
+  // Log-sent modal
+  const [showLogModal, setShowLogModal] = useState(false);
+  const [logNotes, setLogNotes] = useState('');
+
+  // CRM view toggle
+  const [crmView, setCrmView] = useState('compose'); // 'compose' | 'pipeline'
+
+  const firmCrm = firm ? (crm[firm.crd] || null) : null;
+  const sequence = CADENCE_SEQUENCES[firmCrm?.aggressiveness || aggressiveness] || [];
+  const sentTouches = firmCrm?.touches || [];
+  const nextTouchNum = sentTouches.length > 0 ? Math.max(...sentTouches.map(t => t.touchNum)) + 1 : 1;
+  const nextTouch = sequence.find(t => t.touchNum === nextTouchNum) || null;
+  const activeTouch = sequence.find(t => t.touchNum === activeTouchNum) || nextTouch;
+
+  // All contacted firms
+  const contactedFirms = useMemo(() => {
+    return Object.values(crm)
+      .filter(c => c.touches && c.touches.length > 0)
+      .sort((a, b) => {
+        const aLast = a.touches[a.touches.length - 1]?.sentAt || '';
+        const bLast = b.touches[b.touches.length - 1]?.sentAt || '';
+        return bLast.localeCompare(aLast);
+      });
+  }, [crm]);
+
+  const generatePrompt = (touchOverride) => {
+    if (!firm) return;
+    const touch = touchOverride || activeTouch;
+    if (!touch || touch.type === 'pause') return;
+    const p = buildTouchPrompt({
+      touch, firm, roa, profile, purpose: firmCrm?.purpose || purpose,
+      aggressiveness: firmCrm?.aggressiveness || aggressiveness,
+      prevTouches: sentTouches, ctx, sN, sT, sF, sA,
+    });
+    setPrompt(p);
+    setActiveTouchNum(touch.touchNum);
+  };
+
+  const initCampaign = () => {
+    if (!firm) return;
+    const record = {
+      crd: firm.crd,
+      firmName: firm.name,
+      firmCity: firm.city,
+      firmState: firm.state,
+      firmAum: firm.aum,
+      purpose: purpose,
+      aggressiveness: aggressiveness,
+      touches: [],
+      createdAt: new Date().toISOString(),
+    };
+    const updated = { ...crm, [firm.crd]: record };
+    setCrmAndSave(updated);
+  };
+
+  const logTouch = () => {
+    if (!firm || !activeTouch) return;
+    const touch = activeTouch;
+    const record = crm[firm.crd] || {
+      crd: firm.crd, firmName: firm.name, firmCity: firm.city, firmState: firm.state,
+      firmAum: firm.aum, purpose: firmCrm?.purpose || purpose,
+      aggressiveness: firmCrm?.aggressiveness || aggressiveness,
+      touches: [], createdAt: new Date().toISOString(),
+    };
+    const newTouch = { touchNum: touch.touchNum, type: touch.type, label: touch.label, sentAt: new Date().toISOString(), notes: logNotes.trim() };
+    const updated = { ...crm, [firm.crd]: { ...record, touches: [...record.touches, newTouch] } };
+    setCrmAndSave(updated);
+    setLogNotes('');
+    setShowLogModal(false);
+    // Advance to next touch
+    const nextNum = touch.touchNum + 1;
+    setActiveTouchNum(nextNum);
+    setPrompt('');
+  };
+
+  const removeCampaign = (crd) => {
+    const updated = { ...crm };
+    delete updated[crd];
+    setCrmAndSave(updated);
+    if (firm?.crd === crd) setPrompt('');
+  };
+
+  const daysUntilNext = (record) => {
+    if (!record?.touches?.length) return null;
+    const lastTouch = record.touches[record.touches.length - 1];
+    const seq = CADENCE_SEQUENCES[record.aggressiveness] || [];
+    const nextT = seq.find(t => t.touchNum === lastTouch.touchNum + 1);
+    if (!nextT || nextT.type === 'pause') return nextT ? nextT.daysAfterPrev : null;
+    const lastDate = new Date(lastTouch.sentAt);
+    const targetDate = new Date(lastDate.getTime() + nextT.daysAfterPrev * 86400000);
+    const diff = Math.round((targetDate - new Date()) / 86400000);
+    return diff;
+  };
 
   if (!hasProfile) return (
     <div className="page" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '60vh' }}>
       <GateBanner onOpenOnboarding={onOpenOnboarding} />
-      <div className="serif" style={{ fontSize: 28, marginBottom: 10, color: 'var(--text2)', marginTop: 20 }}>Unlock Letter Writer</div>
-      <div style={{ fontSize: 13, color: 'var(--text3)', maxWidth: 360, textAlign: 'center', lineHeight: 1.7 }}>Create a profile to access the letter writer and generate tailored outreach prompts.</div>
     </div>
   );
 
-  const pMap = { acquisition: 'exploring a potential acquisition or merger of their firm', partnership: 'exploring a strategic partnership or affiliation', recruiting: 'recruiting their advisors or team to join your firm', services: 'offering professional services (compliance, technology, operations)', referral: 'establishing a referral relationship' };
-  const tMap = { professional: 'calm, credible, understated sophistication', warm: 'friendly, approachable, relationship-focused', direct: 'concise, to the point, respect their time', strategic: 'measured, confident, emphasizing mutual benefit' };
-
-  const generate = () => {
-    if (!firm) return;
-    const rev = (firm.aum || 0) * roa;
-    const lines = ['Write a personalized physical letter to be mailed to an RIA firm. Tailor it using their SEC Form ADV data below.', '',
-      'SENDER:', 'Name: ' + sN, 'Title: ' + sT, 'Firm: ' + sF, 'Address: ' + sA, '',
-      'RECIPIENT FIRM (from SEC Form ADV):', 'Firm: ' + firm.name + ' (CRD #' + firm.crd + ')', 'Address: ' + firm.addr1 + (firm.addr2 ? ', ' + firm.addr2 : '') + ', ' + firm.city + ', ' + firm.state + ' ' + firm.zip,
-      'Total RAUM: $' + Math.round(firm.aum || 0).toLocaleString(), 'Discretionary RAUM: $' + Math.round(firm.aumDisc || 0).toLocaleString(),
-      'Est Revenue (at ' + (roa * 100).toFixed(2) + '% ROA): $' + Math.round(rev).toLocaleString(), 'Employees: ' + (firm.employees || 'N/A'),
-      'Individual Clients: ' + (firm.clientsInd || 'N/A') + ', HNW Clients: ' + (firm.clientsHNW || 'N/A'),
-      'Services: ' + firm.services.join(', '), 'Compensation: ' + firm.compensation.join(', '), 'Org Type: ' + firm.orgType,
-      'BD Affiliate: ' + (firm.bdAffiliate ? 'Yes' : 'No') + ', Custody: ' + (firm.custody ? 'Yes' : 'No') + ', Wrap Fee: ' + (firm.wrapFee ? 'Yes' : 'No'), '',
-      'PURPOSE: ' + pMap[purpose], 'TONE: ' + tMap[tone], 'ADDITIONAL CONTEXT: ' + (ctx || 'None'), '',
-      'INSTRUCTIONS:', '- Professional letter for physical mail (date, addresses, salutation, body, closing)',
-      '- Reference their ADV data naturally (client mix, services) to show homework, not heavy-handed',
-      '- 250-350 word body, one page', '- No hype, buzzwords, or marketing language',
-      '- Do NOT mention dollar amounts of AUM or revenue — reference scale indirectly',
-      '- Address to The Principals', '- Signal sophistication without being promotional', '- Do NOT use em dashes',
-      '- End with a specific, low-pressure call to action'];
-    setPrompt(lines.join('\n'));
-  };
+  const AGG_OPTS = [
+    { v: 'measured',   label: 'Measured',   desc: '5 touches over ~6 months' },
+    { v: 'active',     label: 'Active',     desc: '7 touches over ~4 months' },
+    { v: 'persistent', label: 'Persistent', desc: '9 touches over ~3 months' },
+  ];
 
   return (
     <div className="page fade-up">
-      <div style={{ marginBottom: 20 }}><div className="page-title">Letter Writer</div><div className="page-sub">Generate tailored outreach prompts</div></div>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 20 }}>
+        <div>
+          <div className="page-title">Outreach CRM</div>
+          <div className="page-sub">Manage cadences, generate prompts, track contacts</div>
+        </div>
+        <div style={{ display: 'flex', gap: 8 }}>
+          <button className={crmView === 'compose' ? 'btn-gold btn-sm' : 'btn-ghost btn-sm'} onClick={() => setCrmView('compose')}>Compose</button>
+          <button className={crmView === 'pipeline' ? 'btn-gold btn-sm' : 'btn-ghost btn-sm'} onClick={() => setCrmView('pipeline')}>
+            Pipeline {contactedFirms.length > 0 && <span style={{ background: 'rgba(200,169,110,.25)', borderRadius: 10, padding: '1px 6px', marginLeft: 4, fontSize: 11 }}>{contactedFirms.length}</span>}
+          </button>
+        </div>
+      </div>
+
+      {/* SENDER BAR */}
       {settOpen ? (
-        <div className="card" style={{ padding: '18px 20px', marginBottom: 16 }}>
+        <div className="card" style={{ padding: '16px 20px', marginBottom: 16 }}>
           <div className="section-head">Your Details</div>
-          <div className="form-grid-2" style={{ gap: 12, marginBottom: 12 }}>
+          <div className="form-grid-2" style={{ gap: 10, marginBottom: 12 }}>
             <input placeholder="Your name" value={sN} onChange={e => setSN(e.target.value)} />
             <input placeholder="Your title" value={sT} onChange={e => setST(e.target.value)} />
             <input placeholder="Your firm" value={sF} onChange={e => setSF(e.target.value)} />
             <input placeholder="Your mailing address" value={sA} onChange={e => setSA(e.target.value)} />
           </div>
-          <button className="btn-gold btn-sm" onClick={() => setSettOpen(false)}>Save & Continue</button>
+          <button className="btn-gold btn-sm" onClick={() => setSettOpen(false)}>Done</button>
         </div>
       ) : (
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16, background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 10, padding: '10px 16px' }}>
-          <div style={{ fontSize: 13 }}><span style={{ fontWeight: 600 }}>{sN}</span><span style={{ color: 'var(--text3)' }}> · {sT} · {sF}</span></div>
-          <button className="btn-ghost btn-sm" onClick={() => setSettOpen(true)}>Edit</button>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16, background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 10, padding: '9px 16px' }}>
+          <div style={{ fontSize: 12 }}>
+            {sN ? <><span style={{ fontWeight: 600 }}>{sN}</span><span style={{ color: 'var(--text3)' }}> · {sT} · {sF}</span></> : <span style={{ color: 'var(--text3)' }}>Add your name and title for letters</span>}
+          </div>
+          <button className="btn-ghost btn-sm" onClick={() => setSettOpen(true)}>Edit Sender</button>
         </div>
       )}
-      <div style={{ display: 'grid', gridTemplateColumns: '340px 1fr', gap: 20 }}>
-        <div>
-          <div className="card" style={{ padding: '18px 20px', marginBottom: 14 }}>
-            <div className="section-head">Recipient Firm</div>
-            <select value={firm?.crd || ''} onChange={e => { const f = FIRMS.find(x => x.crd === e.target.value); setFirm(f || null); }} style={{ marginBottom: 12 }}>
-              <option value="">Choose a firm…</option>
-              {FIRMS.slice().sort((a, b) => a.name.localeCompare(b.name)).map(f => <option key={f.crd} value={f.crd}>{f.name} ({f.state}) — {fmtM(f.aum)}</option>)}
-            </select>
-            {firm && (<div style={{ fontSize: 12, color: 'var(--text2)', lineHeight: 1.7 }}>
-              <div style={{ fontWeight: 600, color: 'var(--text)', marginBottom: 2 }}>{firm.name}</div>
-              <div style={{ color: 'var(--text3)' }}>{firm.city}, {firm.state}</div>
-              <div style={{ marginTop: 6, fontFamily: 'DM Mono,monospace', fontSize: 11 }}>
-                <span>RAUM {fmtM(firm.aum)}</span><span style={{ color: 'var(--border2)', margin: '0 8px' }}>|</span>
-                <span style={{ color: 'var(--accent)' }}>Rev {fmtM((firm.aum || 0) * roa)}</span><span style={{ color: 'var(--border2)', margin: '0 8px' }}>|</span>
-                <span>{fmtN(firm.employees)} emp</span>
-              </div>
-            </div>)}
-          </div>
-          <div className="card" style={{ padding: '18px 20px', marginBottom: 14 }}>
-            <div style={{ marginBottom: 12 }}><div className="filter-group"><label>Purpose</label><select value={purpose} onChange={e => setP(e.target.value)}><option value="acquisition">Acquisition / Merger</option><option value="partnership">Strategic Partnership</option><option value="recruiting">Recruiting</option><option value="services">Professional Services</option><option value="referral">Referral Relationship</option></select></div></div>
-            <div style={{ marginBottom: 12 }}><div className="filter-group"><label>Tone</label><select value={tone} onChange={e => setTo(e.target.value)}><option value="professional">Professional / Understated</option><option value="warm">Warm / Relationship-Focused</option><option value="direct">Direct / Respect Their Time</option><option value="strategic">Strategic / Mutual Benefit</option></select></div></div>
-            <div className="filter-group"><label>Additional Context</label><textarea rows={3} value={ctx} onChange={e => setCtx(e.target.value)} style={{ resize: 'vertical' }} placeholder="Shared connection, specific angle…" /></div>
-          </div>
-          <button className="btn-gold" style={{ width: '100%', padding: 12 }} onClick={generate}>Generate Prompt →</button>
-        </div>
-        <div>
-          {prompt ? (
-            <div className="fade-in">
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
-                <div style={{ fontSize: 13, fontWeight: 600 }}>Prompt Ready</div>
-                <button className={'btn-gold btn-sm' + (copied ? ' copy-flash' : '')} onClick={() => { navigator.clipboard.writeText(prompt); setCopied(true); setTimeout(() => setCopied(false), 2000); }}>{copied ? '✓ Copied' : 'Copy to Clipboard'}</button>
-              </div>
-              <div style={{ fontSize: 12, color: 'var(--text3)', marginBottom: 12 }}>Paste into <a href="https://claude.ai" target="_blank" rel="noopener" style={{ color: 'var(--accent)' }}>Claude</a> or any AI.</div>
-              <div className="card" style={{ padding: 20, maxHeight: 'calc(100vh - 320px)', overflow: 'auto' }}><pre className="prompt-box">{prompt}</pre></div>
+
+      {/* PIPELINE VIEW */}
+      {crmView === 'pipeline' && (
+        <div className="fade-in">
+          {contactedFirms.length === 0 ? (
+            <div style={{ textAlign: 'center', padding: '60px 0', color: 'var(--text3)' }}>
+              <div style={{ fontSize: 36, marginBottom: 12, opacity: .3 }}>📋</div>
+              <div style={{ fontFamily: 'Instrument Serif,serif', fontSize: 22, color: 'var(--text2)', marginBottom: 8 }}>No active campaigns</div>
+              <div style={{ fontSize: 12 }}>Start a campaign from the Compose tab.</div>
             </div>
           ) : (
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%', minHeight: 300, color: 'var(--text3)' }}>
-              <div style={{ fontSize: 48, marginBottom: 12, opacity: .4 }}>✉</div>
-              <div style={{ fontFamily: 'Instrument Serif,serif', fontSize: 22, marginBottom: 8, color: 'var(--text2)' }}>Letter Prompt Generator</div>
-              <div style={{ fontSize: 12, maxWidth: 280, textAlign: 'center', lineHeight: 1.7 }}>Select a firm and hit Generate.</div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+              {contactedFirms.map(record => {
+                const f = FIRMS.find(x => x.crd === record.crd);
+                const seq = CADENCE_SEQUENCES[record.aggressiveness] || [];
+                const lastTouch = record.touches[record.touches.length - 1];
+                const nextT = seq.find(t => t.touchNum === lastTouch.touchNum + 1);
+                const days = daysUntilNext(record);
+                const pct = Math.round((record.touches.length / seq.length) * 100);
+                const isComplete = record.touches.length >= seq.length;
+                return (
+                  <div key={record.crd} className="card" style={{ padding: '16px 20px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
+                          <span style={{ fontFamily: 'Instrument Serif,serif', fontSize: 16, cursor: 'pointer', color: 'var(--text)' }}
+                            onClick={() => { const firm = FIRMS.find(x => x.crd === record.crd); if (firm) { setFirm(firm); setCrmView('compose'); } }}>
+                            {record.firmName}
+                          </span>
+                          <span className="tag tag-state">{record.firmState}</span>
+                          <span className={'tag ' + (record.aggressiveness === 'persistent' ? 'tag-red' : record.aggressiveness === 'active' ? 'tag-amber' : 'tag-dim')}>{AGG_LABELS[record.aggressiveness]}</span>
+                          {isComplete && <span className="tag tag-green">Complete</span>}
+                        </div>
+                        <div style={{ fontSize: 11, color: 'var(--text3)', marginBottom: 10 }}>
+                          {record.firmCity}, {record.firmState} · {record.purpose} · {record.touches.length}/{seq.length} touches sent
+                        </div>
+                        {/* Progress bar */}
+                        <div style={{ height: 4, background: 'var(--surface3)', borderRadius: 3, marginBottom: 10, overflow: 'hidden' }}>
+                          <div style={{ height: '100%', width: pct + '%', background: isComplete ? 'var(--green)' : 'var(--accent)', borderRadius: 3, transition: 'width .4s' }} />
+                        </div>
+                        {/* Touch pills */}
+                        <div style={{ display: 'flex', gap: 5, flexWrap: 'wrap', marginBottom: 8 }}>
+                          {seq.map(t => {
+                            const done = record.touches.find(x => x.touchNum === t.touchNum);
+                            const isNext = t.touchNum === lastTouch.touchNum + 1;
+                            return (
+                              <div key={t.touchNum} title={t.label + (done ? ' - sent ' + new Date(done.sentAt).toLocaleDateString() : '')}
+                                style={{
+                                  width: 28, height: 28, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                  fontSize: 12, cursor: isNext ? 'pointer' : 'default',
+                                  background: done ? 'var(--green-dim)' : isNext ? 'rgba(200,169,110,.15)' : 'var(--surface2)',
+                                  border: '1px solid ' + (done ? 'var(--green)' : isNext ? 'var(--accent)' : 'var(--border)'),
+                                  color: done ? 'var(--green)' : isNext ? 'var(--accent)' : 'var(--text3)',
+                                }}
+                                onClick={() => { if (isNext && !isComplete) { const firm = FIRMS.find(x => x.crd === record.crd); if (firm) { setFirm(firm); setActiveTouchNum(t.touchNum); setCrmView('compose'); }}}}
+                              >
+                                {done ? '✓' : TYPE_ICON[t.type]}
+                              </div>
+                            );
+                          })}
+                        </div>
+                        {!isComplete && nextT && days !== null && (
+                          <div style={{ fontSize: 11, color: days <= 0 ? 'var(--green)' : 'var(--text3)' }}>
+                            {days <= 0
+                              ? <span style={{ color: 'var(--green)', fontWeight: 600 }}>Ready: {nextT.label}</span>
+                              : <span>Next: {nextT.label} in {days} day{days !== 1 ? 's' : ''}</span>}
+                          </div>
+                        )}
+                      </div>
+                      <div style={{ display: 'flex', gap: 6, marginLeft: 16, flexShrink: 0 }}>
+                        <button className="btn-ghost btn-sm" onClick={() => { const firm = FIRMS.find(x => x.crd === record.crd); if (firm) { setFirm(firm); setCrmView('compose'); } }}>Open</button>
+                        <button className="btn-danger btn-sm" onClick={() => { if (confirm('Remove this campaign?')) removeCampaign(record.crd); }}>✕</button>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           )}
         </div>
-      </div>
+      )}
+
+      {/* COMPOSE VIEW */}
+      {crmView === 'compose' && (
+        <div style={{ display: 'grid', gridTemplateColumns: '320px 1fr', gap: 20 }}>
+          {/* LEFT COLUMN */}
+          <div>
+            {/* Firm selector */}
+            <div className="card" style={{ padding: '16px 20px', marginBottom: 12 }}>
+              <div className="section-head">Recipient Firm</div>
+              <select value={firm?.crd || ''} onChange={e => { const f = FIRMS.find(x => x.crd === e.target.value); setFirm(f || null); setPrompt(''); setActiveTouchNum(null); }} style={{ marginBottom: 10 }}>
+                <option value="">Choose a firm...</option>
+                {FIRMS.slice().sort((a, b) => a.name.localeCompare(b.name)).map(f => <option key={f.crd} value={f.crd}>{f.name} ({f.state}) -- {fmtM(f.aum)}</option>)}
+              </select>
+              {firm && (
+                <div style={{ fontSize: 12, lineHeight: 1.7 }}>
+                  <div style={{ fontWeight: 600, marginBottom: 1 }}>{firm.name}</div>
+                  <div style={{ color: 'var(--text3)', marginBottom: 6 }}>{firm.city}, {firm.state}</div>
+                  <div style={{ fontFamily: 'DM Mono,monospace', fontSize: 11, display: 'flex', gap: 10 }}>
+                    <span>{fmtM(firm.aum)}</span>
+                    <span style={{ color: 'var(--accent)' }}>{fmtM((firm.aum || 0) * roa)}</span>
+                    <span>{fmtN(firm.employees)} emp</span>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Campaign settings — locked once campaign started */}
+            <div className="card" style={{ padding: '16px 20px', marginBottom: 12 }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
+                <div className="section-head" style={{ marginBottom: 0 }}>Campaign Settings</div>
+                {firmCrm && <span style={{ fontSize: 10, color: 'var(--green)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '.05em' }}>Active</span>}
+              </div>
+              <div style={{ marginBottom: 10 }}>
+                <label className="form-field-label">Purpose</label>
+                <select value={firmCrm?.purpose || purpose} onChange={e => setP(e.target.value)} disabled={!!firmCrm}>
+                  <option value="acquisition">Acquisition / Merger</option>
+                  <option value="partnership">Strategic Partnership</option>
+                  <option value="recruiting">Recruiting</option>
+                  <option value="services">Professional Services</option>
+                  <option value="referral">Referral Relationship</option>
+                </select>
+              </div>
+              <div style={{ marginBottom: 10 }}>
+                <label className="form-field-label">Aggressiveness</label>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                  {AGG_OPTS.map(o => (
+                    <div key={o.v}
+                      onClick={() => !firmCrm && setAgg(o.v)}
+                      style={{
+                        padding: '8px 12px', borderRadius: 8, border: '1px solid',
+                        borderColor: (firmCrm?.aggressiveness || aggressiveness) === o.v ? 'var(--accent)' : 'var(--border)',
+                        background: (firmCrm?.aggressiveness || aggressiveness) === o.v ? 'rgba(200,169,110,.08)' : 'transparent',
+                        cursor: firmCrm ? 'default' : 'pointer', transition: 'all .15s',
+                      }}>
+                      <div style={{ fontSize: 12, fontWeight: 600, color: (firmCrm?.aggressiveness || aggressiveness) === o.v ? 'var(--accent)' : 'var(--text2)' }}>{o.label}</div>
+                      <div style={{ fontSize: 11, color: 'var(--text3)' }}>{o.desc}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div>
+                <label className="form-field-label">Context / Notes</label>
+                <textarea rows={2} value={ctx} onChange={e => setCtx(e.target.value)} style={{ resize: 'vertical', fontSize: 12 }} placeholder="Shared connection, specific angle..." />
+              </div>
+              {firm && !firmCrm && (
+                <button className="btn-gold" style={{ width: '100%', marginTop: 10 }} onClick={initCampaign}>Start Campaign</button>
+              )}
+            </div>
+
+            {/* Sequence timeline */}
+            {firm && firmCrm && (
+              <div className="card" style={{ padding: '16px 20px' }}>
+                <div className="section-head">Sequence</div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                  {sequence.map((t, i) => {
+                    const done = sentTouches.find(x => x.touchNum === t.touchNum);
+                    const isNext = t.touchNum === nextTouchNum;
+                    const isActive = t.touchNum === activeTouchNum;
+                    return (
+                      <div key={t.touchNum}
+                        onClick={() => t.type !== 'pause' && setActiveTouchNum(isActive ? null : t.touchNum)}
+                        style={{
+                          display: 'flex', alignItems: 'center', gap: 10, padding: '7px 10px', borderRadius: 8,
+                          cursor: t.type !== 'pause' ? 'pointer' : 'default',
+                          background: isActive ? 'rgba(200,169,110,.08)' : 'transparent',
+                          border: '1px solid ' + (isActive ? 'var(--accent)' : 'transparent'),
+                          transition: 'all .15s',
+                        }}>
+                        <div style={{
+                          width: 26, height: 26, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                          fontSize: 11, flexShrink: 0,
+                          background: done ? 'var(--green-dim)' : isNext ? 'rgba(200,169,110,.15)' : 'var(--surface3)',
+                          border: '1px solid ' + (done ? 'var(--green)' : isNext ? 'var(--accent)' : 'var(--border)'),
+                          color: done ? 'var(--green)' : isNext ? 'var(--accent)' : 'var(--text3)',
+                        }}>
+                          {done ? '✓' : TYPE_ICON[t.type]}
+                        </div>
+                        <div style={{ flex: 1, minWidth: 0 }}>
+                          <div style={{ fontSize: 12, fontWeight: isNext ? 600 : 400, color: done ? 'var(--text3)' : isNext ? 'var(--text)' : 'var(--text2)', textDecoration: done ? 'line-through' : 'none' }}>
+                            {t.label}
+                          </div>
+                          {done && <div style={{ fontSize: 10, color: 'var(--text3)' }}>Sent {new Date(done.sentAt).toLocaleDateString()}</div>}
+                          {isNext && !done && <div style={{ fontSize: 10, color: 'var(--accent)' }}>Up next</div>}
+                          {t.daysAfterPrev > 0 && !done && !isNext && i > 0 && <div style={{ fontSize: 10, color: 'var(--text3)' }}>{t.daysAfterPrev}d after prev</div>}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* RIGHT COLUMN */}
+          <div>
+            {!firm && (
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%', minHeight: 400, color: 'var(--text3)' }}>
+                <div style={{ fontSize: 42, opacity: .3, marginBottom: 12 }}>✉</div>
+                <div style={{ fontFamily: 'Instrument Serif,serif', fontSize: 22, color: 'var(--text2)', marginBottom: 6 }}>Select a firm to begin</div>
+                <div style={{ fontSize: 12, maxWidth: 260, textAlign: 'center', lineHeight: 1.7 }}>Choose a firm on the left, set your campaign settings, and generate touch prompts.</div>
+              </div>
+            )}
+
+            {firm && !firmCrm && (
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%', minHeight: 400, color: 'var(--text3)' }}>
+                <div style={{ fontSize: 42, opacity: .3, marginBottom: 12 }}>🚀</div>
+                <div style={{ fontFamily: 'Instrument Serif,serif', fontSize: 22, color: 'var(--text2)', marginBottom: 6 }}>Ready to start</div>
+                <div style={{ fontSize: 12, maxWidth: 300, textAlign: 'center', lineHeight: 1.7, marginBottom: 20 }}>Configure your purpose and aggressiveness, then click Start Campaign to begin the outreach sequence.</div>
+                <button className="btn-gold" onClick={initCampaign}>Start Campaign for {firm.name} →</button>
+              </div>
+            )}
+
+            {firm && firmCrm && (
+              <div className="fade-in">
+                {/* Active touch card */}
+                {activeTouch && (
+                  <div style={{ marginBottom: 16 }}>
+                    <div className="card" style={{ padding: '18px 20px', borderColor: activeTouch.type !== 'pause' ? 'rgba(200,169,110,.3)' : 'var(--border)' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 12 }}>
+                        <div>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
+                            <span style={{ fontSize: 18 }}>{TYPE_ICON[activeTouch.type]}</span>
+                            <span style={{ fontFamily: 'Instrument Serif,serif', fontSize: 20 }}>Touch #{activeTouch.touchNum}: {activeTouch.label}</span>
+                          </div>
+                          <div style={{ fontSize: 12, color: 'var(--text3)', lineHeight: 1.6, maxWidth: 500 }}>{activeTouch.desc}</div>
+                        </div>
+                        <div style={{ display: 'flex', gap: 6, flexShrink: 0 }}>
+                          {activeTouch.type !== 'pause' && (
+                            <button className="btn-gold btn-sm" onClick={() => generatePrompt(activeTouch)}>Generate Prompt</button>
+                          )}
+                          {activeTouch.touchNum === nextTouchNum && activeTouch.type !== 'pause' && (
+                            <button className="btn-ghost btn-sm" style={{ color: 'var(--green)', borderColor: 'rgba(74,222,128,.3)' }} onClick={() => setShowLogModal(true)}>
+                              Mark Sent ✓
+                            </button>
+                          )}
+                        </div>
+                      </div>
+                      {activeTouch.type === 'pause' && (
+                        <div style={{ background: 'var(--surface2)', borderRadius: 8, padding: '10px 14px', fontSize: 12, color: 'var(--text3)' }}>
+                          This is a planned quiet period. No outreach during this window. Click Mark Sent to log the pause and advance the sequence.
+                          <button className="btn-ghost btn-sm" style={{ marginLeft: 12 }} onClick={() => setShowLogModal(true)}>Log Pause</button>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                {/* Prompt output */}
+                {prompt && (
+                  <div className="fade-in">
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
+                      <div style={{ fontSize: 13, fontWeight: 600 }}>Prompt Ready</div>
+                      <div style={{ display: 'flex', gap: 8 }}>
+                        <button className={'btn-gold btn-sm' + (copied ? ' copy-flash' : '')}
+                          onClick={() => { navigator.clipboard.writeText(prompt); setCopied(true); setTimeout(() => setCopied(false), 2000); }}>
+                          {copied ? '✓ Copied' : 'Copy to Clipboard'}
+                        </button>
+                        <button className="btn-ghost btn-sm" style={{ color: 'var(--green)', borderColor: 'rgba(74,222,128,.3)' }} onClick={() => setShowLogModal(true)}>
+                          Mark Sent ✓
+                        </button>
+                      </div>
+                    </div>
+                    <div style={{ fontSize: 12, color: 'var(--text3)', marginBottom: 10 }}>
+                      Paste into <a href="https://claude.ai" target="_blank" rel="noopener" style={{ color: 'var(--accent)' }}>Claude</a> or any AI to generate the {activeTouch?.type}.
+                    </div>
+                    <div className="card" style={{ padding: 20, maxHeight: 'calc(100vh - 380px)', overflow: 'auto' }}>
+                      <pre className="prompt-box">{prompt}</pre>
+                    </div>
+                  </div>
+                )}
+
+                {!prompt && !activeTouch && (
+                  <div style={{ textAlign: 'center', padding: '60px 0', color: 'var(--text3)' }}>
+                    <div style={{ fontSize: 12 }}>Select a touch from the sequence to generate its prompt.</div>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* LOG SENT MODAL */}
+      {showLogModal && (
+        <div className="modal-overlay" onClick={e => e.target === e.currentTarget && setShowLogModal(false)}>
+          <div className="modal slide-down" style={{ maxWidth: 420 }}>
+            <div className="modal-header">
+              <div className="modal-title" style={{ fontSize: 20 }}>Log Touch #{activeTouch?.touchNum}</div>
+              <div style={{ fontSize: 13, color: 'var(--text3)', marginTop: 4, marginBottom: 16 }}>{activeTouch?.label} -- {firm?.name}</div>
+            </div>
+            <div className="modal-body">
+              <div style={{ marginBottom: 16 }}>
+                <label className="form-field-label">Notes (optional)</label>
+                <textarea rows={3} value={logNotes} onChange={e => setLogNotes(e.target.value)}
+                  style={{ resize: 'vertical' }} placeholder="Any context, response received, follow-up flags..." />
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', paddingTop: 16, borderTop: '1px solid var(--border)' }}>
+                <button className="btn-ghost" onClick={() => setShowLogModal(false)}>Cancel</button>
+                <button className="btn-gold" onClick={logTouch}>Confirm Sent -- Advance Sequence</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -2029,6 +2536,8 @@ function App() {
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [saved, setSaved]     = useState(() => loadSaved());
   const [notes, setNotes]     = useState(() => loadNotes());
+  const [crm, setCrm]         = useState(() => loadCRM());
+  const setCrmAndSave = (c) => { setCrm(c); saveCRM(c); };
 
   const hasProfile = !!profile;
 
@@ -2071,7 +2580,7 @@ function App() {
         {view === 'dashboard'  && <Dashboard roa={roa} onSelect={sel} saved={saved} toggleSave={toggleSave} profile={profile} onOpenOnboarding={openOnboarding} />}
         {view === 'explorer'   && <Explorer roa={roa} setRoa={setRoa} onSelect={sel} saved={saved} toggleSave={toggleSave} profile={profile} onOpenOnboarding={openOnboarding} />}
         {view === 'detail'     && <FirmDetail firm={firm} setFirm={setFirm} onLetter={wl} roa={roa} saved={saved} toggleSave={toggleSave} profile={profile} onOpenOnboarding={openOnboarding} />}
-        {view === 'letter'     && <LetterWriter firm={firm} setFirm={setFirm} roa={roa} profile={profile} onOpenOnboarding={openOnboarding} />}
+        {view === 'letter'     && <LetterWriter firm={firm} setFirm={setFirm} roa={roa} profile={profile} onOpenOnboarding={openOnboarding} crm={crm} setCrmAndSave={setCrmAndSave} />}
         {view === 'saved'      && <SavedTargets saved={saved} setSaved={setSaved} notes={notes} setNotes={setNotes} roa={roa} onSelect={sel} onLetter={wl} profile={profile} onOpenOnboarding={openOnboarding} />}
         {view === 'myprofile'  && <MyProfile profile={profile} roa={roa} onOpenOnboarding={openOnboarding} onClearProfile={handleClearProfile} onSelect={sel} />}
       </div>
