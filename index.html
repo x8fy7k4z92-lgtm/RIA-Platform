@@ -450,7 +450,35 @@ const TYPE_ICON = { letter: '✉', email: '📧', phone: '📞', pause: '⏸' };
 const TYPE_COLOR = { letter: 'var(--accent)', email: 'var(--blue)', phone: 'var(--green)', pause: 'var(--text3)' };
 const AGG_LABELS = { measured: 'Measured', active: 'Active', persistent: 'Persistent' };
 
-function buildTouchPrompt({ touch, firm, roa, profile, purpose, aggressiveness, prevTouches, ctx, sN, sT, sF, sA }) {
+const TONE_STYLES = {
+  understated: {
+    label: 'Understated',
+    desc: 'Quiet confidence. Says less, implies more.',
+    instruction: 'Tone: quietly confident and restrained. Never oversell. Let the facts speak. Short sentences. No adjectives that could be cut. The kind of letter a partner at a white-shoe firm would write -- calm authority without effort.',
+  },
+  collegial: {
+    label: 'Collegial',
+    desc: 'Peer-to-peer. Respectful, warm, direct.',
+    instruction: 'Tone: collegial and peer-to-peer. Write as one experienced advisor to another. Acknowledge their accomplishment in building what they have. Warm but not effusive. The kind of note you would write to someone you respect but have never met.',
+  },
+  narrative: {
+    label: 'Narrative',
+    desc: 'Story-forward. Curiosity-driven.',
+    instruction: 'Tone: narrative and curiosity-driven. Open with an observation or question rather than an introduction. Let the story of why you are reaching out unfold naturally. Avoid bullet points or structured lists entirely. Should read like good longform writing, not a business letter template.',
+  },
+  direct: {
+    label: 'Direct',
+    desc: 'No preamble. Specific ask up front.',
+    instruction: 'Tone: direct and economical. State the purpose in the first two sentences. No long wind-up. Respect that their time is limited. Every sentence must earn its place. The ask should be concrete and low-friction.',
+  },
+  personal: {
+    label: 'Personal',
+    desc: 'Human. Acknowledges the weight of what you are asking.',
+    instruction: 'Tone: genuinely personal and human. Acknowledge that this kind of decision -- about the future of something they built -- deserves more than a form letter. Write with empathy for what it means to consider a transition. Avoid anything that sounds like a pitch. This should feel like a conversation, not a solicitation.',
+  },
+};
+
+function buildTouchPrompt({ touch, firm, roa, profile, purpose, aggressiveness, tone, prevTouches, ctx, sN, sT, sF, sA }) {
   const rev = (firm.aum || 0) * roa;
   const pMap = {
     acquisition: 'exploring a potential acquisition or merger of their firm',
@@ -506,6 +534,7 @@ function buildTouchPrompt({ touch, firm, roa, profile, purpose, aggressiveness, 
     '',
     'PURPOSE: ' + (pMap[purpose] || purpose),
     'AGGRESSIVENESS: ' + (aggMap[aggressiveness] || aggressiveness),
+    'TONE & VOICE: ' + ((TONE_STYLES[tone] || TONE_STYLES.understated).instruction),
     'ADDITIONAL CONTEXT: ' + (ctx || 'None'),
     '',
     'INSTRUCTIONS:',
@@ -1531,7 +1560,7 @@ function Nav({ view, setView, savedCount, profile, onOpenOnboarding }) {
 // =============================================================================
 // MAP
 // =============================================================================
-function FirmMap({ firms, roa, rMin, rMax, onSelect, onBounds, userFirm }) {
+function FirmMap({ firms, roa, rMin, rMax, onSelect, onBounds, userFirm, contactedCrds }) {
   const ref = useRef(null), mRef = useRef(null), lRef = useRef(null);
   useEffect(() => {
     if (!ref.current || mRef.current) return;
@@ -1551,9 +1580,19 @@ function FirmMap({ firms, roa, rMin, rMax, onSelect, onBounds, userFirm }) {
     firms.forEach(f => {
       const co = COORDS[f.crd]; if (!co) return;
       const rev = (f.aum || 0) * roa, hit = rev >= rMin && rev <= rMax;
-      const br = Math.max(4, Math.min(11, Math.sqrt((f.aum || 0) / 1e8) * 2.5)), r = hit ? br + 5 : br;
-      const c = L.circleMarker([co.lat, co.lng], { radius: r, fillColor: hit ? '#4ade80' : '#60a5fa', color: hit ? '#166534' : '#1d4ed8', weight: hit ? 2 : 1, opacity: hit ? .9 : .5, fillOpacity: hit ? .6 : .3 });
-      c.bindPopup('<div style="min-width:200px"><div style="font-family:Instrument Serif,serif;font-size:14px;margin-bottom:2px">' + f.name + '</div><div style="color:#9aa0ad;font-size:11px;margin-bottom:8px">' + f.city + ', ' + f.state + '</div><div style="font-family:DM Mono,monospace;font-size:11px">RAUM&nbsp;<b>' + fmtM(f.aum) + '</b><br/>Rev&nbsp;&nbsp;<b style="color:' + (hit ? '#4ade80' : '#f0f1f3') + '">' + fmtM(rev) + '</b></div>' + (hit ? '<div style="margin-top:6px;font-size:10px;color:#4ade80;font-weight:600;text-transform:uppercase">In target range</div>' : '') + '<div onclick="window.__rvf(\'' + f.crd + '\')" class="pvb">View details →</div></div>', { className: 'mp' });
+      const contacted = contactedCrds && contactedCrds.has(f.crd);
+      const br = Math.max(4, Math.min(11, Math.sqrt((f.aum || 0) / 1e8) * 2.5));
+      const r = contacted ? br + 6 : hit ? br + 5 : br;
+      // Colors: contacted = amber/orange, target = green, other = blue
+      const fillColor = contacted ? '#f59e0b' : hit ? '#4ade80' : '#60a5fa';
+      const strokeColor = contacted ? '#92400e' : hit ? '#166534' : '#1d4ed8';
+      const strokeWeight = contacted ? 2.5 : hit ? 2 : 1;
+      const opacity = contacted ? .95 : hit ? .9 : .5;
+      const fillOpacity = contacted ? .75 : hit ? .6 : .3;
+      const c = L.circleMarker([co.lat, co.lng], { radius: r, fillColor, color: strokeColor, weight: strokeWeight, opacity, fillOpacity });
+      const contactedBadge = contacted ? '<div style="margin-top:6px;font-size:10px;color:#f59e0b;font-weight:600;text-transform:uppercase;letter-spacing:.05em">In Outreach</div>' : '';
+      const targetBadge = hit && !contacted ? '<div style="margin-top:6px;font-size:10px;color:#4ade80;font-weight:600;text-transform:uppercase">In target range</div>' : '';
+      c.bindPopup('<div style="min-width:200px"><div style="font-family:Instrument Serif,serif;font-size:14px;margin-bottom:2px">' + f.name + '</div><div style="color:#9aa0ad;font-size:11px;margin-bottom:8px">' + f.city + ', ' + f.state + '</div><div style="font-family:DM Mono,monospace;font-size:11px">RAUM&nbsp;<b>' + fmtM(f.aum) + '</b><br/>Rev&nbsp;&nbsp;<b style="color:' + (hit ? '#4ade80' : '#f0f1f3') + '">' + fmtM(rev) + '</b></div>' + contactedBadge + targetBadge + '<div onclick="window.__rvf(\'' + f.crd + '\')" class="pvb">View details →</div></div>', { className: 'mp' });
       lRef.current.addLayer(c);
     });
 
@@ -1570,7 +1609,7 @@ function FirmMap({ firms, roa, rMin, rMax, onSelect, onBounds, userFirm }) {
       userMarker.bindPopup('<div style="min-width:180px"><div style="display:flex;align-items:center;gap:6px;margin-bottom:4px"><span style="font-size:11px;background:rgba(200,169,110,.15);color:#c8a96e;border:1px solid rgba(200,169,110,.3);border-radius:10px;padding:2px 8px;font-weight:600">Your Firm</span></div><div style="font-family:Instrument Serif,serif;font-size:14px;margin-bottom:6px">' + userFirm.firmName + '</div><div style="color:#9aa0ad;font-size:11px;margin-bottom:8px">' + (userFirm.city || '') + (userFirm.state ? ', ' + userFirm.state : '') + '</div>' + (userAum ? '<div style="font-family:DM Mono,monospace;font-size:11px">RAUM&nbsp;<b style="color:#c8a96e">' + fmtM(userAum) + '</b></div>' : '') + '</div>', { className: 'mp' });
       lRef.current.addLayer(userMarker);
     }
-  }, [firms, roa, rMin, rMax, userFirm]);
+  }, [firms, roa, rMin, rMax, userFirm, contactedCrds]);
   return <div ref={ref} style={{ width: '100%', height: '100%', borderRadius: 10 }} />;
 }
 
@@ -1749,7 +1788,7 @@ function Dashboard({ roa, onSelect, saved, toggleSave, profile, onOpenOnboarding
 // =============================================================================
 // EXPLORER (locked version when no profile)
 // =============================================================================
-function Explorer({ roa, setRoa, onSelect, saved, toggleSave, profile, onOpenOnboarding }) {
+function Explorer({ roa, setRoa, onSelect, saved, toggleSave, profile, onOpenOnboarding, crm }) {
   const hasProfile = !!profile;
   const userFirm = useMemo(() => geocodeUserFirm(profile), [profile]);
   const [search, setSearch] = useState('');
@@ -1762,6 +1801,7 @@ function Explorer({ roa, setRoa, onSelect, saved, toggleSave, profile, onOpenOnb
   const [showMap, setShowMap] = useState(true);
   const [bounds, setBounds] = useState(null);
   const [fByMap, setFByMap] = useState(false);
+  const contactedCrds = useMemo(() => new Set(Object.keys(crm || {})), [crm]);
 
   const allFirms = useMemo(() => getFirmPool(profile), [profile]);
   const base = useMemo(() => allFirms.filter(f => {
@@ -1806,7 +1846,7 @@ function Explorer({ roa, setRoa, onSelect, saved, toggleSave, profile, onOpenOnb
       {showMap && hasProfile && (
         <div style={{ marginBottom: 16 }}>
           <div className="card" style={{ height: 380, padding: 0, overflow: 'hidden' }}>
-            <FirmMap firms={base} roa={roa} rMin={rMin} rMax={rMax} onSelect={onSelect} onBounds={setBounds} userFirm={userFirm} />
+            <FirmMap firms={base} roa={roa} rMin={rMin} rMax={rMax} onSelect={onSelect} onBounds={setBounds} userFirm={userFirm} contactedCrds={contactedCrds} />
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 8 }}>
             <button onClick={() => setFByMap(!fByMap)} className={fByMap ? 'btn-gold btn-sm' : 'btn-ghost btn-sm'}>{fByMap ? '✓ Filtering by map' : 'Filter by map view'}</button>
@@ -1814,6 +1854,7 @@ function Explorer({ roa, setRoa, onSelect, saved, toggleSave, profile, onOpenOnb
               <span><span style={{ display: 'inline-block', width: 9, height: 9, borderRadius: '50%', background: '#4ade80', marginRight: 5, verticalAlign: 'middle' }} />Target range</span>
               <span><span style={{ display: 'inline-block', width: 7, height: 7, borderRadius: '50%', background: '#60a5fa', marginRight: 5, verticalAlign: 'middle' }} />Other</span>
               {userFirm && <span><span style={{ marginRight: 5 }}>★</span><span style={{ color: 'var(--accent)' }}>Your firm</span></span>}
+              {Object.keys(crm || {}).length > 0 && <span><span style={{ display: 'inline-block', width: 9, height: 9, borderRadius: '50%', background: '#f59e0b', marginRight: 5, verticalAlign: 'middle' }} />Contacted ({Object.keys(crm).length})</span>}
             </span>
           </div>
         </div>
@@ -1982,6 +2023,7 @@ function LetterWriter({ firm, setFirm, roa, profile, onOpenOnboarding, crm, setC
   // Campaign settings (per-firm, but defaults here)
   const [purpose, setP] = useState('acquisition');
   const [aggressiveness, setAgg] = useState('active');
+  const [tone, setTone] = useState('understated');
   const [ctx, setCtx] = useState('');
 
   // Active touch being viewed/prompted
@@ -2021,6 +2063,7 @@ function LetterWriter({ firm, setFirm, roa, profile, onOpenOnboarding, crm, setC
     const p = buildTouchPrompt({
       touch, firm, roa, profile, purpose: firmCrm?.purpose || purpose,
       aggressiveness: firmCrm?.aggressiveness || aggressiveness,
+      tone,
       prevTouches: sentTouches, ctx, sN, sT, sF, sA,
     });
     setPrompt(p);
@@ -2267,6 +2310,24 @@ function LetterWriter({ firm, setFirm, roa, profile, onOpenOnboarding, crm, setC
                       }}>
                       <div style={{ fontSize: 12, fontWeight: 600, color: (firmCrm?.aggressiveness || aggressiveness) === o.v ? 'var(--accent)' : 'var(--text2)' }}>{o.label}</div>
                       <div style={{ fontSize: 11, color: 'var(--text3)' }}>{o.desc}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div style={{ marginBottom: 10 }}>
+                <label className="form-field-label">Letter Tone</label>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 5 }}>
+                  {Object.entries(TONE_STYLES).map(([k, v]) => (
+                    <div key={k}
+                      onClick={() => setTone(k)}
+                      style={{
+                        padding: '7px 11px', borderRadius: 8, border: '1px solid',
+                        borderColor: tone === k ? 'var(--accent)' : 'var(--border)',
+                        background: tone === k ? 'rgba(200,169,110,.08)' : 'transparent',
+                        cursor: 'pointer', transition: 'all .15s',
+                      }}>
+                      <div style={{ fontSize: 12, fontWeight: 600, color: tone === k ? 'var(--accent)' : 'var(--text2)' }}>{v.label}</div>
+                      <div style={{ fontSize: 11, color: 'var(--text3)' }}>{v.desc}</div>
                     </div>
                   ))}
                 </div>
@@ -2578,7 +2639,7 @@ function App() {
       <Nav view={view} setView={setView} savedCount={saved.size} profile={profile} onOpenOnboarding={openOnboarding} />
       <div style={{ flex: 1, overflow: 'auto' }}>
         {view === 'dashboard'  && <Dashboard roa={roa} onSelect={sel} saved={saved} toggleSave={toggleSave} profile={profile} onOpenOnboarding={openOnboarding} />}
-        {view === 'explorer'   && <Explorer roa={roa} setRoa={setRoa} onSelect={sel} saved={saved} toggleSave={toggleSave} profile={profile} onOpenOnboarding={openOnboarding} />}
+        {view === 'explorer'   && <Explorer roa={roa} setRoa={setRoa} onSelect={sel} saved={saved} toggleSave={toggleSave} profile={profile} onOpenOnboarding={openOnboarding} crm={crm} />}
         {view === 'detail'     && <FirmDetail firm={firm} setFirm={setFirm} onLetter={wl} roa={roa} saved={saved} toggleSave={toggleSave} profile={profile} onOpenOnboarding={openOnboarding} />}
         {view === 'letter'     && <LetterWriter firm={firm} setFirm={setFirm} roa={roa} profile={profile} onOpenOnboarding={openOnboarding} crm={crm} setCrmAndSave={setCrmAndSave} />}
         {view === 'saved'      && <SavedTargets saved={saved} setSaved={setSaved} notes={notes} setNotes={setNotes} roa={roa} onSelect={sel} onLetter={wl} profile={profile} onOpenOnboarding={openOnboarding} />}
