@@ -623,6 +623,67 @@ function calcFitScore(profile, targetFirm) {
   return Math.min(40, s);
 }
 
+// =============================================================================
+// FIRM-LEVEL SUCCESSION SIGNAL SCORE — derived from ADV data only, no user input
+// =============================================================================
+function calcFirmSuccessionScore(f) {
+  if (!f || !f.aum) return null;
+  let s = 0;
+
+  // Team size -- solo/micro is the strongest structural signal
+  const emp = f.employees || 0;
+  if (emp === 1)              s += 30;
+  else if (emp <= 3)          s += 15;
+  else if (emp <= 5)          s += 5;
+
+  // AUM per employee -- high concentration = one person holds the relationships
+  if (emp > 0) {
+    const aumPerEmp = f.aum / emp;
+    if (aumPerEmp > 100e6)   s += 20;
+    else if (aumPerEmp > 50e6)  s += 15;
+    else if (aumPerEmp > 20e6)  s += 8;
+  }
+
+  // Account concentration per employee
+  if (emp > 0 && f.accounts > 0) {
+    const acctPerEmp = f.accounts / emp;
+    if (acctPerEmp > 100)    s += 15;
+    else if (acctPerEmp > 50) s += 8;
+  }
+
+  // High discretionary ratio -- owner making all decisions, no delegation
+  if (f.aum > 0 && f.aumDisc > 0) {
+    const discRatio = f.aumDisc / f.aum;
+    if (discRatio > 0.9)     s += 10;
+    else if (discRatio > 0.7) s += 5;
+  }
+
+  // No BD affiliate -- independent firms lack built-in succession infrastructure
+  if (!f.bdAffiliate)        s += 10;
+
+  // Single office -- no distributed team, harder to hand off
+  if (!f.otherOffices || f.otherOffices === 0) s += 8;
+
+  // Self-custody adds transition complexity
+  if (f.custody)             s += 5;
+
+  // HNW concentration -- relationship-dependent book
+  if (f.aum > 0 && f.aumHNW > 0) {
+    const hnwRatio = f.aumHNW / f.aum;
+    if (hnwRatio > 0.6)      s += 7;
+  }
+
+  return Math.min(100, s);
+}
+
+function successionLabel(score) {
+  if (score === null) return null;
+  if (score >= 70) return { label: 'High',     color: 'var(--red)'   };
+  if (score >= 45) return { label: 'Moderate', color: 'var(--amber)' };
+  if (score >= 20) return { label: 'Low',      color: 'var(--text3)' };
+  return { label: 'Minimal', color: 'var(--text3)' };
+}
+
 function derivedAumBand(aum) {
   if (!aum || aum < 100e6) return '0–100M';
   if (aum < 250e6) return '100–250M';
@@ -1815,26 +1876,29 @@ function Explorer({ roa, setRoa, onSelect, saved, toggleSave, profile, onOpenOnb
   const [showMap, setShowMap] = useState(_s.showMap !== undefined ? _s.showMap : true);
   const [bounds, setBounds] = useState(null);
   const [fByMap, setFByMap] = useState(_s.fByMap || false);
+  const [minSuccession, setMinSuccession] = useState(_s.minSuccession || 0);
   const contactedCrds = useMemo(() => new Set(Object.keys(crm || {})), [crm]);
+  const [minSuccession, setMinSuccession] = useState(0);
   const savedCrds = useMemo(() => saved || new Set(), [saved]);
 
   // Persist settings whenever they change
   useEffect(() => {
-    saveExplorerSettings({ stF, rMin, rMax, sCol, sDir, tOnly, showMap, fByMap, roa });
-  }, [stF, rMin, rMax, sCol, sDir, tOnly, showMap, fByMap, roa]);
+    saveExplorerSettings({ stF, rMin, rMax, sCol, sDir, tOnly, showMap, fByMap, roa, minSuccession });
+  }, [stF, rMin, rMax, sCol, sDir, tOnly, showMap, fByMap, roa, minSuccession]);
 
   const allFirms = useMemo(() => getFirmPool(profile), [profile]);
   const base = useMemo(() => allFirms.filter(f => {
     if (stF !== 'ALL' && f.state !== stF) return false;
     if (search && !f.name.toLowerCase().includes(search.toLowerCase()) && !f.city.toLowerCase().includes(search.toLowerCase())) return false;
     if (tOnly) { const r = (f.aum || 0) * roa; if (r < rMin || r > rMax) return false; }
+    if (minSuccession > 0) { const sc = calcFirmSuccessionScore(f); if (!sc || sc < minSuccession) return false; }
     return true;
-  }), [search, stF, roa, rMin, rMax, tOnly]);
+  }), [search, stF, roa, rMin, rMax, tOnly, minSuccession]);
 
   const filtered = useMemo(() => {
     let fl = base;
     if (fByMap && bounds) fl = fl.filter(f => { const co = COORDS[f.crd]; if (!co) return false; return co.lat >= bounds.s && co.lat <= bounds.n && co.lng >= bounds.w && co.lng <= bounds.e; });
-    return [...fl].sort((a, b) => { let va = a[sCol], vb = b[sCol]; if (sCol === 'estRev') { va = (a.aum || 0) * roa; vb = (b.aum || 0) * roa; } if (va == null) va = sDir === 'desc' ? -Infinity : Infinity; if (vb == null) vb = sDir === 'desc' ? -Infinity : Infinity; if (typeof va === 'string') return sDir === 'desc' ? vb.localeCompare(va) : va.localeCompare(vb); return sDir === 'desc' ? vb - va : va - vb; });
+    return [...fl].sort((a, b) => { let va = a[sCol], vb = b[sCol]; if (sCol === 'estRev') { va = (a.aum || 0) * roa; vb = (b.aum || 0) * roa; } if (sCol === 'succScore') { va = calcFirmSuccessionScore(a); vb = calcFirmSuccessionScore(b); } if (va == null) va = sDir === 'desc' ? -Infinity : Infinity; if (vb == null) vb = sDir === 'desc' ? -Infinity : Infinity; if (typeof va === 'string') return sDir === 'desc' ? vb.localeCompare(va) : va.localeCompare(vb); return sDir === 'desc' ? vb - va : va - vb; });
   }, [base, fByMap, bounds, sCol, sDir, roa]);
 
   const tog = c => { if (sCol === c) setSDir(d => d === 'desc' ? 'asc' : 'desc'); else { setSCol(c); setSDir('desc'); } };
@@ -1855,6 +1919,17 @@ function Explorer({ roa, setRoa, onSelect, saved, toggleSave, profile, onOpenOnb
             <div className="filter-group"><label>ROA %</label><input type="number" value={(roa * 100).toFixed(2)} onChange={e => setRoa(parseFloat(e.target.value) / 100 || .0065)} step="0.05" style={{ width: 90, textAlign: 'center' }} /></div>
             <div className="filter-group"><label>Rev Min</label><input type="number" value={rMin} onChange={e => setRMin(+e.target.value)} step={100000} style={{ width: 130 }} /></div>
             <div className="filter-group"><label>Rev Max</label><input type="number" value={rMax} onChange={e => setRMax(+e.target.value)} step={100000} style={{ width: 130 }} /></div>
+            <div className="filter-group">
+              <label>Min Succession Score</label>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <input type="range" min="0" max="80" step="5" value={minSuccession}
+                  onChange={e => setMinSuccession(+e.target.value)}
+                  style={{ width: 90, accentColor: 'var(--accent)', background: 'transparent', border: 'none', padding: 0, cursor: 'pointer' }} />
+                <span style={{ fontFamily: 'DM Mono,monospace', fontSize: 12, color: minSuccession > 0 ? 'var(--accent)' : 'var(--text3)', minWidth: 28 }}>
+                  {minSuccession > 0 ? minSuccession + '+' : 'Any'}
+                </span>
+              </div>
+            </div>
             <div style={{ display: 'flex', gap: 8, alignSelf: 'flex-end' }}>
               <button onClick={() => setTOnly(!tOnly)} className={tOnly ? 'btn-gold btn-sm' : 'btn-ghost btn-sm'}>{tOnly ? 'Targets only' : 'Show all'}</button>
               <button onClick={() => setShowMap(!showMap)} className="btn-ghost btn-sm" style={showMap ? { borderColor: 'var(--accent)', color: 'var(--accent)' } : {}}>{showMap ? 'Hide map' : 'Show map'}</button>
@@ -1892,6 +1967,7 @@ function Explorer({ roa, setRoa, onSelect, saved, toggleSave, profile, onOpenOnb
             <th onClick={() => tog('accounts')} style={{ textAlign: 'right' }}>Accts{arr('accounts')}</th>
             <th onClick={() => tog('clientsHNW')} style={{ textAlign: 'right' }}>HNW{arr('clientsHNW')}</th>
             <th onClick={() => tog('employees')} style={{ textAlign: 'right' }}>Emp{arr('employees')}</th>
+            <th onClick={() => tog('succScore')} style={{ textAlign: 'right', color: 'var(--red)' }} title="Succession vulnerability derived from ADV signals">Succ{arr('succScore')}</th>
             <th style={{ textAlign: 'center', width: 60 }}>Detail</th>
             <th style={{ textAlign: 'center', width: 40 }}>★</th>
           </>}
@@ -1910,6 +1986,9 @@ function Explorer({ roa, setRoa, onSelect, saved, toggleSave, profile, onOpenOnb
                   <td style={{ textAlign: 'right' }} className="mono">{fmtN(f.accounts)}</td>
                   <td style={{ textAlign: 'right' }} className="mono">{fmtN(f.clientsHNW)}</td>
                   <td style={{ textAlign: 'right' }} className="mono">{fmtN(f.employees)}</td>
+                  <td style={{ textAlign: 'right' }}>
+                    {(() => { const sc = calcFirmSuccessionScore(f); const lb = successionLabel(sc); return sc ? <span style={{ fontFamily: 'DM Mono,monospace', fontSize: 11, fontWeight: 600, color: lb.color }}>{sc}</span> : <span style={{ color: 'var(--text3)' }}>--</span>; })()}
+                  </td>
                   <td style={{ textAlign: 'center' }} onClick={e => e.stopPropagation()}><button className="btn-ghost btn-sm" onClick={() => onSelect(f)}>View</button></td>
                   <td style={{ textAlign: 'center' }} onClick={e => e.stopPropagation()}><StarBtn crd={f.crd} saved={saved} toggleSave={toggleSave} /></td>
                 </>}
@@ -2005,6 +2084,44 @@ function FirmDetail({ firm, setFirm, onLetter, roa, saved, toggleSave, profile, 
             <Row label="Total RAUM" value={firm.aum} money accent /><Row label="Discretionary" value={firm.aumDisc} money /><Row label="Non-Discretionary" value={firm.aumNonDisc} money /><Row label="% Discretionary" value={pctD} /><Row label="Avg Account Size" value={avg} money />
           </Section>
           <Section title="Revenue"><Row label="Est. Revenue" value={rev} money green /><Row label="Rev per Employee" value={rpe} money /></Section>
+          {(() => {
+            const sc = calcFirmSuccessionScore(firm);
+            const lb = successionLabel(sc);
+            if (!sc) return null;
+            const discRatio = firm.aum > 0 && firm.aumDisc ? (firm.aumDisc / firm.aum) : null;
+            const aumPerEmp = firm.employees > 0 ? firm.aum / firm.employees : null;
+            const acctPerEmp = firm.employees > 0 && firm.accounts ? firm.accounts / firm.employees : null;
+            return (
+              <Section title="Succession Signal">
+                <div style={{ marginBottom: 10 }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
+                    <span style={{ fontSize: 12, color: 'var(--text3)' }}>ADV-Derived Score</span>
+                    <span style={{ fontFamily: 'DM Mono,monospace', fontSize: 20, fontWeight: 700, color: lb.color }}>{sc}<span style={{ fontSize: 12, fontWeight: 400, color: 'var(--text3)' }}>/100</span></span>
+                  </div>
+                  <div className="score-meter"><div className="score-fill" style={{ width: sc + '%', background: lb.color }} /></div>
+                  <div style={{ fontSize: 11, color: lb.color, fontWeight: 600, marginTop: 4, textTransform: 'uppercase', letterSpacing: '.06em' }}>{lb.label} succession vulnerability</div>
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+                  {[
+                    firm.employees === 1 && ['Solo practitioner', '+30', 'var(--red)'],
+                    firm.employees > 1 && firm.employees <= 3 && ['Micro-team (' + firm.employees + ' people)', '+15', 'var(--amber)'],
+                    aumPerEmp > 100e6 && ['AUM/employee ' + fmtM(aumPerEmp), '+20', 'var(--amber)'],
+                    aumPerEmp > 50e6 && aumPerEmp <= 100e6 && ['AUM/employee ' + fmtM(aumPerEmp), '+15', 'var(--amber)'],
+                    acctPerEmp > 100 && ['Accounts/employee ' + Math.round(acctPerEmp), '+15', 'var(--amber)'],
+                    discRatio > 0.9 && ['Discretionary ratio ' + Math.round(discRatio*100) + '%', '+10', 'var(--text2)'],
+                    !firm.bdAffiliate && ['No BD affiliate', '+10', 'var(--text2)'],
+                    (!firm.otherOffices || firm.otherOffices === 0) && ['Single office', '+8', 'var(--text2)'],
+                    firm.custody && ['Holds custody', '+5', 'var(--text2)'],
+                  ].filter(Boolean).map(([label, pts, color], i) => (
+                    <div key={i} style={{ display: 'flex', justifyContent: 'space-between', fontSize: 11, padding: '3px 0' }}>
+                      <span style={{ color: 'var(--text3)' }}>{label}</span>
+                      <span style={{ fontFamily: 'DM Mono,monospace', color, fontWeight: 600 }}>{pts}</span>
+                    </div>
+                  ))}
+                </div>
+              </Section>
+            );
+          })()}
           <Section title="Clients">
             <Row label="Individual" value={fmtN(firm.clientsInd)} /><Row label="Individual AUM" value={firm.aumInd} money /><Row label="HNW" value={fmtN(firm.clientsHNW)} /><Row label="HNW AUM" value={firm.aumHNW} money /><Row label="Pension" value={fmtN(firm.clientsPension)} /><Row label="Charitable" value={fmtN(firm.clientsCharitable)} /><Row label="Corp/Business" value={fmtN(firm.clientsCorp)} />
           </Section>
