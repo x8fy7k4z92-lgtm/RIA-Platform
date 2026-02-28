@@ -291,6 +291,13 @@ pre.prompt-box{white-space:pre-wrap;font-family:'DM Mono',monospace;font-size:12
 <body>
 <div id="root"></div>
 <script src="ria-data.js"></script>
+<script>
+// Guard: if ria-data.js didn't load, show a clear error instead of black screen
+if (typeof FR === 'undefined' || typeof COORDS === 'undefined') {
+  document.getElementById('root').innerHTML = '<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;font-family:DM Sans,sans-serif;background:#0e0f11;color:#f0f1f3;gap:16px"><div style="font-size:48px">⚠️</div><div style="font-family:Instrument Serif,serif;font-size:28px">Data file not found</div><div style="font-size:14px;color:#9aa0ad;max-width:400px;text-align:center;line-height:1.7">This file requires <code style="background:#1e2128;padding:2px 8px;border-radius:4px;font-size:13px">ria-data.js</code> in the same directory. Make sure both files are deployed together on GitHub Pages, or open via your GitHub Pages URL — not as a local file.</div></div>';
+  throw new Error('ria-data.js not loaded');
+}
+</script>
 <script type="text/babel">
 const {useState,useMemo,useRef,useEffect,useCallback} = React;
 
