@@ -1242,6 +1242,100 @@ function Dashboard({ roa, onSelect, saved, toggleSave, profile, onOpenOnboarding
 }
 
 // =============================================================================
+// STATE MULTI-SELECT FILTER
+// =============================================================================
+function StateFilter({ stF, setStF }) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef(null);
+  const STATES = ['NH','VT','MA','ME'];
+
+  useEffect(() => {
+    const handler = e => { if (ref.current && !ref.current.contains(e.target)) setOpen(false); };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, []);
+
+  const toggle = s => {
+    const n = new Set(stF);
+    n.has(s) ? n.delete(s) : n.add(s);
+    setStF(n);
+  };
+
+  const label = stF.size === 0 ? 'All states' : stF.size === 4 ? 'All states' : [...stF].join(', ');
+  const anyActive = stF.size > 0 && stF.size < 4;
+
+  return (
+    <div className="filter-group" ref={ref} style={{ position: 'relative' }}>
+      <label>State</label>
+      <div onClick={() => setOpen(o => !o)}
+        style={{
+          display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10,
+          padding: '9px 13px', borderRadius: 8, cursor: 'pointer', userSelect: 'none',
+          background: 'var(--surface2)', border: '1px solid ' + (open ? 'var(--accent)' : anyActive ? 'var(--accent)' : 'var(--border)'),
+          boxShadow: open ? '0 0 0 3px rgba(200,169,110,.12)' : 'none',
+          color: anyActive ? 'var(--accent)' : 'var(--text)', fontSize: 13, minWidth: 130,
+          transition: 'border-color .2s, box-shadow .2s',
+        }}>
+        <span style={{ fontWeight: anyActive ? 600 : 400 }}>{label}</span>
+        <span style={{ fontSize: 10, color: open ? 'var(--accent)' : 'var(--text3)', transition: 'transform .2s', display: 'inline-block', transform: open ? 'rotate(180deg)' : 'none' }}>▾</span>
+      </div>
+      {open && (
+        <div className="slide-down" style={{
+          position: 'absolute', top: 'calc(100% + 6px)', left: 0, zIndex: 50,
+          background: 'var(--surface)', border: '1px solid var(--border2)',
+          borderRadius: 10, overflow: 'hidden', minWidth: 140,
+          boxShadow: '0 12px 40px rgba(0,0,0,.5)',
+        }}>
+          {/* All toggle */}
+          <div onClick={() => setStF(new Set())}
+            style={{
+              padding: '10px 14px', cursor: 'pointer', fontSize: 12, fontWeight: 500,
+              borderBottom: '1px solid var(--border)',
+              color: stF.size === 0 ? 'var(--accent)' : 'var(--text3)',
+              background: stF.size === 0 ? 'rgba(200,169,110,.08)' : 'transparent',
+              display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+              transition: 'background .15s',
+            }}>
+            <span>All states</span>
+            {stF.size === 0 && <span style={{ fontSize: 11 }}>✓</span>}
+          </div>
+          {STATES.map(s => {
+            const active = stF.has(s);
+            return (
+              <div key={s} onClick={() => toggle(s)}
+                style={{
+                  padding: '10px 14px', cursor: 'pointer', fontSize: 12, fontWeight: active ? 600 : 400,
+                  color: active ? 'var(--accent)' : 'var(--text2)',
+                  background: active ? 'rgba(200,169,110,.08)' : 'transparent',
+                  display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12,
+                  borderBottom: '1px solid var(--border)',
+                  transition: 'background .15s',
+                }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 9 }}>
+                  <div style={{
+                    width: 15, height: 15, borderRadius: 4, flexShrink: 0,
+                    border: '1px solid ' + (active ? 'var(--accent)' : 'var(--border2)'),
+                    background: active ? 'var(--accent)' : 'transparent',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    transition: 'all .15s',
+                  }}>
+                    {active && <span style={{ fontSize: 9, color: '#0e0f11', fontWeight: 700, lineHeight: 1 }}>✓</span>}
+                  </div>
+                  <span>{s}</span>
+                </div>
+                <span style={{ fontSize: 11, color: 'var(--text3)', fontFamily: 'DM Mono,monospace', fontWeight: 400 }}>
+                  {FIRMS.filter(f => f.state === s).length}
+                </span>
+              </div>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// =============================================================================
 // EXPLORER (locked version when no profile)
 // =============================================================================
 function Explorer({ roa, setRoa, onSelect, saved, toggleSave, profile, onOpenOnboarding,
@@ -1278,23 +1372,7 @@ function Explorer({ roa, setRoa, onSelect, saved, toggleSave, profile, onOpenOnb
       <div className="card" style={{ padding: '16px 20px', marginBottom: 16 }}>
         <div className="filter-bar">
           <div className="filter-group" style={{ flex: '1 1 180px' }}><label>Search</label><input value={search} onChange={e => setSearch(e.target.value)} placeholder="Firm name or city…" /></div>
-          <div className="filter-group">
-            <label>State</label>
-            <div style={{ display: 'flex', gap: 5 }}>
-              {['NH','VT','MA','ME'].map(s => {
-                const active = stF.has(s);
-                return (
-                  <div key={s} onClick={() => { const n = new Set(stF); active ? n.delete(s) : n.add(s); setStF(n); }}
-                    style={{ padding: '7px 11px', borderRadius: 7, border: '1px solid', fontSize: 12, cursor: 'pointer', transition: 'all .15s', fontWeight: 500,
-                      borderColor: active ? 'var(--accent)' : 'var(--border)',
-                      background: active ? 'rgba(200,169,110,.12)' : 'var(--surface2)',
-                      color: active ? 'var(--accent)' : 'var(--text3)' }}>
-                    {s}
-                  </div>
-                );
-              })}
-            </div>
-          </div>
+          <StateFilter stF={stF} setStF={setStF} />
           {hasProfile && <>
             <div className="filter-group"><label>ROA %</label><input type="number" value={(roa * 100).toFixed(2)} onChange={e => setRoa(parseFloat(e.target.value) / 100 || .0065)} step="0.05" style={{ width: 90, textAlign: 'center' }} /></div>
             <div className="filter-group"><label>Rev Min</label><input type="number" value={rMin} onChange={e => setRMin(+e.target.value)} step={100000} style={{ width: 130 }} /></div>
