@@ -1244,17 +1244,11 @@ function Dashboard({ roa, onSelect, saved, toggleSave, profile, onOpenOnboarding
 // =============================================================================
 // EXPLORER (locked version when no profile)
 // =============================================================================
-function Explorer({ roa, setRoa, onSelect, saved, toggleSave, profile, onOpenOnboarding }) {
+function Explorer({ roa, setRoa, onSelect, saved, toggleSave, profile, onOpenOnboarding,
+    search, setSearch, stF, setStF, rMin, setRMin, rMax, setRMax,
+    sCol, setSCol, sDir, setSDir, tOnly, setTOnly, showMap, setShowMap }) {
   const hasProfile = !!profile;
   const userFirm = useMemo(() => geocodeUserFirm(profile), [profile]);
-  const [search, setSearch] = useState('');
-  const [stF, setStF] = useState('ALL');
-  const [rMin, setRMin] = useState(1000000);
-  const [rMax, setRMax] = useState(2000000);
-  const [sCol, setSCol] = useState('aum');
-  const [sDir, setSDir] = useState('desc');
-  const [tOnly, setTOnly] = useState(false);
-  const [showMap, setShowMap] = useState(true);
   const [bounds, setBounds] = useState(null);
   const [fByMap, setFByMap] = useState(false);
 
@@ -1672,6 +1666,16 @@ function App() {
   const [saved, setSaved]     = useState(() => loadSaved());
   const [notes, setNotes]     = useState(() => loadNotes());
 
+  // Explorer filter state lifted here so it survives navigation
+  const [exSearch, setExSearch] = useState('');
+  const [exStF, setExStF]       = useState('ALL');
+  const [exRMin, setExRMin]     = useState(1000000);
+  const [exRMax, setExRMax]     = useState(2000000);
+  const [exSCol, setExSCol]     = useState('aum');
+  const [exSDir, setExSDir]     = useState('desc');
+  const [exTOnly, setExTOnly]   = useState(false);
+  const [exShowMap, setExShowMap] = useState(true);
+
   const hasProfile = !!profile;
 
   const toggleSave = crd => {
@@ -1702,7 +1706,11 @@ function App() {
       <Nav view={view} setView={setView} savedCount={saved.size} profile={profile} onOpenOnboarding={openOnboarding} />
       <div style={{ flex: 1, overflow: 'auto' }}>
         {view === 'dashboard'  && <Dashboard roa={roa} onSelect={sel} saved={saved} toggleSave={toggleSave} profile={profile} onOpenOnboarding={openOnboarding} />}
-        {view === 'explorer'   && <Explorer roa={roa} setRoa={setRoa} onSelect={sel} saved={saved} toggleSave={toggleSave} profile={profile} onOpenOnboarding={openOnboarding} />}
+        {view === 'explorer'   && <Explorer roa={roa} setRoa={setRoa} onSelect={sel} saved={saved} toggleSave={toggleSave} profile={profile} onOpenOnboarding={openOnboarding}
+            search={exSearch} setSearch={setExSearch} stF={exStF} setStF={setExStF}
+            rMin={exRMin} setRMin={setExRMin} rMax={exRMax} setRMax={setExRMax}
+            sCol={exSCol} setSCol={setExSCol} sDir={exSDir} setSDir={setExSDir}
+            tOnly={exTOnly} setTOnly={setExTOnly} showMap={exShowMap} setShowMap={setExShowMap} />}
         {view === 'detail'     && <FirmDetail firm={firm} setFirm={setFirm} onLetter={wl} roa={roa} saved={saved} toggleSave={toggleSave} profile={profile} onOpenOnboarding={openOnboarding} />}
         {view === 'letter'     && <LetterWriter firm={firm} setFirm={setFirm} roa={roa} profile={profile} onOpenOnboarding={openOnboarding} />}
         {view === 'saved'      && <SavedTargets saved={saved} setSaved={setSaved} notes={notes} setNotes={setNotes} roa={roa} onSelect={sel} onLetter={wl} profile={profile} onOpenOnboarding={openOnboarding} />}
