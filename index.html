@@ -1253,7 +1253,7 @@ function Explorer({ roa, setRoa, onSelect, saved, toggleSave, profile, onOpenOnb
   const [fByMap, setFByMap] = useState(false);
 
   const base = useMemo(() => FIRMS.filter(f => {
-    if (stF !== 'ALL' && f.state !== stF) return false;
+    if (stF.size > 0 && !stF.has(f.state)) return false;
     if (search && !f.name.toLowerCase().includes(search.toLowerCase()) && !f.city.toLowerCase().includes(search.toLowerCase())) return false;
     if (tOnly) { const r = (f.aum || 0) * roa; if (r < rMin || r > rMax) return false; }
     return true;
@@ -1278,7 +1278,23 @@ function Explorer({ roa, setRoa, onSelect, saved, toggleSave, profile, onOpenOnb
       <div className="card" style={{ padding: '16px 20px', marginBottom: 16 }}>
         <div className="filter-bar">
           <div className="filter-group" style={{ flex: '1 1 180px' }}><label>Search</label><input value={search} onChange={e => setSearch(e.target.value)} placeholder="Firm name or city…" /></div>
-          <div className="filter-group"><label>State</label><select value={stF} onChange={e => setStF(e.target.value)} style={{ width: 90 }}><option value="ALL">All</option><option>NH</option><option>VT</option><option>MA</option><option>ME</option></select></div>
+          <div className="filter-group">
+            <label>State</label>
+            <div style={{ display: 'flex', gap: 5 }}>
+              {['NH','VT','MA','ME'].map(s => {
+                const active = stF.has(s);
+                return (
+                  <div key={s} onClick={() => { const n = new Set(stF); active ? n.delete(s) : n.add(s); setStF(n); }}
+                    style={{ padding: '7px 11px', borderRadius: 7, border: '1px solid', fontSize: 12, cursor: 'pointer', transition: 'all .15s', fontWeight: 500,
+                      borderColor: active ? 'var(--accent)' : 'var(--border)',
+                      background: active ? 'rgba(200,169,110,.12)' : 'var(--surface2)',
+                      color: active ? 'var(--accent)' : 'var(--text3)' }}>
+                    {s}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
           {hasProfile && <>
             <div className="filter-group"><label>ROA %</label><input type="number" value={(roa * 100).toFixed(2)} onChange={e => setRoa(parseFloat(e.target.value) / 100 || .0065)} step="0.05" style={{ width: 90, textAlign: 'center' }} /></div>
             <div className="filter-group"><label>Rev Min</label><input type="number" value={rMin} onChange={e => setRMin(+e.target.value)} step={100000} style={{ width: 130 }} /></div>
@@ -1741,7 +1757,7 @@ function App() {
 
   // Explorer filter state lifted here so it survives navigation
   const [exSearch, setExSearch] = useState('');
-  const [exStF, setExStF]       = useState('ALL');
+  const [exStF, setExStF]       = useState(new Set());
   const [exRMin, setExRMin]     = useState(1000000);
   const [exRMax, setExRMax]     = useState(2000000);
   const [exSCol, setExSCol]     = useState('aum');
