@@ -1478,27 +1478,100 @@ function LetterWriter({ firm, setFirm, roa, profile, onOpenOnboarding }) {
     </div>
   );
 
-  const pMap = { acquisition: 'exploring a potential acquisition or merger of their firm', partnership: 'exploring a strategic partnership or affiliation', recruiting: 'recruiting their advisors or team to join your firm', services: 'offering professional services (compliance, technology, operations)', referral: 'establishing a referral relationship' };
-  const tMap = { professional: 'calm, credible, understated sophistication', warm: 'friendly, approachable, relationship-focused', direct: 'concise, to the point, respect their time', strategic: 'measured, confident, emphasizing mutual benefit' };
+  const pMap = {
+    acquisition: 'exploring whether the principals have any interest in a sale or structured transition of the firm',
+    partnership: 'exploring a strategic partnership or affiliation that preserves their independence',
+    recruiting: 'exploring whether key advisors or the team might be open to a conversation about joining your firm',
+    services: 'offering professional services (compliance, technology, operations) to the firm',
+    referral: 'establishing an informal referral relationship between complementary practices',
+  };
+  const tMap = {
+    professional: 'measured and understated — conveys competence without trying to impress',
+    warm: 'collegial and direct — as if one practitioner reaching out to another',
+    direct: 'brief and respectful of their time — no preamble, gets to the point quickly',
+    strategic: 'confident but not salesy — frames the conversation around mutual benefit, not a pitch',
+  };
+
+  // Interpret ADV data into plain-English observations a practitioner would make
+  const interpretFirm = (f, rvoa) => {
+    const obs = [];
+    const rev = (f.aum || 0) * rvoa;
+    const avgAcct = f.accounts > 0 ? f.aum / f.accounts : null;
+
+    // Scale and structure
+    if (f.employees <= 2 && f.aum > 0) obs.push('This is a very small shop — likely one or two principals running the whole practice, probably without meaningful operational depth.');
+    else if (f.employees <= 5) obs.push('Small team, probably a lead advisor or two with light support staff. Operationally lean.');
+    else if (f.employees >= 15) obs.push('This is a real organization with some infrastructure — not just a principal-led book.');
+
+    // Independence signals
+    if (!f.bdAffiliate && !f.iaAffiliate) obs.push('Fully independent — no broker-dealer or IA affiliate. Likely a pure RIA, fee-only or close to it.');
+    else if (f.bdAffiliate) obs.push('Has a BD affiliate, so they likely run some commission-based or brokerage business alongside advisory.');
+
+    // Compensation model
+    if (f.compensation && f.compensation.length === 1 && f.compensation[0] === 'AUM-based fee') obs.push('Fee structure is clean — AUM only. The business is predictable and easy to value.');
+    else if (f.compensation && f.compensation.includes('Commission')) obs.push('Mixed compensation model including commissions — the practice is probably not purely fee-based, which affects how you\'d think about valuation or fit.');
+
+    // Client concentration
+    if (f.clientsHNW > 0 && f.clientsInd > 0) {
+      const hnwPct = Math.round(f.clientsHNW / f.clientsInd * 100);
+      if (hnwPct >= 60) obs.push(`Heavy HNW concentration — roughly ${hnwPct}% of individual clients are high net worth. This is a quality book.`);
+      else if (hnwPct <= 20) obs.push(`Mostly retail client base — only about ${hnwPct}% HNW. Volume-driven practice.`);
+    }
+
+    // Account size
+    if (avgAcct && avgAcct >= 2e6) obs.push('Average account size is substantial — these are meaningful client relationships, not commodity accounts.');
+    else if (avgAcct && avgAcct < 300000) obs.push('Average account size is relatively modest — suggests a retail or middle-market focus.');
+
+    // Custody
+    if (f.custody) obs.push('They custody client assets themselves, which adds operational complexity and is a detail worth noting in context.');
+
+    // Discretionary vs non
+    if (f.aum > 0 && f.aumDisc) {
+      const discPct = f.aumDisc / f.aum;
+      if (discPct >= 0.95) obs.push('Nearly all assets are discretionary — they\'re actually making the decisions, not just advising.');
+      else if (discPct <= 0.4) obs.push('Large non-discretionary component — suggests some assets are more relationship/consulting-driven than managed.');
+    }
+
+    // Services
+    if (f.services && f.services.includes('Financial Planning') && f.services.includes('Portfolio Management')) obs.push('Offers both planning and investment management — a full-service practice, not just an asset gatherer.');
+
+    return obs;
+  };
 
   const generate = () => {
     if (!firm) return;
-    const rev = (firm.aum || 0) * roa;
-    const lines = ['Write a personalized physical letter to be mailed to an RIA firm. Tailor it using their SEC Form ADV data below.', '',
-      'SENDER:', 'Name: ' + sN, 'Title: ' + sT, 'Firm: ' + sF, 'Address: ' + sA, '',
-      'RECIPIENT FIRM (from SEC Form ADV):', 'Firm: ' + firm.name + ' (CRD #' + firm.crd + ')', 'Address: ' + firm.addr1 + (firm.addr2 ? ', ' + firm.addr2 : '') + ', ' + firm.city + ', ' + firm.state + ' ' + firm.zip,
-      'Total RAUM: $' + Math.round(firm.aum || 0).toLocaleString(), 'Discretionary RAUM: $' + Math.round(firm.aumDisc || 0).toLocaleString(),
-      'Est Revenue (at ' + (roa * 100).toFixed(2) + '% ROA): $' + Math.round(rev).toLocaleString(), 'Employees: ' + (firm.employees || 'N/A'),
-      'Individual Clients: ' + (firm.clientsInd || 'N/A') + ', HNW Clients: ' + (firm.clientsHNW || 'N/A'),
-      'Services: ' + firm.services.join(', '), 'Compensation: ' + firm.compensation.join(', '), 'Org Type: ' + firm.orgType,
-      'BD Affiliate: ' + (firm.bdAffiliate ? 'Yes' : 'No') + ', Custody: ' + (firm.custody ? 'Yes' : 'No') + ', Wrap Fee: ' + (firm.wrapFee ? 'Yes' : 'No'), '',
-      'PURPOSE: ' + pMap[purpose], 'TONE: ' + tMap[tone], 'ADDITIONAL CONTEXT: ' + (ctx || 'None'), '',
-      'INSTRUCTIONS:', '- Professional letter for physical mail (date, addresses, salutation, body, closing)',
-      '- Reference their ADV data naturally (client mix, services) to show homework, not heavy-handed',
-      '- 250-350 word body, one page', '- No hype, buzzwords, or marketing language',
-      '- Do NOT mention dollar amounts of AUM or revenue — reference scale indirectly',
-      '- Address to The Principals', '- Signal sophistication without being promotional', '- Do NOT use em dashes',
-      '- End with a specific, low-pressure call to action'];
+    const observations = interpretFirm(firm, roa);
+
+    const lines = [
+      'Write a brief, personal letter to be physically mailed to the principals of an independent RIA firm.',
+      '',
+      'SENDER:',
+      [sN, sT, sF, sA].filter(Boolean).join(', '),
+      '',
+      'RECIPIENT:',
+      firm.name + ', ' + firm.city + ', ' + firm.state,
+      firm.addr1 + (firm.addr2 ? ', ' + firm.addr2 : '') + ', ' + firm.city + ', ' + firm.state + ' ' + firm.zip,
+      '',
+      'WHAT THE SENDER KNOWS ABOUT THIS FIRM (interpreted from public filings — use this to inform the letter naturally, do not cite or list it):',
+      ...observations.map(o => '- ' + o),
+      ctx ? ('- Additional context from the sender: ' + ctx) : '',
+      '',
+      'PURPOSE: ' + pMap[purpose],
+      'TONE: ' + tMap[tone],
+      '',
+      'WRITE THE LETTER. Rules:',
+      '- Proper format: date, recipient address, salutation, body, closing, signature block',
+      '- Body is 3 short paragraphs, no more than 180 words total',
+      '- First paragraph: brief, specific reason for writing — no flattery, no preamble',
+      '- Second paragraph: establish credibility or shared context in one or two sentences',
+      '- Third paragraph: simple, low-pressure ask — a phone call or reply, nothing more',
+      '- Never mention AUM, revenue, or any dollar figures',
+      '- Never quote or reference the ADV or any filing directly',
+      '- Address to "The Principals" unless a name is provided',
+      '- No em dashes, no bullet points, no bold text, no corporate jargon',
+      '- Sound like a person wrote it, not a firm',
+    ].filter(l => l !== '');
+
     setPrompt(lines.join('\n'));
   };
 
