@@ -1281,7 +1281,7 @@ function StateFilter({ stF, setStF }) {
       </div>
       {open && (
         <div className="slide-down" style={{
-          position: 'absolute', top: 'calc(100% + 6px)', left: 0, zIndex: 50,
+          position: 'absolute', top: 'calc(100% + 6px)', left: 0, zIndex: 9999,
           background: 'var(--surface)', border: '1px solid var(--border2)',
           borderRadius: 10, overflow: 'hidden', minWidth: 160,
           boxShadow: '0 12px 40px rgba(0,0,0,.5)',
@@ -1365,7 +1365,7 @@ function Explorer({ roa, setRoa, onSelect, saved, toggleSave, profile, onOpenOnb
         <div className="page-title">Firm Explorer</div>
         <div className="page-sub">SEC-registered RIAs · NH / VT / MA / ME</div>
       </div>
-      <div className="card" style={{ padding: '16px 20px', marginBottom: 16 }}>
+      <div className="card" style={{ padding: '16px 20px', marginBottom: 16, overflow: 'visible' }}>
         <div className="filter-bar">
           <div className="filter-group" style={{ flex: '1 1 180px' }}><label>Search</label><input value={search} onChange={e => setSearch(e.target.value)} placeholder="Firm name or city…" /></div>
           <StateFilter stF={stF} setStF={setStF} />
