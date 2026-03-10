@@ -1261,56 +1261,52 @@ function StateFilter({ stF, setStF }) {
     setStF(n);
   };
 
-  const label = stF.size === 0 ? 'All states' : stF.size === 4 ? 'All states' : [...stF].join(', ');
+  const label = stF.size === 0 || stF.size === 4 ? 'All states' : [...stF].join(', ');
   const anyActive = stF.size > 0 && stF.size < 4;
 
   return (
     <div className="filter-group" ref={ref} style={{ position: 'relative' }}>
       <label>State</label>
-      <div onClick={() => setOpen(o => !o)}
-        style={{
-          display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10,
-          padding: '9px 13px', borderRadius: 8, cursor: 'pointer', userSelect: 'none',
-          background: 'var(--surface2)', border: '1px solid ' + (open ? 'var(--accent)' : anyActive ? 'var(--accent)' : 'var(--border)'),
-          boxShadow: open ? '0 0 0 3px rgba(200,169,110,.12)' : 'none',
-          color: anyActive ? 'var(--accent)' : 'var(--text)', fontSize: 13, minWidth: 130,
-          transition: 'border-color .2s, box-shadow .2s',
-        }}>
+      <div onClick={() => setOpen(o => !o)} style={{
+        display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10,
+        padding: '9px 13px', borderRadius: 8, cursor: 'pointer', userSelect: 'none',
+        background: 'var(--surface2)',
+        border: '1px solid ' + (open || anyActive ? 'var(--accent)' : 'var(--border)'),
+        boxShadow: open ? '0 0 0 3px rgba(200,169,110,.12)' : 'none',
+        color: anyActive ? 'var(--accent)' : 'var(--text)',
+        fontSize: 13, minWidth: 140, transition: 'border-color .2s, box-shadow .2s',
+      }}>
         <span style={{ fontWeight: anyActive ? 600 : 400 }}>{label}</span>
-        <span style={{ fontSize: 10, color: open ? 'var(--accent)' : 'var(--text3)', transition: 'transform .2s', display: 'inline-block', transform: open ? 'rotate(180deg)' : 'none' }}>▾</span>
+        <span style={{ fontSize: 10, color: open ? 'var(--accent)' : 'var(--text3)', display: 'inline-block', transform: open ? 'rotate(180deg)' : 'none', transition: 'transform .2s' }}>▾</span>
       </div>
       {open && (
         <div className="slide-down" style={{
           position: 'absolute', top: 'calc(100% + 6px)', left: 0, zIndex: 50,
           background: 'var(--surface)', border: '1px solid var(--border2)',
-          borderRadius: 10, overflow: 'hidden', minWidth: 140,
+          borderRadius: 10, overflow: 'hidden', minWidth: 160,
           boxShadow: '0 12px 40px rgba(0,0,0,.5)',
         }}>
-          {/* All toggle */}
-          <div onClick={() => setStF(new Set())}
-            style={{
-              padding: '10px 14px', cursor: 'pointer', fontSize: 12, fontWeight: 500,
-              borderBottom: '1px solid var(--border)',
-              color: stF.size === 0 ? 'var(--accent)' : 'var(--text3)',
-              background: stF.size === 0 ? 'rgba(200,169,110,.08)' : 'transparent',
-              display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-              transition: 'background .15s',
-            }}>
+          <div onClick={() => setStF(new Set())} style={{
+            padding: '10px 14px', cursor: 'pointer', fontSize: 12, fontWeight: 500,
+            borderBottom: '1px solid var(--border)',
+            color: stF.size === 0 ? 'var(--accent)' : 'var(--text3)',
+            background: stF.size === 0 ? 'rgba(200,169,110,.08)' : 'transparent',
+            display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+          }}>
             <span>All states</span>
             {stF.size === 0 && <span style={{ fontSize: 11 }}>✓</span>}
           </div>
           {STATES.map(s => {
             const active = stF.has(s);
             return (
-              <div key={s} onClick={() => toggle(s)}
-                style={{
-                  padding: '10px 14px', cursor: 'pointer', fontSize: 12, fontWeight: active ? 600 : 400,
-                  color: active ? 'var(--accent)' : 'var(--text2)',
-                  background: active ? 'rgba(200,169,110,.08)' : 'transparent',
-                  display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12,
-                  borderBottom: '1px solid var(--border)',
-                  transition: 'background .15s',
-                }}>
+              <div key={s} onClick={() => toggle(s)} style={{
+                padding: '10px 14px', cursor: 'pointer', fontSize: 12,
+                color: active ? 'var(--accent)' : 'var(--text2)',
+                background: active ? 'rgba(200,169,110,.08)' : 'transparent',
+                display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12,
+                borderBottom: '1px solid var(--border)',
+                transition: 'background .15s',
+              }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 9 }}>
                   <div style={{
                     width: 15, height: 15, borderRadius: 4, flexShrink: 0,
@@ -1321,9 +1317,9 @@ function StateFilter({ stF, setStF }) {
                   }}>
                     {active && <span style={{ fontSize: 9, color: '#0e0f11', fontWeight: 700, lineHeight: 1 }}>✓</span>}
                   </div>
-                  <span>{s}</span>
+                  <span style={{ fontWeight: active ? 600 : 400 }}>{s}</span>
                 </div>
-                <span style={{ fontSize: 11, color: 'var(--text3)', fontFamily: 'DM Mono,monospace', fontWeight: 400 }}>
+                <span style={{ fontSize: 11, color: 'var(--text3)', fontFamily: 'DM Mono,monospace' }}>
                   {FIRMS.filter(f => f.state === s).length}
                 </span>
               </div>
@@ -1586,56 +1582,36 @@ function LetterWriter({ firm, setFirm, roa, profile, onOpenOnboarding }) {
     strategic: 'confident but not salesy — frames the conversation around mutual benefit, not a pitch',
   };
 
-  // Interpret ADV data into plain-English observations a practitioner would make
   const interpretFirm = (f, rvoa) => {
     const obs = [];
-    const rev = (f.aum || 0) * rvoa;
     const avgAcct = f.accounts > 0 ? f.aum / f.accounts : null;
-
-    // Scale and structure
     if (f.employees <= 2 && f.aum > 0) obs.push('This is a very small shop — likely one or two principals running the whole practice, probably without meaningful operational depth.');
     else if (f.employees <= 5) obs.push('Small team, probably a lead advisor or two with light support staff. Operationally lean.');
     else if (f.employees >= 15) obs.push('This is a real organization with some infrastructure — not just a principal-led book.');
-
-    // Independence signals
     if (!f.bdAffiliate && !f.iaAffiliate) obs.push('Fully independent — no broker-dealer or IA affiliate. Likely a pure RIA, fee-only or close to it.');
     else if (f.bdAffiliate) obs.push('Has a BD affiliate, so they likely run some commission-based or brokerage business alongside advisory.');
-
-    // Compensation model
     if (f.compensation && f.compensation.length === 1 && f.compensation[0] === 'AUM-based fee') obs.push('Fee structure is clean — AUM only. The business is predictable and easy to value.');
-    else if (f.compensation && f.compensation.includes('Commission')) obs.push('Mixed compensation model including commissions — the practice is probably not purely fee-based, which affects how you\'d think about valuation or fit.');
-
-    // Client concentration
+    else if (f.compensation && f.compensation.includes('Commission')) obs.push('Mixed compensation model including commissions — not purely fee-based, which affects how you\'d think about valuation or fit.');
     if (f.clientsHNW > 0 && f.clientsInd > 0) {
       const hnwPct = Math.round(f.clientsHNW / f.clientsInd * 100);
-      if (hnwPct >= 60) obs.push(`Heavy HNW concentration — roughly ${hnwPct}% of individual clients are high net worth. This is a quality book.`);
-      else if (hnwPct <= 20) obs.push(`Mostly retail client base — only about ${hnwPct}% HNW. Volume-driven practice.`);
+      if (hnwPct >= 60) obs.push('Heavy HNW concentration — roughly ' + hnwPct + '% of individual clients are high net worth. This is a quality book.');
+      else if (hnwPct <= 20) obs.push('Mostly retail client base — only about ' + hnwPct + '% HNW. Volume-driven practice.');
     }
-
-    // Account size
     if (avgAcct && avgAcct >= 2e6) obs.push('Average account size is substantial — these are meaningful client relationships, not commodity accounts.');
     else if (avgAcct && avgAcct < 300000) obs.push('Average account size is relatively modest — suggests a retail or middle-market focus.');
-
-    // Custody
-    if (f.custody) obs.push('They custody client assets themselves, which adds operational complexity and is a detail worth noting in context.');
-
-    // Discretionary vs non
+    if (f.custody) obs.push('They custody client assets themselves, which adds operational complexity.');
     if (f.aum > 0 && f.aumDisc) {
       const discPct = f.aumDisc / f.aum;
       if (discPct >= 0.95) obs.push('Nearly all assets are discretionary — they\'re actually making the decisions, not just advising.');
       else if (discPct <= 0.4) obs.push('Large non-discretionary component — suggests some assets are more relationship/consulting-driven than managed.');
     }
-
-    // Services
     if (f.services && f.services.includes('Financial Planning') && f.services.includes('Portfolio Management')) obs.push('Offers both planning and investment management — a full-service practice, not just an asset gatherer.');
-
     return obs;
   };
 
   const generate = () => {
     if (!firm) return;
     const observations = interpretFirm(firm, roa);
-
     const lines = [
       'Write a brief, personal letter to be physically mailed to the principals of an independent RIA firm.',
       '',
@@ -1665,7 +1641,6 @@ function LetterWriter({ firm, setFirm, roa, profile, onOpenOnboarding }) {
       '- No em dashes, no bullet points, no bold text, no corporate jargon',
       '- Sound like a person wrote it, not a firm',
     ].filter(l => l !== '');
-
     setPrompt(lines.join('\n'));
   };
 
