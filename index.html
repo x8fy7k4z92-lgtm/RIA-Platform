@@ -81,7 +81,7 @@ tr:hover td{background:var(--surface2)}tr:last-child td{border-bottom:none}
 .page{padding:28px 28px 48px;max-width:1400px;margin:0 auto}
 .page-title{font-family:'Instrument Serif',serif;font-size:30px;letter-spacing:-.02em;margin-bottom:4px}
 .page-sub{font-size:12px;color:var(--text3)}
-.table-scroll{overflow:auto;border-radius:14px;contain:paint}
+.table-scroll{overflow:auto;border-radius:14px}
 .ss-row{cursor:pointer}.ss-row:hover td{background:rgba(200,169,110,.06)!important}
 pre.prompt-box{white-space:pre-wrap;font-family:'DM Mono',monospace;font-size:12px;line-height:1.7;color:var(--text2);margin:0}
 .score-meter{height:5px;border-radius:3px;background:var(--surface3);overflow:hidden;margin-top:5px}
@@ -1225,14 +1225,16 @@ function Dashboard({ roa, onSelect, saved, toggleSave, profile, onOpenOnboarding
         </div>
         <div className={!hasProfile ? 'lock-overlay' : ''} style={{ maxHeight: hasProfile ? 'none' : 220, overflow: 'hidden' }}>
           <div className="table-scroll"><table><thead><tr>
-            <th onClick={() => togSS('name')}>Firm{arrSS('name')}</th>
-            <th onClick={() => togSS('state')}>St{arrSS('state')}</th>
-            <th onClick={() => togSS('city')}>City{arrSS('city')}</th>
-            <th style={{ textAlign: 'right' }} onClick={() => togSS('aum')}>RAUM{arrSS('aum')}</th>
-            <th style={{ textAlign: 'right', color: 'var(--green)' }} onClick={() => togSS('estRev')}>Est Rev{arrSS('estRev')}</th>
-            <th style={{ textAlign: 'right' }} onClick={() => togSS('employees')}>Emp{arrSS('employees')}</th>
-            <th style={{ textAlign: 'right' }} onClick={() => togSS('accounts')}>Accts{arrSS('accounts')}</th>
-            {hasProfile && <th style={{ textAlign: 'center', width: 36 }}>★</th>}
+            {[['name','Firm','left'],['state','St','left'],['city','City','left'],['aum','RAUM','right'],['estRev','Est Rev','right'],['employees','Emp','right'],['accounts','Accts','right']].map(([col, label, align]) => (
+              <th key={col} onClick={() => togSS(col)} style={{
+                textAlign: align, color: ssCol === col ? 'var(--accent)' : col === 'estRev' ? 'var(--green)' : undefined,
+                cursor: 'pointer', userSelect: 'none', position: 'sticky', top: 0,
+                background: 'var(--surface)', zIndex: 2,
+              }}>
+                {label}{arrSS(col)}
+              </th>
+            ))}
+            {hasProfile && <th style={{ textAlign: 'center', width: 36, position: 'sticky', top: 0, background: 'var(--surface)', zIndex: 2 }}>★</th>}
           </tr></thead><tbody>
             {sweetSpotSorted.slice(0, hasProfile ? sweetSpotSorted.length : 5).map(f => {
               const rev = f.aum * roa;
