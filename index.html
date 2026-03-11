@@ -180,6 +180,28 @@ nav { position: fixed; top:0; left:0; right:0; z-index:200; height:60px; padding
 .bd-tag { font-size:11px; padding:5px 12px; border-radius:20px; border:1px solid rgba(255,255,255,.08); color:rgba(240,240,234,.35); background:rgba(255,255,255,.02); transition:all .2s; }
 .bd-tag:hover { border-color:rgba(168,116,42,.3); color:rgba(240,240,234,.6); }
 
+/* PROFILE SECTION */
+.profile-section { padding:120px 48px; background:var(--paper); }
+.profile-inner { max-width:1100px; margin:0 auto; }
+.profile-grid { display:grid; grid-template-columns:1fr 1fr; gap:80px; align-items:start; }
+.profile-points { margin-top:36px; border-top:1px solid var(--paper3); }
+.profile-point { display:flex; gap:18px; padding:20px 0; border-bottom:1px solid var(--paper3); }
+.pnum { font-family:var(--mono); font-size:11px; color:var(--ink4); flex-shrink:0; padding-top:2px; width:22px; }
+.ptitle { font-size:14px; font-weight:500; color:var(--ink); margin-bottom:4px; }
+.pbody { font-size:13px; color:var(--ink3); line-height:1.7; font-weight:300; }
+.profile-card { background:#fff; border:1px solid var(--paper3); border-radius:16px; overflow:hidden; box-shadow:0 2px 16px rgba(0,0,0,.05); }
+.profile-card-header { padding:16px 20px; border-bottom:1px solid var(--paper3); }
+.profile-card-eyebrow { font-size:9px; text-transform:uppercase; letter-spacing:.1em; color:var(--gold); font-weight:600; }
+.profile-field-row { display:flex; align-items:center; gap:12px; padding:12px 20px; border-bottom:1px solid var(--paper3); }
+.profile-field-row:last-child { border-bottom:none; }
+.pf-icon { width:30px; height:30px; border-radius:7px; background:var(--paper2); display:flex; align-items:center; justify-content:center; font-size:13px; flex-shrink:0; }
+.pf-label { font-size:12px; font-weight:500; color:var(--ink2); flex:1; }
+.pf-badge { font-size:9px; font-weight:700; letter-spacing:.04em; padding:3px 9px; border-radius:20px; white-space:nowrap; }
+.badge-pub  { background:rgba(42,82,56,.1);   color:var(--green); }
+.badge-priv { background:rgba(124,58,237,.1); color:#7c3aed; }
+.badge-opt  { background:rgba(168,116,42,.12); color:var(--gold); }
+.profile-card-footer { padding:14px 20px; background:var(--paper2); font-size:11px; color:var(--ink3); line-height:1.65; }
+
 /* FEATURES */
 .features { padding:120px 48px; background:var(--paper2); border-top:1px solid var(--paper3); border-bottom:1px solid var(--paper3); }
 .features-inner { max-width:1100px; margin:0 auto; }
@@ -220,9 +242,9 @@ footer { padding:32px 48px; border-top:1px solid var(--paper3); display:flex; al
 @media(max-width:768px){
   nav{padding:0 20px} .nav-links{display:none}
   .hero{padding:88px 24px 56px}
-  .value-split,.features,.cta{padding:80px 24px}
+  .value-split,.features,.cta,.profile-section{padding:80px 24px}
   .bd-section,.demo-section{padding:72px 24px}
-  .value-grid,.bd-grid,.features-grid{grid-template-columns:1fr;gap:40px}
+  .value-grid,.bd-grid,.features-grid,.profile-grid{grid-template-columns:1fr;gap:40px}
   .gap-visual{grid-template-columns:1fr}
   .app-shell{grid-template-columns:1fr;height:auto}
   .app-sidebar{display:none}
@@ -251,6 +273,7 @@ footer { padding:32px 48px; border-top:1px solid var(--paper3); display:flex; al
   <div class="nav-links">
     <a href="#why">Why It Exists</a>
     <a href="#bd">BD Advisors</a>
+    <a href="#how-it-works">How It Works</a>
     <a href="#platform">Platform</a>
     <a href="register.html" class="nav-pill">Enter Platform →</a>
   </div>
@@ -443,6 +466,90 @@ footer { padding:32px 48px; border-top:1px solid var(--paper3); display:flex; al
           <div class="bd-card-type">For Both Sides</div>
           <div class="bd-card-title">Private matching, no intermediary</div>
           <div class="bd-card-body">The matching engine runs on your profile data. No listings. No bankers. No counterparty knowing you're looking until you choose to reach out.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROFILE INTELLIGENCE -->
+<section class="profile-section" id="how-it-works">
+  <div class="profile-inner">
+    <div class="profile-grid">
+      <div>
+        <div class="section-kicker reveal">How it works</div>
+        <h2 class="section-title reveal rd1">Your profile is the<br><em>intelligence layer.</em></h2>
+        <div class="section-body reveal rd2">
+          <p>The SEC database tells you what firms look like on paper. Your profile tells the platform what <em>you</em> look like — so it can score every firm in the database against your geography, size, services, and intent.</p>
+          <p>Private match scoring, succession targeting, and acquisition pipeline all derive from this. <strong>Nothing you enter here is visible to other users.</strong></p>
+        </div>
+        <div class="profile-points reveal rd3">
+          <div class="profile-point">
+            <div class="pnum">01</div>
+            <div>
+              <div class="ptitle">Takes about 2 minutes</div>
+              <div class="pbody">Three steps. No payment required. Profile data persists across monthly dataset refreshes — the SEC data updates, your intelligence layer doesn't move.</div>
+            </div>
+          </div>
+          <div class="profile-point">
+            <div class="pnum">02</div>
+            <div>
+              <div class="ptitle">Survives dataset updates</div>
+              <div class="pbody">Monthly SEC Form ADV refreshes never touch your profile. The base data is fully replaceable. Your private fields sit in a separate layer and are never overwritten.</div>
+            </div>
+          </div>
+          <div class="profile-point">
+            <div class="pnum">03</div>
+            <div>
+              <div class="ptitle">You control what signals you send</div>
+              <div class="pbody">Firm structure is public. Succession details are private — used only to calculate your readiness score. Intent fields are opt-in, disclosable to matched firms only.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="reveal rd2">
+        <div class="profile-card">
+          <div class="profile-card-header">
+            <div class="profile-card-eyebrow">Profile data — visibility by field</div>
+          </div>
+          <div class="profile-field-row">
+            <div class="pf-icon">🏢</div>
+            <div class="pf-label">Firm name, location, AUM band</div>
+            <span class="pf-badge badge-pub">Public</span>
+          </div>
+          <div class="profile-field-row">
+            <div class="pf-icon">👥</div>
+            <div class="pf-label">Team size, services, custodian</div>
+            <span class="pf-badge badge-pub">Public</span>
+          </div>
+          <div class="profile-field-row">
+            <div class="pf-icon">🏗</div>
+            <div class="pf-label">Ownership structure, founder age</div>
+            <span class="pf-badge badge-pub">Public</span>
+          </div>
+          <div class="profile-field-row">
+            <div class="pf-icon">🔄</div>
+            <div class="pf-label">Succession timeline, successor status</div>
+            <span class="pf-badge badge-priv">Private</span>
+          </div>
+          <div class="profile-field-row">
+            <div class="pf-icon">💼</div>
+            <div class="pf-label">Open to sale, minority capital</div>
+            <span class="pf-badge badge-priv">Private</span>
+          </div>
+          <div class="profile-field-row">
+            <div class="pf-icon">🎯</div>
+            <div class="pf-label">Seeking acquisitions, growth intent</div>
+            <span class="pf-badge badge-opt">Opt-in</span>
+          </div>
+          <div class="profile-field-row">
+            <div class="pf-icon">📍</div>
+            <div class="pf-label">Geographic flexibility, hiring intent</div>
+            <span class="pf-badge badge-opt">Opt-in</span>
+          </div>
+          <div class="profile-card-footer">
+            Private fields are never displayed to other users — they exist solely to calculate match scores and succession readiness. Opt-in fields can be selectively disclosed to matched firms only.
+          </div>
         </div>
       </div>
     </div>
