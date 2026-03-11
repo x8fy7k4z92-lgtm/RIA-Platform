@@ -1245,103 +1245,33 @@ function Dashboard({ roa, onSelect, saved, toggleSave, profile, onOpenOnboarding
 // STATE MULTI-SELECT FILTER
 // =============================================================================
 function StateFilter({ stF, setStF }) {
-  const [open, setOpen] = useState(false);
-  const [pos, setPos] = useState({ top: 0, left: 0 });
-  const triggerRef = useRef(null);
-  const dropRef = useRef(null);
   const STATES = ['NH','VT','MA','ME'];
-
-  const openDropdown = () => {
-    if (triggerRef.current) {
-      const r = triggerRef.current.getBoundingClientRect();
-      setPos({ top: r.bottom + 6, left: r.left });
-    }
-    setOpen(o => !o);
-  };
-
-  useEffect(() => {
-    const handler = e => {
-      if (triggerRef.current && !triggerRef.current.contains(e.target) &&
-          dropRef.current && !dropRef.current.contains(e.target)) setOpen(false);
-    };
-    document.addEventListener('mousedown', handler);
-    return () => document.removeEventListener('mousedown', handler);
-  }, []);
-
   const toggle = s => {
     const n = new Set(stF);
     n.has(s) ? n.delete(s) : n.add(s);
     setStF(n);
   };
-
-  const label = stF.size === 0 || stF.size === 4 ? 'All states' : [...stF].join(', ');
-  const anyActive = stF.size > 0 && stF.size < 4;
-
   return (
-    <div className="filter-group" style={{ position: 'relative' }}>
+    <div className="filter-group">
       <label>State</label>
-      <div ref={triggerRef} onClick={openDropdown} style={{
-        display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10,
-        padding: '9px 13px', borderRadius: 8, cursor: 'pointer', userSelect: 'none',
-        background: 'var(--surface2)',
-        border: '1px solid ' + (open || anyActive ? 'var(--accent)' : 'var(--border)'),
-        boxShadow: open ? '0 0 0 3px rgba(200,169,110,.12)' : 'none',
-        color: anyActive ? 'var(--accent)' : 'var(--text)',
-        fontSize: 13, minWidth: 140, transition: 'border-color .2s, box-shadow .2s',
-      }}>
-        <span style={{ fontWeight: anyActive ? 600 : 400 }}>{label}</span>
-        <span style={{ fontSize: 10, color: open ? 'var(--accent)' : 'var(--text3)', display: 'inline-block', transform: open ? 'rotate(180deg)' : 'none', transition: 'transform .2s' }}>▾</span>
+      <div style={{ display: 'flex', gap: 5 }}>
+        {STATES.map(s => {
+          const active = stF.has(s);
+          return (
+            <div key={s} onClick={() => toggle(s)} style={{
+              padding: '8px 13px', borderRadius: 8, cursor: 'pointer',
+              fontSize: 13, fontWeight: active ? 600 : 400,
+              border: '1px solid ' + (active ? 'var(--accent)' : 'var(--border)'),
+              background: active ? 'rgba(200,169,110,.12)' : 'var(--surface2)',
+              color: active ? 'var(--accent)' : 'var(--text2)',
+              transition: 'all .15s', userSelect: 'none',
+              boxShadow: active ? '0 0 0 3px rgba(200,169,110,.1)' : 'none',
+            }}>
+              {s}
+            </div>
+          );
+        })}
       </div>
-      {open && ReactDOM.createPortal(
-        <div ref={dropRef} style={{
-          position: 'fixed', top: pos.top, left: pos.left, zIndex: 99999,
-          background: 'var(--surface)', border: '1px solid var(--border2)',
-          borderRadius: 10, overflow: 'hidden', minWidth: 160,
-          boxShadow: '0 12px 40px rgba(0,0,0,.6)',
-          animation: 'slideDown .2s ease both',
-        }}>
-          <div onClick={() => setStF(new Set())} style={{
-            padding: '10px 14px', cursor: 'pointer', fontSize: 12, fontWeight: 500,
-            borderBottom: '1px solid var(--border)',
-            color: stF.size === 0 ? 'var(--accent)' : 'var(--text3)',
-            background: stF.size === 0 ? 'rgba(200,169,110,.08)' : 'transparent',
-            display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-          }}>
-            <span>All states</span>
-            {stF.size === 0 && <span style={{ fontSize: 11 }}>✓</span>}
-          </div>
-          {STATES.map(s => {
-            const active = stF.has(s);
-            return (
-              <div key={s} onClick={() => toggle(s)} style={{
-                padding: '10px 14px', cursor: 'pointer', fontSize: 12,
-                color: active ? 'var(--accent)' : 'var(--text2)',
-                background: active ? 'rgba(200,169,110,.08)' : 'transparent',
-                display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12,
-                borderBottom: '1px solid var(--border)',
-                transition: 'background .15s',
-              }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 9 }}>
-                  <div style={{
-                    width: 15, height: 15, borderRadius: 4, flexShrink: 0,
-                    border: '1px solid ' + (active ? 'var(--accent)' : 'var(--border2)'),
-                    background: active ? 'var(--accent)' : 'transparent',
-                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    transition: 'all .15s',
-                  }}>
-                    {active && <span style={{ fontSize: 9, color: '#0e0f11', fontWeight: 700, lineHeight: 1 }}>✓</span>}
-                  </div>
-                  <span style={{ fontWeight: active ? 600 : 400 }}>{s}</span>
-                </div>
-                <span style={{ fontSize: 11, color: 'var(--text3)', fontFamily: 'DM Mono,monospace' }}>
-                  {FIRMS.filter(f => f.state === s).length}
-                </span>
-              </div>
-            );
-          })}
-        </div>,
-        document.body
-      )}
     </div>
   );
 }
