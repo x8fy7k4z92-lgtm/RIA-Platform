@@ -19,7 +19,7 @@
   --red:#f87171;--red-dim:#2d1515;--blue:#60a5fa;--blue-dim:#1a2540;
   --purple:#a78bfa;--purple-dim:#1e1a35;--amber:#fbbf24;--amber-dim:#2a1f06;
 }
-html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
+html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased;overflow-y:auto}
 ::-webkit-scrollbar{width:5px;height:5px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--border2);border-radius:10px}
 .serif{font-family:'Instrument Serif',serif}.mono{font-family:'DM Mono',monospace;font-size:12px}
 input,select,textarea{font-family:'DM Sans',sans-serif;font-size:13px;background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:9px 13px;border-radius:8px;outline:none;transition:border-color .2s,box-shadow .2s;width:100%}
@@ -1293,11 +1293,12 @@ function StateFilter({ stF, setStF }) {
         <span style={{ fontSize: 10, color: open ? 'var(--accent)' : 'var(--text3)', display: 'inline-block', transform: open ? 'rotate(180deg)' : 'none', transition: 'transform .2s' }}>▾</span>
       </div>
       {open && ReactDOM.createPortal(
-        <div ref={dropRef} className="slide-down" style={{
+        <div ref={dropRef} style={{
           position: 'fixed', top: pos.top, left: pos.left, zIndex: 99999,
           background: 'var(--surface)', border: '1px solid var(--border2)',
           borderRadius: 10, overflow: 'hidden', minWidth: 160,
           boxShadow: '0 12px 40px rgba(0,0,0,.6)',
+          animation: 'slideDown .2s ease both',
         }}>
           <div onClick={() => setStF(new Set())} style={{
             padding: '10px 14px', cursor: 'pointer', fontSize: 12, fontWeight: 500,
@@ -1860,7 +1861,7 @@ function App() {
   return (
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
       <Nav view={view} setView={setView} savedCount={saved.size} profile={profile} onOpenOnboarding={openOnboarding} />
-      <div style={{ flex: 1, overflow: 'auto' }}>
+      <div style={{ flex: 1 }}>
         {view === 'dashboard'  && <Dashboard roa={roa} onSelect={sel} saved={saved} toggleSave={toggleSave} profile={profile} onOpenOnboarding={openOnboarding} />}
         {view === 'explorer'   && <Explorer roa={roa} setRoa={setRoa} onSelect={sel} saved={saved} toggleSave={toggleSave} profile={profile} onOpenOnboarding={openOnboarding}
             search={exSearch} setSearch={setExSearch} stF={exStF} setStF={setExStF}
