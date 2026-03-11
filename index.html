@@ -1,0 +1,1634 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Meridian — Private M&A Intelligence for Independent Advisors</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --ink: #0f0f0d;
+  --ink2: #3a3a36;
+  --ink3: #7a7a72;
+  --ink4: #b8b8b0;
+  --paper: #fafaf7;
+  --paper2: #f2f2ed;
+  --paper3: #e8e8e1;
+  --gold: #b8863a;
+  --gold-light: #d4a855;
+  --gold-pale: #f5eddc;
+  --green: #2d5a3d;
+  --green-pale: #e8f0eb;
+  --serif: 'Instrument Serif', Georgia, serif;
+  --sans: 'DM Sans', sans-serif;
+  --mono: 'DM Mono', monospace;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--sans);
+  background: var(--paper);
+  color: var(--ink);
+  font-size: 15px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* ─── LOGO MARK ─── */
+.logo-mark {
+  width: 38px;
+  height: 38px;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.logo-mark svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* ─── NAV ─── */
+nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  padding: 0 48px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(250, 250, 247, 0.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+  transition: all 0.3s ease;
+}
+
+.nav-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.nav-name {
+  font-family: var(--serif);
+  font-size: 17px;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+
+.nav-links a {
+  font-size: 13px;
+  color: var(--ink3);
+  text-decoration: none;
+  letter-spacing: 0.01em;
+  transition: color 0.15s;
+}
+
+.nav-links a:hover { color: var(--ink); }
+
+.nav-cta {
+  background: var(--ink);
+  color: var(--paper) !important;
+  padding: 9px 20px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.15s !important;
+  letter-spacing: 0.01em;
+}
+
+.nav-cta:hover {
+  background: var(--ink2) !important;
+  color: var(--paper) !important;
+  transform: translateY(-1px);
+}
+
+/* ─── HERO ─── */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 120px 48px 80px;
+  position: relative;
+  overflow: hidden;
+  text-align: center;
+}
+
+/* Subtle background texture */
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(184,134,58,0.07) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 80% 80%, rgba(45,90,61,0.04) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+/* Decorative grid lines */
+.hero-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(0,0,0,0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,0,0,0.025) 1px, transparent 1px);
+  background-size: 60px 60px;
+  mask-image: radial-gradient(ellipse 70% 70% at center, black 40%, transparent 100%);
+  pointer-events: none;
+}
+
+.hero-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gold);
+  background: var(--gold-pale);
+  border: 1px solid rgba(184,134,58,0.2);
+  padding: 6px 14px;
+  border-radius: 20px;
+  margin-bottom: 32px;
+  animation: fadeUp 0.6s ease both;
+}
+
+.hero-eyebrow::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--gold);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+.hero-title {
+  font-family: var(--serif);
+  font-size: clamp(44px, 6vw, 82px);
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  color: var(--ink);
+  max-width: 900px;
+  margin-bottom: 28px;
+  animation: fadeUp 0.6s 0.1s ease both;
+}
+
+.hero-title em {
+  font-style: italic;
+  color: var(--gold);
+}
+
+.hero-sub {
+  font-size: 17px;
+  color: var(--ink3);
+  max-width: 560px;
+  line-height: 1.7;
+  margin-bottom: 48px;
+  font-weight: 300;
+  animation: fadeUp 0.6s 0.2s ease both;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  justify-content: center;
+  animation: fadeUp 0.6s 0.3s ease both;
+}
+
+.btn-primary {
+  background: var(--ink);
+  color: var(--paper);
+  padding: 14px 28px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+  letter-spacing: 0.01em;
+  transition: all 0.18s;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-primary:hover {
+  background: var(--ink2);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--ink2);
+  padding: 14px 24px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 400;
+  text-decoration: none;
+  letter-spacing: 0.01em;
+  transition: all 0.15s;
+  border: 1px solid var(--paper3);
+}
+
+.btn-secondary:hover {
+  background: var(--paper2);
+  border-color: var(--ink4);
+}
+
+.hero-proof {
+  margin-top: 64px;
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  color: var(--ink4);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  animation: fadeUp 0.6s 0.4s ease both;
+}
+
+.hero-proof-divider {
+  width: 1px;
+  height: 16px;
+  background: var(--paper3);
+}
+
+.hero-proof span strong {
+  color: var(--ink2);
+  font-weight: 500;
+}
+
+/* ─── DEMO STRIP ─── */
+.demo-strip {
+  background: var(--ink);
+  padding: 80px 48px;
+  position: relative;
+  overflow: hidden;
+}
+
+.demo-strip::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(184,134,58,0.4), transparent);
+}
+
+.demo-strip-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.demo-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--gold);
+  font-weight: 500;
+  margin-bottom: 16px;
+}
+
+.demo-headline {
+  font-family: var(--serif);
+  font-size: clamp(28px, 3.5vw, 44px);
+  color: #f0f0ec;
+  margin-bottom: 12px;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+}
+
+.demo-sub {
+  font-size: 14px;
+  color: rgba(240,240,236,0.45);
+  margin-bottom: 48px;
+  max-width: 480px;
+  line-height: 1.6;
+}
+
+/* Animated terminal / data window */
+.demo-window {
+  background: #16181c;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 32px 80px rgba(0,0,0,0.5);
+}
+
+.demo-window-bar {
+  background: #1e2128;
+  padding: 12px 18px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+
+.demo-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.demo-window-title {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: rgba(240,240,236,0.3);
+  margin-left: 8px;
+}
+
+.demo-body {
+  padding: 24px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+/* Firm card in demo */
+.demo-firm-card {
+  background: #1e2128;
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 10px;
+  padding: 16px 18px;
+  position: relative;
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(12px);
+  transition: all 0.5s ease;
+}
+
+.demo-firm-card.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.demo-firm-card.highlighted {
+  border-color: rgba(74,222,128,0.3);
+  background: #1a2420;
+}
+
+.demo-firm-name {
+  font-family: var(--serif);
+  font-size: 15px;
+  color: #f0f0ec;
+  margin-bottom: 3px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.demo-firm-location {
+  font-size: 11px;
+  color: rgba(240,240,236,0.35);
+  margin-bottom: 12px;
+}
+
+.demo-firm-stats {
+  display: flex;
+  gap: 14px;
+}
+
+.demo-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.demo-stat-label {
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: rgba(240,240,236,0.3);
+}
+
+.demo-stat-value {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: #f0f0ec;
+  font-weight: 500;
+}
+
+.demo-stat-value.gold { color: #c8a96e; }
+.demo-stat-value.green { color: #4ade80; }
+
+.demo-tag {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: 10px;
+}
+
+.demo-tag.target { background: rgba(74,222,128,0.15); color: #4ade80; }
+.demo-tag.match { background: rgba(200,169,110,0.15); color: #c8a96e; }
+
+.demo-score-bar {
+  margin-top: 10px;
+  height: 3px;
+  background: rgba(255,255,255,0.07);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.demo-score-fill {
+  height: 100%;
+  border-radius: 2px;
+  background: linear-gradient(90deg, #4ade80, #22c55e);
+  width: 0%;
+  transition: width 1.2s cubic-bezier(0.22, 0.68, 0, 1.2);
+}
+
+.demo-score-fill.gold {
+  background: linear-gradient(90deg, #c8a96e, #b8863a);
+}
+
+/* Sidebar panel in demo */
+.demo-sidebar {
+  background: #16181c;
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 10px;
+  padding: 16px 18px;
+  grid-column: 2;
+  grid-row: 1 / 3;
+  opacity: 0;
+  transform: translateX(12px);
+  transition: all 0.6s 0.3s ease;
+}
+
+.demo-sidebar.visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.demo-sidebar-title {
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: #c8a96e;
+  font-weight: 600;
+  margin-bottom: 14px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+
+.demo-match-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  opacity: 0;
+  transform: translateX(8px);
+  transition: all 0.4s ease;
+}
+
+.demo-match-item.visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.demo-match-rank {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.demo-match-info { flex: 1; min-width: 0; }
+
+.demo-match-name {
+  font-size: 11px;
+  color: #f0f0ec;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-weight: 500;
+}
+
+.demo-match-sub {
+  font-size: 10px;
+  color: rgba(240,240,236,0.3);
+  margin-top: 1px;
+}
+
+.demo-match-score {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: #4ade80;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+/* ─── PROBLEM SECTION ─── */
+.problem {
+  padding: 120px 48px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.section-eyebrow {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--ink4);
+  font-weight: 500;
+  margin-bottom: 20px;
+}
+
+.problem-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: start;
+}
+
+.problem-headline {
+  font-family: var(--serif);
+  font-size: clamp(32px, 3.5vw, 48px);
+  line-height: 1.1;
+  letter-spacing: -0.025em;
+  color: var(--ink);
+  margin-bottom: 24px;
+}
+
+.problem-headline em { font-style: italic; color: var(--gold); }
+
+.problem-body {
+  font-size: 15px;
+  color: var(--ink3);
+  line-height: 1.8;
+  font-weight: 300;
+}
+
+.problem-body p + p { margin-top: 16px; }
+
+.problem-body strong { color: var(--ink2); font-weight: 500; }
+
+.problem-points {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  margin-top: 8px;
+}
+
+.problem-point {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  padding: 20px 22px;
+  background: var(--paper2);
+  border-radius: 12px;
+  border: 1px solid var(--paper3);
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.problem-point:hover {
+  border-color: rgba(184,134,58,0.2);
+  background: var(--gold-pale);
+}
+
+.problem-point-icon {
+  font-size: 20px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.problem-point-title {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--ink);
+  margin-bottom: 4px;
+}
+
+.problem-point-body {
+  font-size: 13px;
+  color: var(--ink3);
+  line-height: 1.6;
+}
+
+/* ─── FEATURES ─── */
+.features {
+  background: var(--paper2);
+  border-top: 1px solid var(--paper3);
+  border-bottom: 1px solid var(--paper3);
+  padding: 120px 48px;
+}
+
+.features-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.features-header {
+  text-align: center;
+  margin-bottom: 72px;
+}
+
+.features-title {
+  font-family: var(--serif);
+  font-size: clamp(30px, 3vw, 44px);
+  letter-spacing: -0.025em;
+  color: var(--ink);
+  margin-bottom: 16px;
+  line-height: 1.1;
+}
+
+.features-sub {
+  font-size: 15px;
+  color: var(--ink3);
+  max-width: 480px;
+  margin: 0 auto;
+  line-height: 1.7;
+  font-weight: 300;
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.feature-card {
+  background: var(--paper);
+  border: 1px solid var(--paper3);
+  border-radius: 14px;
+  padding: 28px;
+  transition: all 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+
+.feature-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.feature-card:hover {
+  border-color: rgba(184,134,58,0.25);
+  transform: translateY(-3px);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.07);
+}
+
+.feature-card:hover::before { opacity: 1; }
+
+.feature-icon {
+  width: 40px;
+  height: 40px;
+  background: var(--paper2);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  margin-bottom: 18px;
+  border: 1px solid var(--paper3);
+}
+
+.feature-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 8px;
+  letter-spacing: -0.01em;
+}
+
+.feature-body {
+  font-size: 13px;
+  color: var(--ink3);
+  line-height: 1.7;
+}
+
+/* ─── DATA SNIPPET ─── */
+.data-snippet {
+  padding: 120px 48px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.snippet-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 72px;
+  align-items: center;
+}
+
+.snippet-copy { }
+
+.snippet-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--gold);
+  font-weight: 500;
+  margin-bottom: 20px;
+}
+
+.snippet-headline {
+  font-family: var(--serif);
+  font-size: clamp(28px, 3vw, 42px);
+  line-height: 1.1;
+  letter-spacing: -0.025em;
+  margin-bottom: 20px;
+}
+
+.snippet-body {
+  font-size: 14px;
+  color: var(--ink3);
+  line-height: 1.8;
+  font-weight: 300;
+  margin-bottom: 28px;
+}
+
+.snippet-body strong { color: var(--ink2); font-weight: 500; }
+
+.snippet-stats {
+  display: flex;
+  gap: 28px;
+}
+
+.snippet-stat-value {
+  font-family: var(--serif);
+  font-size: 32px;
+  color: var(--ink);
+  letter-spacing: -0.03em;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+.snippet-stat-label {
+  font-size: 11px;
+  color: var(--ink4);
+  letter-spacing: 0.03em;
+}
+
+/* Mini data table */
+.mini-table {
+  background: var(--paper);
+  border: 1px solid var(--paper3);
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.05);
+}
+
+.mini-table-header {
+  background: var(--paper2);
+  padding: 12px 18px;
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--paper3);
+}
+
+.mini-table-title {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--ink2);
+  letter-spacing: 0.03em;
+}
+
+.mini-table-sub {
+  font-size: 10px;
+  color: var(--ink4);
+  font-family: var(--mono);
+}
+
+.mini-table-row {
+  display: flex;
+  align-items: center;
+  padding: 12px 18px;
+  border-bottom: 1px solid rgba(0,0,0,0.04);
+  transition: background 0.15s;
+  gap: 12px;
+}
+
+.mini-table-row:last-child { border-bottom: none; }
+.mini-table-row:hover { background: var(--paper2); }
+
+.mini-table-row.sweet {
+  background: rgba(45,90,61,0.04);
+}
+
+.mini-row-name {
+  flex: 1;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mini-row-state {
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 7px;
+  border-radius: 10px;
+  background: rgba(96,165,250,0.1);
+  color: #2563eb;
+  flex-shrink: 0;
+}
+
+.mini-row-aum {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--ink3);
+  flex-shrink: 0;
+  width: 60px;
+  text-align: right;
+}
+
+.mini-row-rev {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--green);
+  flex-shrink: 0;
+  width: 60px;
+  text-align: right;
+  font-weight: 500;
+}
+
+.mini-row-tag {
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 3px 8px;
+  border-radius: 10px;
+  background: rgba(45,90,61,0.1);
+  color: var(--green);
+  flex-shrink: 0;
+}
+
+/* blurred cells */
+.blurred {
+  filter: blur(4px);
+  user-select: none;
+  opacity: 0.5;
+}
+
+/* ─── WHO IT'S FOR ─── */
+.audience {
+  background: var(--ink);
+  padding: 120px 48px;
+  position: relative;
+  overflow: hidden;
+}
+
+.audience::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(184,134,58,0.3), transparent);
+}
+
+.audience-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.audience-eyebrow {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--gold);
+  font-weight: 500;
+  margin-bottom: 20px;
+}
+
+.audience-headline {
+  font-family: var(--serif);
+  font-size: clamp(30px, 3.5vw, 48px);
+  line-height: 1.1;
+  letter-spacing: -0.025em;
+  color: #f0f0ec;
+  margin-bottom: 60px;
+  max-width: 680px;
+}
+
+.audience-headline em {
+  font-style: italic;
+  color: var(--gold-light);
+}
+
+.audience-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.audience-card {
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 14px;
+  padding: 28px;
+  background: rgba(255,255,255,0.02);
+  transition: all 0.2s;
+}
+
+.audience-card:hover {
+  border-color: rgba(184,134,58,0.3);
+  background: rgba(184,134,58,0.04);
+}
+
+.audience-type {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--gold);
+  margin-bottom: 14px;
+}
+
+.audience-title {
+  font-family: var(--serif);
+  font-size: 20px;
+  color: #f0f0ec;
+  margin-bottom: 12px;
+  line-height: 1.2;
+}
+
+.audience-body {
+  font-size: 13px;
+  color: rgba(240,240,236,0.45);
+  line-height: 1.7;
+}
+
+/* ─── CTA ─── */
+.cta-section {
+  padding: 140px 48px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.cta-section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 60% 60% at 50% 50%, rgba(184,134,58,0.06) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.cta-headline {
+  font-family: var(--serif);
+  font-size: clamp(36px, 5vw, 68px);
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  color: var(--ink);
+  margin-bottom: 24px;
+  max-width: 700px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.cta-headline em {
+  font-style: italic;
+  color: var(--gold);
+}
+
+.cta-sub {
+  font-size: 16px;
+  color: var(--ink3);
+  margin-bottom: 40px;
+  font-weight: 300;
+  max-width: 400px;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.7;
+}
+
+/* ─── FOOTER ─── */
+footer {
+  padding: 40px 48px;
+  border-top: 1px solid var(--paper3);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.footer-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.footer-name {
+  font-family: var(--serif);
+  font-size: 14px;
+  color: var(--ink2);
+}
+
+.footer-note {
+  font-size: 11px;
+  color: var(--ink4);
+}
+
+/* ─── SCROLL REVEALS ─── */
+.reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.reveal.in { opacity: 1; transform: none; }
+.reveal-delay-1 { transition-delay: 0.1s; }
+.reveal-delay-2 { transition-delay: 0.2s; }
+.reveal-delay-3 { transition-delay: 0.3s; }
+.reveal-delay-4 { transition-delay: 0.4s; }
+.reveal-delay-5 { transition-delay: 0.5s; }
+
+/* ─── ANIMATIONS ─── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 768px) {
+  nav { padding: 0 20px; }
+  .nav-links { display: none; }
+  .hero { padding: 100px 24px 60px; }
+  .problem, .data-snippet, .cta-section { padding: 80px 24px; }
+  .features { padding: 80px 24px; }
+  .audience { padding: 80px 24px; }
+  .problem-grid, .snippet-grid { grid-template-columns: 1fr; gap: 40px; }
+  .features-grid, .audience-grid { grid-template-columns: 1fr; }
+  .demo-strip { padding: 60px 24px; }
+  .demo-body { grid-template-columns: 1fr; }
+  .demo-sidebar { grid-column: 1; grid-row: auto; }
+  footer { padding: 28px 24px; flex-direction: column; gap: 12px; text-align: center; }
+}
+</style>
+</head>
+<body>
+
+<!-- ─── NAV ─── -->
+<nav>
+  <div class="nav-brand">
+    <div class="logo-mark">
+      <!-- Distinctive geometric logo: layered hexagonal form suggesting data convergence -->
+      <svg viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Outer ring, partial arc -->
+        <circle cx="19" cy="19" r="17" stroke="#b8863a" stroke-width="1.5" stroke-dasharray="72 34" stroke-dashoffset="12"/>
+        <!-- Inner geometric shape: asymmetric quadrilateral -->
+        <polygon points="19,5 32,14 28,30 10,30 6,14" fill="none" stroke="#0f0f0d" stroke-width="1.5" opacity="0.15"/>
+        <!-- Central mark: offset diamond -->
+        <polygon points="19,10 27,19 19,28 11,19" fill="none" stroke="#b8863a" stroke-width="1.5"/>
+        <!-- Inner dot cluster: 3 points suggesting data nodes -->
+        <circle cx="19" cy="19" r="2" fill="#b8863a"/>
+        <circle cx="13" cy="22" r="1.2" fill="#0f0f0d" opacity="0.3"/>
+        <circle cx="25" cy="22" r="1.2" fill="#0f0f0d" opacity="0.3"/>
+        <!-- Connecting lines, data graph -->
+        <line x1="19" y1="19" x2="13" y2="22" stroke="#b8863a" stroke-width="0.75" opacity="0.5"/>
+        <line x1="19" y1="19" x2="25" y2="22" stroke="#b8863a" stroke-width="0.75" opacity="0.5"/>
+      </svg>
+    </div>
+    <span class="nav-name">Meridian</span>
+  </div>
+  <div class="nav-links">
+    <a href="#problem">The Problem</a>
+    <a href="#platform">The Platform</a>
+    <a href="#who">Who It's For</a>
+    <a href="app.html" class="nav-cta">Enter Platform →</a>
+  </div>
+</nav>
+
+<!-- ─── HERO ─── -->
+<section class="hero">
+  <div class="hero-grid"></div>
+
+  <div class="hero-eyebrow">Private M&amp;A Intelligence</div>
+
+  <h1 class="hero-title">
+    The deal flow PE firms have.<br>
+    <em>Now available to you.</em>
+  </h1>
+
+  <p class="hero-sub">
+    Institutional acquirers have research desks, data licenses, and dedicated sourcing teams.
+    Independent advisors have a spreadsheet and a phone. We're closing that gap.
+  </p>
+
+  <div class="hero-actions">
+    <a href="app.html" class="btn-primary">
+      Access the Platform
+      <span style="opacity:0.6">→</span>
+    </a>
+    <a href="#problem" class="btn-secondary">See how it works</a>
+  </div>
+
+  <div class="hero-proof">
+    <span><strong>NH · VT · MA · ME</strong></span>
+    <div class="hero-proof-divider"></div>
+    <span>SEC Form ADV · <strong>Updated Monthly</strong></span>
+    <div class="hero-proof-divider"></div>
+    <span><strong>500+</strong> RIA firms profiled</span>
+  </div>
+</section>
+
+<!-- ─── DEMO STRIP ─── -->
+<section class="demo-strip" id="demo">
+  <div class="demo-strip-inner">
+    <div class="demo-label">Live Intelligence</div>
+    <h2 class="demo-headline">Find your next acquisition<br>before someone else does.</h2>
+    <p class="demo-sub">Real-time scoring against SEC filing data. Succession signals, revenue estimates, and private matching — all derived at runtime from public records.</p>
+
+    <div class="demo-window" id="demoWindow">
+      <div class="demo-window-bar">
+        <div class="demo-dot" style="background:#ff5f57"></div>
+        <div class="demo-dot" style="background:#ffbd2e"></div>
+        <div class="demo-dot" style="background:#28c840"></div>
+        <span class="demo-window-title">meridian · acquisition explorer · NH/VT/MA/ME</span>
+      </div>
+      <div class="demo-body">
+        <!-- Card 1 -->
+        <div class="demo-firm-card highlighted" id="dc1">
+          <div class="demo-tag target">Sweet Spot</div>
+          <div class="demo-firm-name">Granite Peak Advisors LLC</div>
+          <div class="demo-firm-location">Concord, NH · CRD #172841</div>
+          <div class="demo-firm-stats">
+            <div class="demo-stat">
+              <div class="demo-stat-label">RAUM</div>
+              <div class="demo-stat-value">$187M</div>
+            </div>
+            <div class="demo-stat">
+              <div class="demo-stat-label">Est Rev</div>
+              <div class="demo-stat-value green">$1.2M</div>
+            </div>
+            <div class="demo-stat">
+              <div class="demo-stat-label">Emp</div>
+              <div class="demo-stat-value">3</div>
+            </div>
+            <div class="demo-stat">
+              <div class="demo-stat-label">HNW Clients</div>
+              <div class="demo-stat-value">62</div>
+            </div>
+          </div>
+          <div class="demo-score-bar">
+            <div class="demo-score-fill" id="sf1"></div>
+          </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="demo-firm-card" id="dc2">
+          <div class="demo-tag match">Strong Match</div>
+          <div class="demo-firm-name">Merrimack Wealth Partners</div>
+          <div class="demo-firm-location">Manchester, NH · CRD #204417</div>
+          <div class="demo-firm-stats">
+            <div class="demo-stat">
+              <div class="demo-stat-label">RAUM</div>
+              <div class="demo-stat-value">$312M</div>
+            </div>
+            <div class="demo-stat">
+              <div class="demo-stat-label">Est Rev</div>
+              <div class="demo-stat-value gold">$2.0M</div>
+            </div>
+            <div class="demo-stat">
+              <div class="demo-stat-label">Emp</div>
+              <div class="demo-stat-value">5</div>
+            </div>
+            <div class="demo-stat">
+              <div class="demo-stat-label">HNW Clients</div>
+              <div class="demo-stat-value">104</div>
+            </div>
+          </div>
+          <div class="demo-score-bar">
+            <div class="demo-score-fill gold" id="sf2"></div>
+          </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="demo-firm-card" id="dc3">
+          <div class="demo-firm-name">Vermont Fiduciary Group</div>
+          <div class="demo-firm-location">Burlington, VT · CRD #188033</div>
+          <div class="demo-firm-stats">
+            <div class="demo-stat">
+              <div class="demo-stat-label">RAUM</div>
+              <div class="demo-stat-value">$224M</div>
+            </div>
+            <div class="demo-stat">
+              <div class="demo-stat-label">Est Rev</div>
+              <div class="demo-stat-value gold">$1.5M</div>
+            </div>
+            <div class="demo-stat">
+              <div class="demo-stat-label">Emp</div>
+              <div class="demo-stat-value">4</div>
+            </div>
+            <div class="demo-stat">
+              <div class="demo-stat-label">HNW Clients</div>
+              <div class="demo-stat-value">88</div>
+            </div>
+          </div>
+          <div class="demo-score-bar">
+            <div class="demo-score-fill gold" id="sf3"></div>
+          </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="demo-sidebar" id="dsidebar">
+          <div class="demo-sidebar-title">Private Match Score · Your Profile</div>
+          <div class="demo-match-item" id="dm1">
+            <div class="demo-match-rank" style="background:rgba(200,169,110,0.2);color:#c8a96e">1</div>
+            <div class="demo-match-info">
+              <div class="demo-match-name">Granite Peak Advisors</div>
+              <div class="demo-match-sub">Concord, NH · 3 emp · AUM-only fee</div>
+            </div>
+            <div class="demo-match-score">82</div>
+          </div>
+          <div class="demo-match-item" id="dm2">
+            <div class="demo-match-rank" style="background:rgba(255,255,255,0.05);color:rgba(240,240,236,0.3)">2</div>
+            <div class="demo-match-info">
+              <div class="demo-match-name">Merrimack Wealth Partners</div>
+              <div class="demo-match-sub">Manchester, NH · 5 emp</div>
+            </div>
+            <div class="demo-match-score" style="color:#c8a96e">71</div>
+          </div>
+          <div class="demo-match-item" id="dm3">
+            <div class="demo-match-rank" style="background:rgba(255,255,255,0.05);color:rgba(240,240,236,0.3)">3</div>
+            <div class="demo-match-info">
+              <div class="demo-match-name">Vermont Fiduciary Group</div>
+              <div class="demo-match-sub">Burlington, VT · regional</div>
+            </div>
+            <div class="demo-match-score" style="color:#c8a96e">64</div>
+          </div>
+          <div class="demo-match-item" id="dm4">
+            <div class="demo-match-rank" style="background:rgba(255,255,255,0.05);color:rgba(240,240,236,0.3)">4</div>
+            <div class="demo-match-info">
+              <div class="demo-match-name">White Mountain Capital</div>
+              <div class="demo-match-sub">Plymouth, NH · 2 emp</div>
+            </div>
+            <div class="demo-match-score" style="color:rgba(240,240,236,0.3)">58</div>
+          </div>
+          <div class="demo-match-item" id="dm5">
+            <div class="demo-match-rank" style="background:rgba(255,255,255,0.05);color:rgba(240,240,236,0.3)">5</div>
+            <div class="demo-match-info">
+              <div class="demo-match-name">Champlain Valley Advisors</div>
+              <div class="demo-match-sub">Burlington, VT · 6 emp</div>
+            </div>
+            <div class="demo-match-score" style="color:rgba(240,240,236,0.3)">51</div>
+          </div>
+
+          <div style="margin-top:16px;padding-top:14px;border-top:1px solid rgba(255,255,255,0.06)">
+            <div style="font-size:9px;text-transform:uppercase;letter-spacing:0.1em;color:rgba(240,240,236,0.2);margin-bottom:8px">Succession signals detected</div>
+            <div style="display:flex;gap:6px;flex-wrap:wrap">
+              <span style="font-size:10px;padding:3px 8px;border-radius:8px;background:rgba(248,113,113,0.1);color:#f87171">Solo owner</span>
+              <span style="font-size:10px;padding:3px 8px;border-radius:8px;background:rgba(251,191,36,0.1);color:#fbbf24">Age 60–64</span>
+              <span style="font-size:10px;padding:3px 8px;border-radius:8px;background:rgba(167,139,250,0.1);color:#a78bfa">No successor</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── PROBLEM ─── -->
+<section class="problem" id="problem">
+  <div class="problem-grid">
+    <div>
+      <div class="section-eyebrow reveal">The Access Gap</div>
+      <h2 class="problem-headline reveal reveal-delay-1">
+        M&amp;A intelligence has always been<br>
+        <em>a luxury for the well-capitalized.</em>
+      </h2>
+      <div class="problem-body reveal reveal-delay-2">
+        <p>
+          When a PE-backed consolidator targets an RIA, they arrive with a full research stack: curated deal pipelines, succession scoring models, proprietary contact databases, and a team of analysts running outreach. The seller often doesn't know it's happening until the LOI lands.
+        </p>
+        <p>
+          <strong>Independent advisors looking to grow through acquisition have none of that.</strong> They rely on word of mouth, broker referrals, and cold calls into a market they can barely see. By the time a quality firm surfaces, someone else has already been in that conversation for six months.
+        </p>
+        <p>
+          The same SEC filings that institutions pay six figures to license and analyze sit in a public database — structured, current, and rich with signals. The gap isn't data. It's access and interpretation.
+        </p>
+      </div>
+    </div>
+    <div class="problem-points">
+      <div class="problem-point reveal reveal-delay-1">
+        <div class="problem-point-icon">🏦</div>
+        <div>
+          <div class="problem-point-title">PE firms run structured sourcing</div>
+          <div class="problem-point-body">Dedicated analysts, proprietary pipelines, and pre-built succession models. They know which firms are transitioning before the advisor does.</div>
+        </div>
+      </div>
+      <div class="problem-point reveal reveal-delay-2">
+        <div class="problem-point-icon">📊</div>
+        <div>
+          <div class="problem-point-title">ADV data is public but opaque</div>
+          <div class="problem-point-body">500+ pages of raw SEC filings per firm, updated quarterly. Revenue, client composition, succession signals — all there, none of it actionable without infrastructure.</div>
+        </div>
+      </div>
+      <div class="problem-point reveal reveal-delay-3">
+        <div class="problem-point-icon">⏱</div>
+        <div>
+          <div class="problem-point-title">Timing is everything in transitions</div>
+          <div class="problem-point-body">Succession conversations have a window. An advisor who surfaces the right firm 18 months early has a fundamentally different conversation than one who calls after a banker is engaged.</div>
+        </div>
+      </div>
+      <div class="problem-point reveal reveal-delay-4">
+        <div class="problem-point-icon">🎯</div>
+        <div>
+          <div class="problem-point-title">Match quality determines deal quality</div>
+          <div class="problem-point-body">Geographic fit, service overlap, compensation model, and cultural signals all predict integration success. Deals that start with a warm, intelligent match close faster and retain more clients.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── FEATURES ─── -->
+<section class="features" id="platform">
+  <div class="features-inner">
+    <div class="features-header">
+      <div class="section-eyebrow reveal">What it does</div>
+      <h2 class="features-title reveal reveal-delay-1">Everything a research desk gives you.<br>Without the research desk.</h2>
+      <p class="features-sub reveal reveal-delay-2">Built directly on SEC Form ADV data, structured and scored so you can move fast on the right opportunity.</p>
+    </div>
+
+    <div class="features-grid">
+      <div class="feature-card reveal">
+        <div class="feature-icon">🗺</div>
+        <div class="feature-title">Geographic Intelligence</div>
+        <div class="feature-body">Every SEC-registered RIA in NH, VT, MA, and ME mapped by AUM, revenue estimate, client composition, and employee count. Filter, rank, and visualize your market.</div>
+      </div>
+      <div class="feature-card reveal reveal-delay-1">
+        <div class="feature-icon">📡</div>
+        <div class="feature-title">Succession Signal Detection</div>
+        <div class="feature-body">Firms scored on founder age band, ownership structure, team size, and identified succession planning — derived from ADV disclosures. Find firms before they're marketed.</div>
+      </div>
+      <div class="feature-card reveal reveal-delay-2">
+        <div class="feature-icon">🎯</div>
+        <div class="feature-title">Private Match Scoring</div>
+        <div class="feature-body">Create a profile for your firm. The platform scores every RIA in the database against your size, geography, services, and growth intent to surface your best acquisition or partnership candidates.</div>
+      </div>
+      <div class="feature-card reveal reveal-delay-3">
+        <div class="feature-icon">💰</div>
+        <div class="feature-title">Revenue Estimation</div>
+        <div class="feature-body">Estimated annual revenue derived from AUM at configurable ROA assumptions. Instantly understand the economics of any firm in the database without a call.</div>
+      </div>
+      <div class="feature-card reveal reveal-delay-4">
+        <div class="feature-icon">✉</div>
+        <div class="feature-title">Intelligent Outreach</div>
+        <div class="feature-body">Generate tailored outreach letters calibrated to each firm's specific ADV data, ownership profile, and inferred succession position. Purpose-built for physical mail — the channel that still gets read.</div>
+      </div>
+      <div class="feature-card reveal reveal-delay-5">
+        <div class="feature-icon">📋</div>
+        <div class="feature-title">Target Management</div>
+        <div class="feature-body">Save and track firms across sessions with private notes and outreach status. Export to CSV. Manage a full acquisition pipeline from first signal to active conversation.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── DATA SNIPPET ─── -->
+<section class="data-snippet">
+  <div class="snippet-grid">
+    <div class="snippet-copy">
+      <div class="snippet-label reveal">The Acquisition Sweet Spot</div>
+      <h2 class="snippet-headline reveal reveal-delay-1">$500K–$3M revenue.<br>1–10 employees.<br>Real businesses.</h2>
+      <p class="snippet-body reveal reveal-delay-2">
+        These are the firms that institutional buyers increasingly overlook — <strong>too small for PE, too good to leave on the table</strong>. Solo practitioners with $150–400M in discretionary AUM, fee-only compensation, clean regulatory history, and no succession plan.
+        <br><br>
+        The database surfaces dozens of them across the four-state region, ranked and filterable by every variable that matters to an acquirer.
+      </p>
+      <div class="snippet-stats reveal reveal-delay-3">
+        <div>
+          <div class="snippet-stat-value">$500K</div>
+          <div class="snippet-stat-label">Revenue floor</div>
+        </div>
+        <div style="width:1px;background:var(--paper3);height:40px;align-self:center"></div>
+        <div>
+          <div class="snippet-stat-value">$3M</div>
+          <div class="snippet-stat-label">Revenue ceiling</div>
+        </div>
+        <div style="width:1px;background:var(--paper3);height:40px;align-self:center"></div>
+        <div>
+          <div class="snippet-stat-value">1–10</div>
+          <div class="snippet-stat-label">Employees</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mini-table reveal reveal-delay-1">
+      <div class="mini-table-header">
+        <span class="mini-table-title">Acquisition Sweet Spot · Sample</span>
+        <span class="mini-table-sub">Est. Rev · $500K–$3M</span>
+      </div>
+      <div class="mini-table-row sweet">
+        <span class="mini-row-name">Granite Peak Advisors LLC</span>
+        <span class="mini-row-state">NH</span>
+        <span class="mini-row-aum">$187M</span>
+        <span class="mini-row-rev">$1.2M</span>
+        <span class="mini-row-tag">Target</span>
+      </div>
+      <div class="mini-table-row sweet">
+        <span class="mini-row-name">Merrimack Wealth Partners</span>
+        <span class="mini-row-state">NH</span>
+        <span class="mini-row-aum">$312M</span>
+        <span class="mini-row-rev">$2.0M</span>
+        <span class="mini-row-tag">Target</span>
+      </div>
+      <div class="mini-table-row sweet">
+        <span class="mini-row-name">Vermont Fiduciary Group</span>
+        <span class="mini-row-state">VT</span>
+        <span class="mini-row-aum">$224M</span>
+        <span class="mini-row-rev">$1.5M</span>
+        <span class="mini-row-tag">Target</span>
+      </div>
+      <div class="mini-table-row" style="position:relative">
+        <span class="mini-row-name blurred">Androscoggin Capital Mgmt</span>
+        <span class="mini-row-state blurred">ME</span>
+        <span class="mini-row-aum blurred">$278M</span>
+        <span class="mini-row-rev blurred">$1.8M</span>
+        <span class="mini-row-tag" style="background:rgba(0,0,0,0.04);color:var(--ink4)">Locked</span>
+      </div>
+      <div class="mini-table-row">
+        <span class="mini-row-name blurred">Champlain Valley Advisors</span>
+        <span class="mini-row-state blurred">VT</span>
+        <span class="mini-row-aum blurred">$195M</span>
+        <span class="mini-row-rev blurred">$1.3M</span>
+        <span class="mini-row-tag" style="background:rgba(0,0,0,0.04);color:var(--ink4)">Locked</span>
+      </div>
+      <div class="mini-table-row">
+        <span class="mini-row-name blurred">White Mountain Capital Mgmt</span>
+        <span class="mini-row-state blurred">NH</span>
+        <span class="mini-row-aum blurred">$143M</span>
+        <span class="mini-row-rev blurred">$930K</span>
+        <span class="mini-row-tag" style="background:rgba(0,0,0,0.04);color:var(--ink4)">Locked</span>
+      </div>
+      <div style="padding:14px 18px;text-align:center">
+        <a href="app.html" style="font-size:12px;color:var(--gold);text-decoration:none;font-weight:500;letter-spacing:0.02em">
+          Create a profile to unlock all firms →
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── WHO IT'S FOR ─── -->
+<section class="audience" id="who">
+  <div class="audience-inner">
+    <div class="audience-eyebrow reveal">Who this is for</div>
+    <h2 class="audience-headline reveal reveal-delay-1">
+      Built for advisors who want to<br>
+      <em>grow on their own terms.</em>
+    </h2>
+
+    <div class="audience-grid">
+      <div class="audience-card reveal">
+        <div class="audience-type">Acquirers</div>
+        <div class="audience-title">Advisors pursuing economies of scale</div>
+        <div class="audience-body">You're at $200–600M AUM and know that the path to $1B+ runs through acquisition. You want warm leads, not cold lists. Firms that match your profile, geography, and services before you make a call.</div>
+      </div>
+      <div class="audience-card reveal reveal-delay-1">
+        <div class="audience-type">Transitioning Principals</div>
+        <div class="audience-title">Founders thinking about what comes next</div>
+        <div class="audience-body">You've built something real and want to understand your options before engaging a banker. The platform helps you see who's in your market, what they look like, and what a thoughtful transition might look like.</div>
+      </div>
+      <div class="audience-card reveal reveal-delay-2">
+        <div class="audience-type">BD &amp; Independent Teams</div>
+        <div class="audience-title">Teams considering RIA affiliation or partnership</div>
+        <div class="audience-body">You sit outside the SEC database but operate in the same market. Map the independent landscape, identify partnership candidates, and understand how your firm compares to the RIAs around you.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── CTA ─── -->
+<section class="cta-section">
+  <div class="section-eyebrow reveal" style="display:inline-block">Private access</div>
+  <h2 class="cta-headline reveal reveal-delay-1">
+    Stop finding out about deals<br>
+    <em>after they close.</em>
+  </h2>
+  <p class="cta-sub reveal reveal-delay-2">
+    Create a profile in two minutes. Unlock the full database.
+    Start identifying firms before anyone else does.
+  </p>
+  <div class="reveal reveal-delay-3">
+    <a href="app.html" class="btn-primary" style="font-size:15px;padding:16px 36px;display:inline-flex">
+      Enter the Platform
+      <span style="opacity:0.6;margin-left:4px">→</span>
+    </a>
+  </div>
+  <div class="reveal reveal-delay-4" style="margin-top:20px;font-size:12px;color:var(--ink4)">
+    No subscription required · SEC data · Updated monthly
+  </div>
+</section>
+
+<!-- ─── FOOTER ─── -->
+<footer>
+  <div class="footer-brand">
+    <div class="logo-mark" style="width:26px;height:26px">
+      <svg viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="19" cy="19" r="17" stroke="#b8863a" stroke-width="1.5" stroke-dasharray="72 34" stroke-dashoffset="12"/>
+        <polygon points="19,10 27,19 19,28 11,19" fill="none" stroke="#b8863a" stroke-width="1.5"/>
+        <circle cx="19" cy="19" r="2" fill="#b8863a"/>
+      </svg>
+    </div>
+    <span class="footer-name">Meridian</span>
+  </div>
+  <div class="footer-note">SEC Form ADV · NH · VT · MA · ME · Private use</div>
+</footer>
+
+<script>
+// ─── SCROLL REVEAL ───
+const reveals = document.querySelectorAll('.reveal');
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('in');
+      observer.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.12 });
+reveals.forEach(el => observer.observe(el));
+
+// ─── DEMO ANIMATION ───
+function runDemoAnimation() {
+  const cards = ['dc1','dc2','dc3'];
+  const sidebar = document.getElementById('dsidebar');
+  const fills = [
+    { id: 'sf1', width: '82%' },
+    { id: 'sf2', width: '71%' },
+    { id: 'sf3', width: '64%' },
+  ];
+  const matches = ['dm1','dm2','dm3','dm4','dm5'];
+
+  // Cards cascade in
+  cards.forEach((id, i) => {
+    setTimeout(() => {
+      const el = document.getElementById(id);
+      if (el) el.classList.add('visible');
+    }, i * 180);
+  });
+
+  // Sidebar
+  setTimeout(() => {
+    if (sidebar) sidebar.classList.add('visible');
+  }, 400);
+
+  // Score bars
+  fills.forEach((f, i) => {
+    setTimeout(() => {
+      const el = document.getElementById(f.id);
+      if (el) el.style.width = f.width;
+    }, 600 + i * 120);
+  });
+
+  // Match items cascade
+  matches.forEach((id, i) => {
+    setTimeout(() => {
+      const el = document.getElementById(id);
+      if (el) el.classList.add('visible');
+    }, 700 + i * 100);
+  });
+}
+
+// Trigger demo when it comes into view
+const demoObserver = new IntersectionObserver(entries => {
+  if (entries[0].isIntersecting) {
+    runDemoAnimation();
+    demoObserver.disconnect();
+  }
+}, { threshold: 0.2 });
+
+const demoWindow = document.getElementById('demoWindow');
+if (demoWindow) demoObserver.observe(demoWindow);
+</script>
+
+</body>
+</html>
