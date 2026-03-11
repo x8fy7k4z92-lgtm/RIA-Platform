@@ -1092,6 +1092,24 @@ function Dashboard({ roa, onSelect, saved, toggleSave, profile, onOpenOnboarding
   const topRev = useMemo(() => top5([...pool].sort((a, b) => b.aum * roa - a.aum * roa)), [pool, roa]);
   const topHNW = useMemo(() => top5([...pool].filter(f => f.clientsHNW > 0).sort((a, b) => b.clientsHNW - a.clientsHNW)), [pool]);
   const sweetSpot = useMemo(() => pool.filter(f => { const rev = f.aum * roa; return rev >= 500000 && rev <= 3000000 && f.employees >= 1 && f.employees <= 10; }).sort((a, b) => (b.aum * roa) - (a.aum * roa)), [pool, roa]);
+  const [ssCol, setSsCol] = useState('estRev');
+  const [ssDir, setSsDir] = useState('desc');
+  const sweetSpotSorted = useMemo(() => {
+    return [...sweetSpot].sort((a, b) => {
+      let va, vb;
+      if (ssCol === 'estRev') { va = a.aum * roa; vb = b.aum * roa; }
+      else if (ssCol === 'name') { va = a.name; vb = b.name; }
+      else if (ssCol === 'state') { va = a.state; vb = b.state; }
+      else if (ssCol === 'city') { va = a.city; vb = b.city; }
+      else { va = a[ssCol]; vb = b[ssCol]; }
+      if (va == null) va = ssDir === 'desc' ? -Infinity : Infinity;
+      if (vb == null) vb = ssDir === 'desc' ? -Infinity : Infinity;
+      if (typeof va === 'string') return ssDir === 'desc' ? vb.localeCompare(va) : va.localeCompare(vb);
+      return ssDir === 'desc' ? vb - va : va - vb;
+    });
+  }, [sweetSpot, ssCol, ssDir, roa]);
+  const togSS = c => { if (ssCol === c) setSsDir(d => d === 'desc' ? 'asc' : 'desc'); else { setSsCol(c); setSsDir('desc'); } };
+  const arrSS = c => ssCol === c ? (ssDir === 'desc' ? ' ▾' : ' ▴') : '';
   const hasFilter = fState || fBucket || aumCap !== 10e9;
 
   const Stat = ({ label, value, sub, gold, green }) => (
@@ -1207,14 +1225,16 @@ function Dashboard({ roa, onSelect, saved, toggleSave, profile, onOpenOnboarding
         </div>
         <div className={!hasProfile ? 'lock-overlay' : ''} style={{ maxHeight: hasProfile ? 'none' : 220, overflow: 'hidden' }}>
           <div className="table-scroll"><table><thead><tr>
-            <th>Firm</th><th>St</th><th>City</th>
-            <th style={{ textAlign: 'right' }}>RAUM</th>
-            <th style={{ textAlign: 'right', color: 'var(--green)' }}>Est Rev</th>
-            <th style={{ textAlign: 'right' }}>Emp</th>
-            <th style={{ textAlign: 'right' }}>Accts</th>
+            <th onClick={() => togSS('name')}>Firm{arrSS('name')}</th>
+            <th onClick={() => togSS('state')}>St{arrSS('state')}</th>
+            <th onClick={() => togSS('city')}>City{arrSS('city')}</th>
+            <th style={{ textAlign: 'right' }} onClick={() => togSS('aum')}>RAUM{arrSS('aum')}</th>
+            <th style={{ textAlign: 'right', color: 'var(--green)' }} onClick={() => togSS('estRev')}>Est Rev{arrSS('estRev')}</th>
+            <th style={{ textAlign: 'right' }} onClick={() => togSS('employees')}>Emp{arrSS('employees')}</th>
+            <th style={{ textAlign: 'right' }} onClick={() => togSS('accounts')}>Accts{arrSS('accounts')}</th>
             {hasProfile && <th style={{ textAlign: 'center', width: 36 }}>★</th>}
           </tr></thead><tbody>
-            {sweetSpot.slice(0, hasProfile ? 25 : 5).map(f => {
+            {sweetSpotSorted.slice(0, hasProfile ? sweetSpotSorted.length : 5).map(f => {
               const rev = f.aum * roa;
               return (
                 <tr key={f.crd} className="ss-row" onClick={() => hasProfile && onSelect(f)}>
