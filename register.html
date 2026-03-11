@@ -11,943 +11,715 @@
 :root {
   --ink: #0c0c0a; --ink2: #2e2e2a; --ink3: #6b6b62; --ink4: #a8a89e;
   --paper: #f9f9f5; --paper2: #f2f2ec; --paper3: #e6e6de; --paper4: #d8d8ce;
-  --gold: #a8742a; --gold-bright: #c9913a; --gold-pale: #f5edda; --gold-mid: rgba(168,116,42,0.14);
-  --green: #2a5238; --green-pale: #e6efe9; --green-bright: #4ade80;
-  --red: #c0392b; --red-pale: #fde8e8;
+  --gold: #a8742a; --gold-bright: #c9913a; --gold-pale: #f5edda;
+  --green: #2a5238; --green-pale: #e6efe9;
+  --red: #c0392b;
   --border: #e2e2da; --border-focus: #a8742a;
   --serif: 'Instrument Serif', Georgia, serif;
   --sans: 'DM Sans', sans-serif;
   --mono: 'DM Mono', monospace;
-  --ease: cubic-bezier(0.22,0.68,0,1.2);
-  --shadow: 0 1px 3px rgba(0,0,0,.06), 0 4px 16px rgba(0,0,0,.04);
 }
-
 html, body { height: 100%; }
-body {
-  font-family: var(--sans); background: var(--paper); color: var(--ink);
-  font-size: 14px; line-height: 1.6; -webkit-font-smoothing: antialiased;
-  min-height: 100vh; display: flex; flex-direction: column;
-}
+body { font-family: var(--sans); background: var(--paper); color: var(--ink); font-size: 14px; line-height: 1.6; -webkit-font-smoothing: antialiased; }
 ::-webkit-scrollbar { width: 4px; }
 ::-webkit-scrollbar-thumb { background: var(--paper4); border-radius: 4px; }
 
-/* ── REDIRECT BANNER ── */
-.redirect-banner {
-  background: var(--gold-pale); border-bottom: 1px solid rgba(168,116,42,.2);
-  padding: 12px 24px; text-align: center; font-size: 12px; color: var(--gold);
-  display: none; align-items: center; justify-content: center; gap: 8px;
-}
-.redirect-banner.show { display: flex; }
-.redirect-banner strong { font-weight: 600; color: var(--ink2); }
-
-/* ── LAYOUT ── */
-.page {
-  flex: 1; display: grid;
-  grid-template-columns: 1fr 420px 1fr;
-  grid-template-rows: auto 1fr auto;
-  min-height: 100vh;
-}
-
-/* ── TOP BAR ── */
+/* ── TOPBAR ── */
 .topbar {
-  grid-column: 1 / -1; padding: 24px 48px;
-  display: flex; align-items: center; justify-content: space-between;
-  border-bottom: 1px solid var(--paper3);
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  padding: 18px 40px; display: flex; align-items: center; justify-content: space-between;
+  background: var(--paper); border-bottom: 1px solid var(--paper3);
 }
-.topbar-brand { display: flex; align-items: center; gap: 11px; text-decoration: none; }
+.topbar-brand { display: flex; align-items: center; gap: 10px; text-decoration: none; }
 .topbar-name { font-family: var(--serif); font-size: 17px; color: var(--ink); letter-spacing: -.01em; }
+.topbar-right { display: flex; align-items: center; gap: 20px; }
+.topbar-step { font-family: var(--mono); font-size: 11px; color: var(--ink4); }
 .topbar-back { font-size: 12px; color: var(--ink4); text-decoration: none; transition: color .15s; }
 .topbar-back:hover { color: var(--ink2); }
 
-/* ── SIDE PANELS ── */
-.side-left {
-  grid-column: 1; grid-row: 2;
-  padding: 60px 48px; display: flex; flex-direction: column; justify-content: center;
-  border-right: 1px solid var(--paper3);
-}
-.side-right {
-  grid-column: 3; grid-row: 2;
-  padding: 60px 48px; display: flex; flex-direction: column; justify-content: center;
-  border-left: 1px solid var(--paper3);
-}
+/* ── PROGRESS ── */
+.progress-track { position: fixed; top: 61px; left: 0; right: 0; z-index: 99; height: 2px; background: var(--paper3); }
+.progress-fill { height: 100%; background: var(--gold); transition: width .4s cubic-bezier(0.4,0,0.2,1); }
 
-.side-label {
-  font-size: 9px; text-transform: uppercase; letter-spacing: .12em;
-  color: var(--ink4); font-weight: 500; margin-bottom: 20px;
+/* ── STEP LABELS ── */
+.step-labels {
+  position: fixed; top: 63px; left: 0; right: 0; z-index: 98;
+  padding: 0 40px; display: flex; background: var(--paper); border-bottom: 1px solid var(--paper3);
 }
-.side-title {
-  font-family: var(--serif); font-size: 28px; line-height: 1.1;
-  letter-spacing: -.02em; color: var(--ink); margin-bottom: 16px;
+.step-label {
+  flex: 1; padding: 9px 0; font-size: 11px; color: var(--ink4);
+  letter-spacing: .01em; display: flex; align-items: center; gap: 7px; transition: color .2s;
 }
-.side-title em { font-style: italic; color: var(--gold-bright); }
-.side-body { font-size: 13px; color: var(--ink3); line-height: 1.8; font-weight: 300; }
-.side-body p+p { margin-top: 12px; }
-.side-body strong { color: var(--ink2); font-weight: 500; }
-
-.side-points { display: flex; flex-direction: column; gap: 14px; margin-top: 28px; }
-.side-point {
-  display: flex; gap: 10px; align-items: flex-start;
-  font-size: 12px; color: var(--ink3); line-height: 1.6;
-}
-.side-point-dot {
-  width: 5px; height: 5px; border-radius: 50%; background: var(--gold);
-  flex-shrink: 0; margin-top: 6px;
-}
-.side-point strong { color: var(--ink2); font-weight: 500; display: block; margin-bottom: 1px; font-size: 12px; }
-
-/* State coverage notice */
-.coverage-notice {
-  margin-top: 32px; padding: 14px 16px;
-  background: var(--paper2); border: 1px solid var(--paper3); border-radius: 10px;
-  font-size: 12px; color: var(--ink3); line-height: 1.6;
-}
-.coverage-notice-title {
-  font-size: 10px; text-transform: uppercase; letter-spacing: .08em;
-  color: var(--gold); font-weight: 600; margin-bottom: 6px;
-}
-.coverage-states { display: flex; gap: 6px; margin-top: 8px; }
-.cov-state {
-  font-size: 10px; font-weight: 600; padding: 3px 9px; border-radius: 10px;
-  background: rgba(96,165,250,.1); color: #2563eb;
-}
-
-/* ── FORM CENTER ── */
-.form-col {
-  grid-column: 2; grid-row: 2;
-  padding: 48px 0; overflow-y: auto;
-  display: flex; flex-direction: column;
-}
-
-/* Progress steps */
-.steps {
-  display: flex; gap: 0; margin-bottom: 36px; padding: 0 2px;
-}
-.step { flex: 1; display: flex; flex-direction: column; align-items: center; position: relative; }
-.step:not(:last-child)::after {
-  content: ''; position: absolute; top: 13px; left: 50%;
-  width: 100%; height: 1px; background: var(--paper3); z-index: 0;
-}
-.step-dot {
-  width: 26px; height: 26px; border-radius: 50%;
-  border: 1.5px solid var(--paper3); background: var(--paper2);
+.step-label.active { color: var(--gold); font-weight: 500; }
+.step-label.done { color: var(--green); }
+.step-num {
+  width: 18px; height: 18px; border-radius: 50%; border: 1.5px solid currentColor;
   display: flex; align-items: center; justify-content: center;
-  font-size: 11px; font-weight: 600; z-index: 1;
-  transition: all .25s; color: var(--ink4);
+  font-size: 9px; font-weight: 700; flex-shrink: 0;
 }
-.step-dot.active { border-color: var(--gold); background: var(--gold); color: #fff; }
-.step-dot.done { border-color: var(--green); background: var(--green-pale); color: var(--green); }
-.step-lbl {
-  font-size: 9px; margin-top: 5px; color: var(--ink4);
-  text-align: center; letter-spacing: .03em; white-space: nowrap;
+.step-label.active .step-num { background: var(--gold); color: #fff; border-color: var(--gold); }
+.step-label.done .step-num { background: var(--green); color: #fff; border-color: var(--green); }
+
+/* ── REDIRECT BANNER ── */
+.redirect-banner {
+  position: fixed; top: 100px; left: 0; right: 0; z-index: 97;
+  background: var(--gold-pale); border-bottom: 1px solid rgba(168,116,42,.2);
+  padding: 9px 40px; text-align: center; font-size: 12px; color: var(--gold);
+  display: none; align-items: center; justify-content: center; gap: 8px;
 }
-.step.active .step-lbl { color: var(--gold); }
-.step.done .step-lbl { color: var(--green); }
+.redirect-banner.show { display: flex; }
 
-/* Form panels */
-.form-panel { display: none; animation: panelIn .3s ease both; }
-.form-panel.active { display: block; }
-@keyframes panelIn { from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none} }
+/* ── MAIN ── */
+.wizard { min-height: 100vh; padding: 120px 40px 80px; display: flex; justify-content: center; }
+.wizard-inner { width: 100%; max-width: 560px; }
 
-.panel-title {
-  font-family: var(--serif); font-size: 26px; letter-spacing: -.02em;
-  color: var(--ink); margin-bottom: 6px; line-height: 1.15;
-}
-.panel-sub { font-size: 13px; color: var(--ink3); margin-bottom: 28px; line-height: 1.6; font-weight: 300; }
+/* ── PANELS ── */
+.panel { display: none; }
+.panel.active { display: block; animation: fadeUp .28s ease both; }
+@keyframes fadeUp { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:none} }
 
-/* Profile type cards */
-.type-cards { display: flex; flex-direction: column; gap: 10px; margin-bottom: 8px; }
+/* ── PANEL HEADER ── */
+.panel-eyebrow { font-size: 10px; text-transform: uppercase; letter-spacing: .1em; color: var(--gold); font-weight: 600; margin-bottom: 10px; }
+.panel-title { font-family: var(--serif); font-size: 32px; line-height: 1.1; letter-spacing: -.02em; color: var(--ink); margin-bottom: 8px; }
+.panel-sub { font-size: 13px; color: var(--ink3); line-height: 1.7; font-weight: 300; margin-bottom: 32px; max-width: 460px; }
+
+/* ── TYPE CARDS ── */
+.type-cards { display: flex; flex-direction: column; gap: 10px; }
 .type-card {
-  border: 1.5px solid var(--border); border-radius: 12px;
-  padding: 18px 20px; cursor: pointer; transition: all .2s;
-  display: flex; gap: 14px; align-items: flex-start;
+  border: 1.5px solid var(--border); border-radius: 14px; padding: 20px 22px;
+  cursor: pointer; transition: all .2s; display: flex; gap: 16px; align-items: flex-start; background: #fff;
 }
-.type-card:hover { border-color: var(--paper4); background: var(--paper2); }
-.type-card.selected { border-color: var(--gold); background: var(--gold-pale); }
-.type-card-icon { font-size: 22px; flex-shrink: 0; margin-top: 1px; }
-.type-card-title { font-size: 14px; font-weight: 600; color: var(--ink); margin-bottom: 3px; }
-.type-card-desc { font-size: 12px; color: var(--ink3); line-height: 1.55; }
+.type-card:hover { border-color: var(--paper4); background: var(--paper2); transform: translateY(-1px); box-shadow: 0 4px 20px rgba(0,0,0,.05); }
+.type-card.selected { border-color: var(--gold); background: var(--gold-pale); box-shadow: 0 0 0 3px rgba(168,116,42,.08); }
+.type-card-icon { font-size: 24px; flex-shrink: 0; margin-top: 2px; }
+.type-card-title { font-size: 15px; font-weight: 600; color: var(--ink); margin-bottom: 4px; }
+.type-card-desc { font-size: 12px; color: var(--ink3); line-height: 1.6; }
 .type-card.selected .type-card-desc { color: var(--ink2); }
 
-/* Form fields */
-.field-group { margin-bottom: 16px; }
-.field-label {
-  display: block; font-size: 10px; font-weight: 600; text-transform: uppercase;
-  letter-spacing: .07em; color: var(--ink3); margin-bottom: 5px;
-}
+/* ── FIELDS ── */
+.field-group { margin-bottom: 18px; }
+.field-label { display: block; font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: .07em; color: var(--ink3); margin-bottom: 6px; }
 .field-label.err { color: var(--red); }
 .req { color: var(--red); margin-left: 2px; }
-.field-hint { font-size: 11px; color: var(--ink4); margin-top: 4px; line-height: 1.5; }
-.field-err { font-size: 11px; color: var(--red); margin-top: 4px; }
+.field-err { font-size: 11px; color: var(--red); margin-top: 4px; min-height: 15px; }
 
-input, select, textarea {
+input, select {
   font-family: var(--sans); font-size: 13px; background: #fff;
   border: 1.5px solid var(--border); color: var(--ink);
-  padding: 10px 13px; border-radius: 8px; outline: none;
+  padding: 11px 14px; border-radius: 10px; outline: none;
   transition: border-color .2s, box-shadow .2s; width: 100%;
 }
-input:focus, select:focus, textarea:focus {
-  border-color: var(--border-focus);
-  box-shadow: 0 0 0 3px rgba(168,116,42,.1);
-}
+input:focus, select:focus { border-color: var(--border-focus); box-shadow: 0 0 0 3px rgba(168,116,42,.1); }
 input.err, select.err { border-color: var(--red); }
-select option { background: #fff; }
 
-.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-.grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
 .span2 { grid-column: 1 / -1; }
 
-/* Typeahead */
+.fsec { margin-bottom: 28px; }
+.fsec-title { font-size: 9px; text-transform: uppercase; letter-spacing: .1em; color: var(--gold); font-weight: 600; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 1px solid var(--paper3); }
+
+/* ── TYPEAHEAD ── */
 .typeahead-wrap { position: relative; }
 .typeahead-dropdown {
   position: absolute; top: calc(100% + 4px); left: 0; right: 0; z-index: 50;
-  background: #fff; border: 1.5px solid var(--border); border-radius: 10px;
-  box-shadow: 0 8px 32px rgba(0,0,0,.1); max-height: 240px; overflow-y: auto;
-  display: none;
+  background: #fff; border: 1.5px solid var(--border); border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0,0,0,.1); max-height: 260px; overflow-y: auto; display: none;
 }
 .typeahead-dropdown.open { display: block; }
-.ta-item {
-  padding: 10px 14px; cursor: pointer; transition: background .1s;
-  display: flex; align-items: center; gap: 10px; border-bottom: 1px solid var(--paper3);
-}
+.ta-item { padding: 11px 15px; cursor: pointer; transition: background .1s; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid var(--paper3); }
 .ta-item:last-child { border-bottom: none; }
 .ta-item:hover, .ta-item.focused { background: var(--paper2); }
-.ta-item-state {
-  font-size: 9px; font-weight: 700; padding: 2px 7px; border-radius: 8px;
-  background: rgba(96,165,250,.1); color: #2563eb; flex-shrink: 0;
-}
+.ta-item-state { font-size: 9px; font-weight: 700; padding: 2px 7px; border-radius: 8px; background: rgba(96,165,250,.1); color: #2563eb; flex-shrink: 0; }
 .ta-item-name { font-size: 12px; font-weight: 500; color: var(--ink); flex: 1; }
 .ta-item-sub { font-size: 10px; color: var(--ink4); font-family: var(--mono); white-space: nowrap; }
-.ta-empty { padding: 14px; font-size: 12px; color: var(--ink4); text-align: center; }
-.ta-selected-pill {
-  display: flex; align-items: center; gap: 8px;
-  background: var(--green-pale); border: 1px solid rgba(42,82,56,.2);
-  border-radius: 8px; padding: 10px 14px; margin-top: 8px; font-size: 13px;
-}
-.ta-selected-pill-name { font-weight: 600; color: var(--green); flex: 1; }
+.ta-empty { padding: 16px; font-size: 12px; color: var(--ink4); text-align: center; }
+.ta-hint { padding: 12px 15px; font-size: 11px; color: var(--ink4); text-align: center; font-style: italic; }
+
+.ta-selected-pill { display: flex; align-items: center; gap: 10px; background: var(--green-pale); border: 1px solid rgba(42,82,56,.2); border-radius: 10px; padding: 11px 15px; margin-top: 8px; }
+.ta-selected-pill-name { font-weight: 600; color: var(--green); flex: 1; font-size: 13px; }
 .ta-selected-pill-sub { font-size: 11px; color: var(--ink3); font-family: var(--mono); }
-.ta-clear { background: none; border: none; color: var(--ink4); cursor: pointer; font-size: 14px; padding: 2px; transition: color .15s; width: auto; }
+.ta-clear { background: none; border: none; color: var(--ink4); cursor: pointer; font-size: 16px; padding: 0 2px; transition: color .15s; width: auto; line-height: 1; }
 .ta-clear:hover { color: var(--red); }
 
-/* Claimed firm preview */
-.claimed-preview {
-  background: var(--paper2); border: 1px solid var(--paper3); border-radius: 10px;
-  padding: 14px 16px; margin-top: 12px; display: none;
-}
-.claimed-preview.show { display: block; }
-.cp-head { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
-.cp-name { font-family: var(--serif); font-size: 16px; color: var(--ink); }
+/* ── FIRM PREVIEW ── */
+.claimed-preview { background: var(--paper2); border: 1px solid var(--paper3); border-radius: 12px; padding: 16px 18px; margin-top: 14px; display: none; }
+.claimed-preview.show { display: block; animation: fadeUp .2s ease; }
+.cp-head { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
+.cp-name { font-family: var(--serif); font-size: 16px; color: var(--ink); flex: 1; }
 .cp-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; }
-.cp-stat { background: #fff; border-radius: 7px; padding: 9px 12px; border: 1px solid var(--paper3); }
-.cp-stat-label { font-size: 9px; text-transform: uppercase; letter-spacing: .06em; color: var(--ink4); margin-bottom: 2px; }
+.cp-stat { background: #fff; border-radius: 8px; padding: 10px 13px; border: 1px solid var(--paper3); }
+.cp-stat-label { font-size: 9px; text-transform: uppercase; letter-spacing: .06em; color: var(--ink4); margin-bottom: 3px; }
 .cp-stat-val { font-family: var(--mono); font-size: 13px; font-weight: 500; color: var(--ink); }
+.cp-note { font-size: 11px; color: var(--ink4); margin-top: 10px; line-height: 1.6; }
 
-/* Toggle chips (for multi-select fields) */
+/* ── CHIPS ── */
 .chip-row { display: flex; flex-wrap: wrap; gap: 6px; }
-.chip {
-  padding: 6px 13px; border-radius: 20px; border: 1.5px solid var(--border);
-  font-size: 12px; color: var(--ink3); background: #fff; cursor: pointer;
-  transition: all .15s; user-select: none; font-weight: 400;
-}
+.chip { padding: 7px 14px; border-radius: 20px; border: 1.5px solid var(--border); font-size: 12px; color: var(--ink3); background: #fff; cursor: pointer; transition: all .15s; user-select: none; }
 .chip:hover { border-color: var(--paper4); background: var(--paper2); }
-.chip.on {
-  border-color: var(--gold); background: var(--gold-pale); color: var(--gold);
-  font-weight: 500;
-}
+.chip.on { border-color: var(--gold); background: var(--gold-pale); color: var(--gold); font-weight: 500; }
 
-/* Section divider */
-.fsec { margin-bottom: 22px; }
-.fsec-title {
-  font-size: 9px; text-transform: uppercase; letter-spacing: .1em;
-  color: var(--gold); font-weight: 600; margin-bottom: 14px;
-  padding-bottom: 7px; border-bottom: 1px solid var(--paper3);
-}
+/* ── YES/NO BUTTONS ── */
+.yn-group { display: flex; gap: 8px; }
+.yn-btn { flex: 1; padding: 11px 14px; border: 1.5px solid var(--border); border-radius: 10px; background: #fff; font-family: var(--sans); font-size: 13px; color: var(--ink3); cursor: pointer; transition: all .15s; }
+.yn-btn:hover { border-color: var(--paper4); background: var(--paper2); }
+.yn-btn.sel-yes { border-color: var(--green); background: var(--green-pale); color: var(--green); font-weight: 500; }
+.yn-btn.sel-no  { border-color: var(--paper4); background: var(--paper2); color: var(--ink2); font-weight: 500; }
 
-/* Private note */
-.private-note {
-  background: rgba(167,139,250,.07); border: 1px solid rgba(167,139,250,.18);
-  border-radius: 9px; padding: 11px 14px; font-size: 12px;
-  color: var(--ink3); line-height: 1.6; margin-bottom: 22px;
-  display: flex; gap: 8px; align-items: flex-start;
-}
-.private-note-icon { font-size: 13px; flex-shrink: 0; margin-top: 1px; }
+/* ── PRIVATE NOTE ── */
+.private-note { background: rgba(167,139,250,.06); border: 1px solid rgba(167,139,250,.18); border-radius: 10px; padding: 12px 15px; font-size: 12px; color: var(--ink3); line-height: 1.6; margin-bottom: 28px; display: flex; gap: 9px; align-items: flex-start; }
 
-/* Tooltip */
-.tip { position: relative; display: inline-block; cursor: help; }
+/* ── TOOLTIP ── */
+.tip { position: relative; cursor: help; }
 .tip-box {
-  visibility: hidden; opacity: 0; position: absolute; bottom: calc(100% + 7px);
-  left: 50%; transform: translateX(-50%); background: var(--ink2);
-  border-radius: 8px; padding: 8px 12px; font-size: 11px; line-height: 1.55;
-  color: rgba(249,249,245,.85); width: 220px; z-index: 100; pointer-events: none;
-  transition: opacity .15s; box-shadow: 0 4px 16px rgba(0,0,0,.2);
+  visibility: hidden; opacity: 0; position: absolute; bottom: calc(100% + 8px); left: 50%;
+  transform: translateX(-50%); background: var(--ink2); border-radius: 8px; padding: 8px 12px;
+  font-size: 11px; line-height: 1.55; color: rgba(249,249,245,.85); width: 220px; z-index: 100;
+  pointer-events: none; transition: opacity .15s; box-shadow: 0 4px 16px rgba(0,0,0,.2);
   font-style: normal; font-weight: 400; text-transform: none; letter-spacing: normal;
 }
 .tip-box::after { content:''; position:absolute; top:100%; left:50%; transform:translateX(-50%); border:5px solid transparent; border-top-color:var(--ink2); }
 .tip:hover .tip-box { visibility: visible; opacity: 1; }
 
-/* Nav buttons */
-.form-nav {
-  display: flex; justify-content: space-between; align-items: center;
-  margin-top: 28px; padding-top: 20px; border-top: 1px solid var(--paper3);
-}
-.btn-back {
-  background: transparent; color: var(--ink3); border: 1.5px solid var(--border);
-  padding: 11px 20px; border-radius: 8px; font-size: 13px; font-weight: 500;
-  cursor: pointer; transition: all .15s; font-family: var(--sans);
-}
+/* ── NAV ── */
+.form-nav { display: flex; justify-content: space-between; align-items: center; margin-top: 36px; padding-top: 24px; border-top: 1px solid var(--paper3); }
+.btn-back { background: transparent; color: var(--ink3); border: 1.5px solid var(--border); padding: 11px 20px; border-radius: 10px; font-size: 13px; font-weight: 500; cursor: pointer; transition: all .15s; font-family: var(--sans); }
 .btn-back:hover { background: var(--paper2); color: var(--ink); }
-.btn-next {
-  background: var(--ink); color: var(--paper); border: none;
-  padding: 12px 28px; border-radius: 8px; font-size: 13px; font-weight: 600;
-  cursor: pointer; transition: all .18s; font-family: var(--sans);
-  display: flex; align-items: center; gap: 7px;
-}
+.btn-next { background: var(--ink); color: var(--paper); border: none; padding: 12px 28px; border-radius: 10px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all .18s; font-family: var(--sans); display: flex; align-items: center; gap: 8px; }
 .btn-next:hover { background: var(--ink2); transform: translateY(-1px); box-shadow: 0 6px 20px rgba(0,0,0,.14); }
-.btn-next:disabled { opacity: .4; pointer-events: none; }
-.btn-complete {
-  background: var(--gold); color: #fff; border: none;
-  padding: 12px 28px; border-radius: 8px; font-size: 13px; font-weight: 600;
-  cursor: pointer; transition: all .18s; font-family: var(--sans);
-  display: flex; align-items: center; gap: 7px;
-}
+.btn-next:disabled { opacity: .35; pointer-events: none; }
+.btn-complete { background: var(--gold); color: #fff; border: none; padding: 12px 28px; border-radius: 10px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all .18s; font-family: var(--sans); display: flex; align-items: center; gap: 8px; }
 .btn-complete:hover { background: var(--gold-bright); transform: translateY(-1px); box-shadow: 0 6px 20px rgba(168,116,42,.3); }
 
-/* FOOTER */
-.page-footer {
-  grid-column: 1 / -1; padding: 18px 48px;
-  border-top: 1px solid var(--paper3);
-  display: flex; align-items: center; justify-content: space-between;
-  font-size: 11px; color: var(--ink4);
-}
-
-@media(max-width:900px){
-  .page { grid-template-columns: 1fr; grid-template-rows: auto auto 1fr auto; }
-  .topbar { grid-column: 1; padding: 16px 20px; }
-  .side-left, .side-right { display: none; }
-  .form-col { grid-column: 1; padding: 32px 20px; }
-  .page-footer { padding: 16px 20px; flex-direction: column; gap: 6px; }
+@media(max-width:640px){
+  .topbar { padding: 16px 20px; }
+  .step-labels, .topbar-step { display: none; }
+  .wizard { padding: 90px 20px 60px; }
+  .grid2 { grid-template-columns: 1fr; }
 }
 </style>
 </head>
 <body>
 
-<!-- REDIRECT BANNER -->
-<div class="redirect-banner" id="redirectBanner">
-  <span>🔒</span>
-  <span>You need a profile to access the platform. <strong>Create yours below — takes about 2 minutes.</strong></span>
+<div class="topbar">
+  <a class="topbar-brand" href="index.html">
+    <svg width="28" height="28" viewBox="0 0 34 34" fill="none">
+      <circle cx="17" cy="17" r="15.5" stroke="#a8742a" stroke-width="1.2" stroke-dasharray="64 32" stroke-dashoffset="10"/>
+      <polygon points="17,9 25,17 17,25 9,17" fill="none" stroke="#a8742a" stroke-width="1.3"/>
+      <circle cx="17" cy="17" r="2.2" fill="#a8742a"/>
+      <line x1="17" y1="17" x2="11" y2="21" stroke="#a8742a" stroke-width=".7" opacity=".45"/>
+      <line x1="17" y1="17" x2="23" y2="21" stroke="#a8742a" stroke-width=".7" opacity=".45"/>
+    </svg>
+    <span class="topbar-name">Meridian</span>
+  </a>
+  <div class="topbar-right">
+    <span class="topbar-step" id="stepCount">Step 1 of 4</span>
+    <a class="topbar-back" href="index.html">← Back</a>
+  </div>
 </div>
 
-<div class="page">
+<div class="progress-track">
+  <div class="progress-fill" id="progressFill" style="width:25%"></div>
+</div>
 
-  <!-- TOP BAR -->
-  <div class="topbar">
-    <a class="topbar-brand" href="index.html">
-      <svg width="30" height="30" viewBox="0 0 34 34" fill="none">
-        <circle cx="17" cy="17" r="15.5" stroke="#a8742a" stroke-width="1.2" stroke-dasharray="64 32" stroke-dashoffset="10"/>
-        <polygon points="17,9 25,17 17,25 9,17" fill="none" stroke="#a8742a" stroke-width="1.3"/>
-        <circle cx="17" cy="17" r="2.2" fill="#a8742a"/>
-        <line x1="17" y1="17" x2="11" y2="21" stroke="#a8742a" stroke-width=".7" opacity=".45"/>
-        <line x1="17" y1="17" x2="23" y2="21" stroke="#a8742a" stroke-width=".7" opacity=".45"/>
-      </svg>
-      <span class="topbar-name">Meridian</span>
-    </a>
-    <a class="topbar-back" href="index.html">← Back to home</a>
-  </div>
+<div class="step-labels">
+  <div class="step-label active" id="sl-0"><div class="step-num">1</div>Profile type</div>
+  <div class="step-label" id="sl-1"><div class="step-num">2</div>Firm details</div>
+  <div class="step-label" id="sl-2"><div class="step-num">3</div>Structure</div>
+  <div class="step-label" id="sl-3"><div class="step-num">4</div>Intent</div>
+</div>
 
-  <!-- LEFT PANEL -->
-  <div class="side-left">
-    <div class="side-label">Why this matters</div>
-    <div class="side-title">Your profile is the<br><em>intelligence layer.</em></div>
-    <div class="side-body">
-      <p>The SEC database tells you what firms look like on paper. Your profile tells the platform what <em>you</em> look like — so it can score every firm in the database against your geography, size, services, and intent.</p>
-      <p>Private match scoring, succession targeting, and acquisition pipeline all derive from this. <strong>Nothing you enter here is visible to other users.</strong></p>
-    </div>
-    <div class="side-points">
-      <div class="side-point">
-        <div class="side-point-dot"></div>
-        <div><strong>Takes about 2 minutes</strong>Three steps. No payment required.</div>
-      </div>
-      <div class="side-point">
-        <div class="side-point-dot"></div>
-        <div><strong>Completely private</strong>Your intelligence fields are never exposed or shared.</div>
-      </div>
-      <div class="side-point">
-        <div class="side-point-dot"></div>
-        <div><strong>Survives dataset updates</strong>Monthly SEC data refreshes never touch your profile.</div>
+<div class="redirect-banner" id="redirectBanner">
+  <span>🔒</span>
+  <span>You need a profile to access the platform. <strong>Takes about 2 minutes.</strong></span>
+</div>
+
+<div class="wizard">
+<div class="wizard-inner">
+
+<!-- STEP 0: Profile type -->
+<div class="panel active" id="panel-0">
+  <div class="panel-eyebrow">Step 1 of 4</div>
+  <div class="panel-title">How is your firm registered?</div>
+  <div class="panel-sub">This determines how your profile is built — and what data carries over automatically from public records.</div>
+  <div class="type-cards">
+    <div class="type-card" id="tc-claimed" onclick="selectType('claimed')">
+      <div class="type-card-icon">📋</div>
+      <div>
+        <div class="type-card-title">Claim an existing RIA</div>
+        <div class="type-card-desc">Your firm is SEC-registered and appears in the Form ADV database. AUM, client count, and employee data will carry over automatically. You'll layer private intelligence fields on top.</div>
       </div>
     </div>
-
-    <div class="coverage-notice">
-      <div class="coverage-notice-title">⚠ Current Coverage</div>
-      The RIA database currently covers SEC-registered firms in four states. Firms outside these states will not appear in Explorer or match results.
-      <div class="coverage-states">
-        <span class="cov-state">NH</span>
-        <span class="cov-state">VT</span>
-        <span class="cov-state">MA</span>
-        <span class="cov-state">ME</span>
+    <div class="type-card" id="tc-bd" onclick="selectType('bd')">
+      <div class="type-card-icon">🏢</div>
+      <div>
+        <div class="type-card-title">Add my firm manually</div>
+        <div class="type-card-desc">Your firm isn't separately SEC-registered — e.g. a wirehouse team, BD-affiliated practice, or independent contractor. You'll enter your details and still appear in the private match layer.</div>
       </div>
     </div>
   </div>
+  <div class="form-nav">
+    <div></div>
+    <button class="btn-next" id="btn-next-0" onclick="nextStep()" disabled>Continue <span style="opacity:.5">→</span></button>
+  </div>
+</div>
 
-  <!-- FORM CENTER -->
-  <div class="form-col" id="formCol">
+<!-- STEP 1a: Claim RIA -->
+<div class="panel" id="panel-1-claimed">
+  <div class="panel-eyebrow">Step 2 of 4</div>
+  <div class="panel-title">Find your firm</div>
+  <div class="panel-sub">Search the SEC Form ADV database. Once you select your firm, AUM, accounts, and employee data carry over automatically.</div>
 
-    <!-- Step indicators -->
-    <div class="steps" id="stepsBar">
-      <div class="step active" id="step-ind-0">
-        <div class="step-dot active" id="sdot-0">1</div>
-        <div class="step-lbl">Profile type</div>
-      </div>
-      <div class="step" id="step-ind-1">
-        <div class="step-dot" id="sdot-1">2</div>
-        <div class="step-lbl">Firm details</div>
-      </div>
-      <div class="step" id="step-ind-2">
-        <div class="step-dot" id="sdot-2">3</div>
-        <div class="step-lbl">Intelligence</div>
-      </div>
+  <div class="field-group">
+    <label class="field-label" id="lbl-claimSearch">Firm Name <span class="req">*</span></label>
+    <div class="typeahead-wrap">
+      <input id="claimSearch" placeholder="Type at least 3 characters..." autocomplete="off"
+        oninput="handleTypeahead(this.value)" onkeydown="taKeyNav(event)"/>
+      <div class="typeahead-dropdown" id="taDropdown"></div>
     </div>
-
-    <!-- ── STEP 0: Profile type ── -->
-    <div class="form-panel active" id="panel-0">
-      <div class="panel-title">How do you want to profile your firm?</div>
-      <div class="panel-sub">Choose the option that best describes where your firm appears — or doesn't appear — in public records.</div>
-
-      <div class="type-cards">
-        <div class="type-card" id="tc-bd" onclick="selectType('bd')">
-          <div class="type-card-icon">🏢</div>
-          <div>
-            <div class="type-card-title">Add my firm manually</div>
-            <div class="type-card-desc">My firm isn't in the SEC RIA database — e.g. a wirehouse team, BD-affiliated practice, LPL, Raymond James, Steward Partners, or independent practice that isn't separately registered. I'll enter my details.</div>
-          </div>
-        </div>
-        <div class="type-card" id="tc-claimed" onclick="selectType('claimed')">
-          <div class="type-card-icon">📋</div>
-          <div>
-            <div class="type-card-title">Claim an existing RIA</div>
-            <div class="type-card-desc">My firm is SEC-registered and appears in the Form ADV database. I'll find and claim it — AUM, client, and employee data carry over automatically. I'll add private intelligence fields on top.</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="form-nav">
-        <div></div>
-        <button class="btn-next" id="btn-next-0" onclick="nextStep()" disabled>Continue <span style="opacity:.6">→</span></button>
-      </div>
-    </div>
-
-    <!-- ── STEP 1: Firm details ── -->
-    <div class="form-panel" id="panel-1">
-
-      <!-- BD version -->
-      <div id="step1-bd">
-        <div class="panel-title">Tell us about your firm</div>
-        <div class="panel-sub">This information is used for map placement, peer comparison, and match scoring. Not visible to other users.</div>
-
-        <div class="fsec">
-          <div class="fsec-title">Firm Identity</div>
-          <div class="grid2">
-            <div class="field-group span2">
-              <label class="field-label" id="lbl-firmName">Firm Name <span class="req">*</span></label>
-              <input id="firmName" placeholder="e.g. Northeast Wealth Partners" oninput="clearErr('firmName')"/>
-              <div class="field-err" id="err-firmName"></div>
-            </div>
-            <div class="field-group">
-              <label class="field-label">Legal Entity Name</label>
-              <input id="firmLegal" placeholder="If different from above"/>
-            </div>
-            <div class="field-group">
-              <label class="field-label">Organization Type</label>
-              <select id="orgType">
-                <option value="">Select...</option>
-                <option>Sole Proprietorship</option><option>Partnership</option>
-                <option>LLC</option><option>S-Corp</option><option>C-Corp</option><option>Other</option>
-              </select>
-            </div>
-            <div class="field-group">
-              <label class="field-label">Phone</label>
-              <input id="phone" placeholder="(603) 555-0100"/>
-            </div>
-            <div class="field-group">
-              <label class="field-label">Website</label>
-              <input id="website" placeholder="https://"/>
-            </div>
-          </div>
-        </div>
-
-        <div class="fsec">
-          <div class="fsec-title">Address <span style="color:var(--ink4);font-weight:400;text-transform:none;letter-spacing:normal;font-size:10px">— required for map placement</span></div>
-          <div class="grid2">
-            <div class="field-group span2">
-              <label class="field-label" id="lbl-addr1">Street Address <span class="req">*</span></label>
-              <input id="addr1" placeholder="123 Main St" oninput="clearErr('addr1')"/>
-              <div class="field-err" id="err-addr1"></div>
-            </div>
-            <div class="field-group">
-              <label class="field-label">Suite / Unit</label>
-              <input id="addr2" placeholder="Suite 400"/>
-            </div>
-            <div class="field-group">
-              <label class="field-label" id="lbl-city">City <span class="req">*</span></label>
-              <input id="city" oninput="clearErr('city')"/>
-              <div class="field-err" id="err-city"></div>
-            </div>
-            <div class="field-group">
-              <label class="field-label" id="lbl-state">State <span class="req">*</span></label>
-              <select id="bdState" onchange="clearErr('bdState')">
-                <option value="">Select...</option>
-                <option>NH</option><option>VT</option><option>MA</option><option>ME</option>
-                <option>CT</option><option>RI</option><option>NY</option><option>NJ</option>
-                <option>PA</option><option>FL</option><option>TX</option><option>CA</option>
-                <option>IL</option><option>WA</option><option>CO</option><option>GA</option>
-                <option>NC</option><option>VA</option><option>OH</option><option>AZ</option>
-                <option>MN</option><option>WI</option><option>MO</option><option>OR</option>
-                <option>IN</option><option>MD</option><option>TN</option><option>MI</option>
-                <option>SC</option><option>Other</option>
-              </select>
-              <div class="field-err" id="err-bdState"></div>
-            </div>
-            <div class="field-group">
-              <label class="field-label" id="lbl-zip">ZIP Code <span class="req">*</span></label>
-              <input id="zip" placeholder="03101" oninput="clearErr('zip')"/>
-              <div class="field-err" id="err-zip"></div>
-            </div>
-          </div>
-        </div>
-
-        <div class="fsec">
-          <div class="fsec-title">Assets & Clients <span style="color:var(--ink4);font-weight:400;text-transform:none;letter-spacing:normal;font-size:10px">— self-reported</span></div>
-          <div class="grid2">
-            <div class="field-group">
-              <label class="field-label">
-                <span class="tip">AUM ($M)<span class="tip-box">Enter in millions — e.g. type 250 for $250M</span></span>
-              </label>
-              <input type="number" id="selfAum" placeholder="e.g. 250"/>
-            </div>
-            <div class="field-group">
-              <label class="field-label">Total Accounts</label>
-              <input type="number" id="selfAccounts" placeholder="e.g. 180"/>
-            </div>
-            <div class="field-group">
-              <label class="field-label">Individual Clients</label>
-              <input type="number" id="selfIndClients" placeholder="e.g. 140"/>
-            </div>
-            <div class="field-group">
-              <label class="field-label">HNW Clients</label>
-              <input type="number" id="selfHNWClients" placeholder="e.g. 60"/>
-            </div>
-          </div>
-        </div>
-
-        <div class="fsec">
-          <div class="fsec-title">Custodian</div>
-          <div class="grid2">
-            <div class="field-group span2">
-              <label class="field-label">Primary Custodian(s)</label>
-              <div class="chip-row" id="custodianChips">
-                <div class="chip" onclick="toggleChip(this,'custodian')">Schwab</div>
-                <div class="chip" onclick="toggleChip(this,'custodian')">Fidelity</div>
-                <div class="chip" onclick="toggleChip(this,'custodian')">Pershing</div>
-                <div class="chip" onclick="toggleChip(this,'custodian')">TD Ameritrade</div>
-                <div class="chip" onclick="toggleChip(this,'custodian')">Raymond James</div>
-                <div class="chip" onclick="toggleChip(this,'custodian')">LPL</div>
-                <div class="chip" onclick="toggleChip(this,'custodian')">Fidelity Institutional</div>
-                <div class="chip" onclick="toggleChip(this,'custodian')">Altruist</div>
-                <div class="chip" onclick="toggleChip(this,'custodian')">Interactive Brokers</div>
-                <div class="chip" onclick="toggleChip(this,'custodian')">Self-custody</div>
-                <div class="chip" onclick="toggleChip(this,'custodian')">Other</div>
-              </div>
-            </div>
-            <div class="field-group">
-              <label class="field-label">
-                <span class="tip">Number of Custodians<span class="tip-box">How many custodial platforms do you currently use across all client accounts?</span></span>
-              </label>
-              <select id="custodianCount">
-                <option value="">Select...</option>
-                <option value="1">1</option><option value="2">2</option>
-                <option value="3">3</option><option value="4+">4 or more</option>
-              </select>
-            </div>
-            <div class="field-group">
-              <label class="field-label">
-                <span class="tip">Open to Changing Custodian?<span class="tip-box">Would you consider consolidating or switching custodial platforms as part of a merger or acquisition?</span></span>
-              </label>
-              <select id="custodianOpenToChange">
-                <option value="">Select...</option>
-                <option value="yes">Yes — open to change</option>
-                <option value="no">No — prefer to retain current</option>
-                <option value="partial">Partial — could consolidate</option>
-                <option value="undecided">Undecided</option>
-              </select>
-            </div>
-          </div>
-        </div>
-
-        <div class="fsec" style="margin-bottom:0">
-          <div class="fsec-title">Services & Compensation</div>
-          <div class="field-group">
-            <label class="field-label">Services Offered</label>
-            <div class="chip-row" id="servicesChips">
-              <div class="chip" onclick="toggleChip(this,'services')">Financial Planning</div>
-              <div class="chip" onclick="toggleChip(this,'services')">Portfolio Management</div>
-              <div class="chip" onclick="toggleChip(this,'services')">Tax Advisory</div>
-              <div class="chip" onclick="toggleChip(this,'services')">Estate Planning</div>
-              <div class="chip" onclick="toggleChip(this,'services')">Retirement Planning</div>
-              <div class="chip" onclick="toggleChip(this,'services')">Business Planning</div>
-              <div class="chip" onclick="toggleChip(this,'services')">Insurance</div>
-              <div class="chip" onclick="toggleChip(this,'services')">Other</div>
-            </div>
-          </div>
-          <div class="field-group" style="margin-bottom:0">
-            <label class="field-label">Compensation Model</label>
-            <div class="chip-row" id="compChips">
-              <div class="chip" onclick="toggleChip(this,'comp')">AUM-based fee</div>
-              <div class="chip" onclick="toggleChip(this,'comp')">Flat fee</div>
-              <div class="chip" onclick="toggleChip(this,'comp')">Hourly</div>
-              <div class="chip" onclick="toggleChip(this,'comp')">Commission</div>
-              <div class="chip" onclick="toggleChip(this,'comp')">Performance-based</div>
-              <div class="chip" onclick="toggleChip(this,'comp')">Other</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- CLAIMED version -->
-      <div id="step1-claimed" style="display:none">
-        <div class="panel-title">Find your firm</div>
-        <div class="panel-sub">Type your firm's name to search the SEC Form ADV database. Select your firm to carry over AUM, accounts, and employee data automatically.</div>
-
-        <div class="field-group">
-          <label class="field-label" id="lbl-claimSearch">Firm Name <span class="req">*</span></label>
-          <div class="typeahead-wrap">
-            <input id="claimSearch" placeholder="Start typing your firm name..." autocomplete="off"
-              oninput="handleTypeahead(this.value)" onkeydown="taKeyNav(event)"/>
-            <div class="typeahead-dropdown" id="taDropdown"></div>
-          </div>
-          <div class="field-err" id="err-claimSearch"></div>
-          <div id="taSelectedPill" style="display:none" class="ta-selected-pill">
-            <span style="color:var(--green);font-size:14px">✓</span>
-            <span class="ta-selected-pill-name" id="taPillName"></span>
-            <span class="ta-selected-pill-sub" id="taPillSub"></span>
-            <button class="ta-clear" onclick="clearClaim()" title="Clear selection">✕</button>
-          </div>
-        </div>
-
-        <div class="claimed-preview" id="claimedPreview">
-          <div class="cp-head">
-            <span style="color:var(--green);font-size:16px">✓</span>
-            <span class="cp-name" id="cpName"></span>
-            <span style="font-size:10px;font-weight:700;padding:2px 8px;border-radius:8px;background:rgba(96,165,250,.1);color:#2563eb" id="cpState"></span>
-          </div>
-          <div class="cp-grid">
-            <div class="cp-stat"><div class="cp-stat-label">RAUM</div><div class="cp-stat-val" id="cpAum">—</div></div>
-            <div class="cp-stat"><div class="cp-stat-label">Accounts</div><div class="cp-stat-val" id="cpAccts">—</div></div>
-            <div class="cp-stat"><div class="cp-stat-label">Employees</div><div class="cp-stat-val" id="cpEmp">—</div></div>
-          </div>
-          <div style="font-size:11px;color:var(--ink4);margin-top:10px;line-height:1.6">
-            ADV data carries over automatically. On the next step you'll add private intelligence fields — only visible to you.
-          </div>
-        </div>
-
-        <!-- Custodian for claimed firms too -->
-        <div style="margin-top:24px">
-          <div class="fsec-title">Custodian</div>
-          <div class="grid2">
-            <div class="field-group span2">
-              <label class="field-label">Primary Custodian(s)</label>
-              <div class="chip-row" id="custodianChips2">
-                <div class="chip" onclick="toggleChip(this,'custodian2')">Schwab</div>
-                <div class="chip" onclick="toggleChip(this,'custodian2')">Fidelity</div>
-                <div class="chip" onclick="toggleChip(this,'custodian2')">Pershing</div>
-                <div class="chip" onclick="toggleChip(this,'custodian2')">TD Ameritrade</div>
-                <div class="chip" onclick="toggleChip(this,'custodian2')">Raymond James</div>
-                <div class="chip" onclick="toggleChip(this,'custodian2')">LPL</div>
-                <div class="chip" onclick="toggleChip(this,'custodian2')">Fidelity Institutional</div>
-                <div class="chip" onclick="toggleChip(this,'custodian2')">Altruist</div>
-                <div class="chip" onclick="toggleChip(this,'custodian2')">Interactive Brokers</div>
-                <div class="chip" onclick="toggleChip(this,'custodian2')">Self-custody</div>
-                <div class="chip" onclick="toggleChip(this,'custodian2')">Other</div>
-              </div>
-            </div>
-            <div class="field-group">
-              <label class="field-label">Number of Custodians</label>
-              <select id="custodianCount2">
-                <option value="">Select...</option>
-                <option value="1">1</option><option value="2">2</option>
-                <option value="3">3</option><option value="4+">4 or more</option>
-              </select>
-            </div>
-            <div class="field-group">
-              <label class="field-label">Open to Changing Custodian?</label>
-              <select id="custodianOpenToChange2">
-                <option value="">Select...</option>
-                <option value="yes">Yes — open to change</option>
-                <option value="no">No — prefer to retain current</option>
-                <option value="partial">Partial — could consolidate</option>
-                <option value="undecided">Undecided</option>
-              </select>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="form-nav">
-        <button class="btn-back" onclick="prevStep()">← Back</button>
-        <button class="btn-next" id="btn-next-1" onclick="nextStep()">Continue <span style="opacity:.6">→</span></button>
-      </div>
-    </div>
-
-    <!-- ── STEP 2: Intelligence ── -->
-    <div class="form-panel" id="panel-2">
-      <div class="panel-title">Growth intelligence</div>
-      <div class="panel-sub">These fields power private matching and succession scoring. Required — all 12 fields. Nothing here is visible to anyone else.</div>
-
-      <div class="private-note">
-        <div class="private-note-icon">🔒</div>
-        <div><strong style="color:#7c3aed">Private.</strong> These answers are stored only in your browser. They're never transmitted, shared, or visible to other users. They exist purely to score your matches.</div>
-      </div>
-
-      <div class="fsec">
-        <div class="fsec-title">Firm Structure</div>
-        <div class="grid2">
-          <div class="field-group">
-            <label class="field-label">
-              <span class="tip">Team Size <span class="req">*</span><span class="tip-box">Total headcount — advisors, support, partners.</span></span>
-            </label>
-            <input type="number" min="1" id="teamSize" placeholder="e.g. 4" oninput="clearErr('teamSize')"/>
-            <div class="field-err" id="err-teamSize"></div>
-          </div>
-          <div class="field-group">
-            <label class="field-label">
-              <span class="tip">AUM Band <span class="req">*</span><span class="tip-box">Approximate range of total assets under management.</span></span>
-            </label>
-            <select id="aumBand" onchange="clearErr('aumBand')">
-              <option value="">Select...</option>
-              <option>0–100M</option><option>100–250M</option><option>250–500M</option>
-              <option>500M–1B</option><option>1B+</option>
-            </select>
-            <div class="field-err" id="err-aumBand"></div>
-          </div>
-          <div class="field-group">
-            <label class="field-label">
-              <span class="tip">Ownership Structure <span class="req">*</span><span class="tip-box">How ownership is distributed. Affects succession complexity and deal structuring.</span></span>
-            </label>
-            <select id="ownershipStructure" onchange="clearErr('ownershipStructure')">
-              <option value="">Select...</option>
-              <option>Solo owner</option><option>2 partners</option>
-              <option>3+ partners</option><option>Corporate owned</option>
-            </select>
-            <div class="field-err" id="err-ownershipStructure"></div>
-          </div>
-          <div class="field-group">
-            <label class="field-label">
-              <span class="tip">Founder / Principal Age Band <span class="req">*</span><span class="tip-box">Age range of the founding principal(s). Key input to succession vulnerability scoring.</span></span>
-            </label>
-            <select id="founderAgeBand" onchange="clearErr('founderAgeBand')">
-              <option value="">Select...</option>
-              <option>&lt;40</option><option>40–49</option><option>50–59</option>
-              <option>60–64</option><option>65+</option>
-            </select>
-            <div class="field-err" id="err-founderAgeBand"></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="fsec">
-        <div class="fsec-title">Succession & Transition</div>
-        <div class="grid2">
-          <div class="field-group">
-            <label class="field-label">Internal Successor Identified <span class="req">*</span></label>
-            <select id="internalSuccessor" onchange="clearErr('internalSuccessor')">
-              <option value="">Select...</option>
-              <option value="true">Yes</option><option value="false">No</option>
-            </select>
-            <div class="field-err" id="err-internalSuccessor"></div>
-          </div>
-          <div class="field-group">
-            <label class="field-label">
-              <span class="tip">Succession Timeline <span class="req">*</span><span class="tip-box">How soon you anticipate a principal transition or ownership change.</span></span>
-            </label>
-            <select id="successionTimeline" onchange="clearErr('successionTimeline')">
-              <option value="">Select...</option>
-              <option>None / not considering</option><option>5+ years</option>
-              <option>3–5 years</option><option>1–3 years</option>
-              <option>Actively exploring</option>
-            </select>
-            <div class="field-err" id="err-successionTimeline"></div>
-          </div>
-          <div class="field-group">
-            <label class="field-label">
-              <span class="tip">Open to Minority Capital <span class="req">*</span><span class="tip-box">Would you consider a partial equity investment (20–49%) while retaining control?</span></span>
-            </label>
-            <select id="openToMinority" onchange="clearErr('openToMinority')">
-              <option value="">Select...</option>
-              <option value="true">Yes</option><option value="false">No</option>
-            </select>
-            <div class="field-err" id="err-openToMinority"></div>
-          </div>
-          <div class="field-group">
-            <label class="field-label">Open to Full Sale <span class="req">*</span></label>
-            <select id="openToFullSale" onchange="clearErr('openToFullSale')">
-              <option value="">Select...</option>
-              <option value="true">Yes</option><option value="false">No</option>
-            </select>
-            <div class="field-err" id="err-openToFullSale"></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="fsec" style="margin-bottom:0">
-        <div class="fsec-title">Growth Intent</div>
-        <div class="grid2">
-          <div class="field-group">
-            <label class="field-label">Seeking Acquisitions <span class="req">*</span></label>
-            <select id="seekingAcquisitions" onchange="clearErr('seekingAcquisitions')">
-              <option value="">Select...</option>
-              <option value="true">Yes</option><option value="false">No</option>
-            </select>
-            <div class="field-err" id="err-seekingAcquisitions"></div>
-          </div>
-          <div class="field-group">
-            <label class="field-label">Hiring Junior Advisors <span class="req">*</span></label>
-            <select id="hiringJunior" onchange="clearErr('hiringJunior')">
-              <option value="">Select...</option>
-              <option value="true">Yes</option><option value="false">No</option>
-            </select>
-            <div class="field-err" id="err-hiringJunior"></div>
-          </div>
-          <div class="field-group">
-            <label class="field-label">
-              <span class="tip">Geographic Flexibility <span class="req">*</span><span class="tip-box">How far outside your market are you willing to look for acquisitions or partnerships?</span></span>
-            </label>
-            <select id="geoFlexibility" onchange="clearErr('geoFlexibility')">
-              <option value="">Select...</option>
-              <option>None — local only</option><option>Regional</option><option>National</option>
-            </select>
-            <div class="field-err" id="err-geoFlexibility"></div>
-          </div>
-          <div class="field-group">
-            <label class="field-label">
-              <span class="tip">Growth Intent <span class="req">*</span><span class="tip-box">Your primary growth strategy — organic, acquisitive, or partnership-driven.</span></span>
-            </label>
-            <select id="growthIntent" onchange="clearErr('growthIntent')">
-              <option value="">Select...</option>
-              <option>Organic only</option><option>Acquisitive</option>
-              <option>Strategic partnership</option><option>Undecided</option>
-            </select>
-            <div class="field-err" id="err-growthIntent"></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="form-nav">
-        <button class="btn-back" onclick="prevStep()">← Back</button>
-        <button class="btn-complete" onclick="completeProfile()">Complete Profile ✓</button>
-      </div>
-    </div>
-
-  </div><!-- /form-col -->
-
-  <!-- RIGHT PANEL -->
-  <div class="side-right">
-    <div class="side-label">Current Coverage</div>
-    <div class="side-title">Four states.<br><em>Hundreds of firms.</em></div>
-    <div class="side-body">
-      <p>The platform currently covers SEC-registered RIAs across New Hampshire, Vermont, Massachusetts, and Maine — updated monthly from Form ADV filings.</p>
-      <p><strong>If you're outside this region</strong>, you can still create a BD profile and use the platform's intelligence tools. Acquisition match scoring will surface firms within the covered states.</p>
-    </div>
-
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:28px">
-      <div style="background:var(--paper2);border:1px solid var(--paper3);border-radius:10px;padding:16px">
-        <div style="font-size:9px;text-transform:uppercase;letter-spacing:.08em;color:var(--ink4);margin-bottom:6px">NH · VT · MA · ME</div>
-        <div style="font-family:var(--mono);font-size:22px;color:var(--ink);font-weight:500" id="firmCount">500+</div>
-        <div style="font-size:11px;color:var(--ink4);margin-top:2px">SEC-registered RIAs</div>
-      </div>
-      <div style="background:var(--paper2);border:1px solid var(--paper3);border-radius:10px;padding:16px">
-        <div style="font-size:9px;text-transform:uppercase;letter-spacing:.08em;color:var(--ink4);margin-bottom:6px">Updated</div>
-        <div style="font-family:var(--mono);font-size:18px;color:var(--ink);font-weight:500">Monthly</div>
-        <div style="font-size:11px;color:var(--ink4);margin-top:2px">SEC Form ADV</div>
-      </div>
-    </div>
-
-    <div style="margin-top:24px;padding:14px 16px;background:var(--gold-pale);border:1px solid rgba(168,116,42,.18);border-radius:10px;font-size:12px;color:var(--ink2);line-height:1.65">
-      <div style="font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--gold);font-weight:600;margin-bottom:6px">BD Advisors</div>
-      If your firm doesn't appear in the SEC database — wirehouse teams, BD-affiliated practices, independent contractors — create a manual profile. You'll appear in the private match layer and can be discovered by RIA acquirers looking to expand.
+    <div class="field-err" id="err-claimSearch"></div>
+    <div id="taSelectedPill" style="display:none" class="ta-selected-pill">
+      <span style="color:var(--green);font-size:16px">✓</span>
+      <span class="ta-selected-pill-name" id="taPillName"></span>
+      <span class="ta-selected-pill-sub" id="taPillSub"></span>
+      <button class="ta-clear" onclick="clearClaim()" title="Clear">✕</button>
     </div>
   </div>
 
-  <!-- PAGE FOOTER -->
-  <div class="page-footer">
-    <span>Meridian · Private M&A Intelligence</span>
-    <span>Data stored locally in your browser · Never transmitted</span>
+  <div class="claimed-preview" id="claimedPreview">
+    <div class="cp-head">
+      <span style="color:var(--green);font-size:15px">✓</span>
+      <span class="cp-name" id="cpName"></span>
+      <span style="font-size:10px;font-weight:700;padding:2px 8px;border-radius:8px;background:rgba(96,165,250,.1);color:#2563eb" id="cpState"></span>
+    </div>
+    <div class="cp-grid">
+      <div class="cp-stat"><div class="cp-stat-label">RAUM</div><div class="cp-stat-val" id="cpAum">—</div></div>
+      <div class="cp-stat"><div class="cp-stat-label">Accounts</div><div class="cp-stat-val" id="cpAccts">—</div></div>
+      <div class="cp-stat"><div class="cp-stat-label">Employees</div><div class="cp-stat-val" id="cpEmp">—</div></div>
+    </div>
+    <div class="cp-note">ADV data carries over automatically. You'll add private intelligence fields in the next two steps.</div>
   </div>
 
-</div><!-- /page -->
+  <div id="claimCustodianSection" style="display:none;margin-top:28px">
+    <div class="fsec-title">Custodian <span style="font-weight:400;text-transform:none;letter-spacing:normal;font-size:10px;color:var(--ink4)">— optional</span></div>
+    <div class="field-group">
+      <label class="field-label">Primary Custodian(s)</label>
+      <div class="chip-row" id="custodianChips2">
+        <div class="chip" onclick="toggleChip(this,'custodian2')">Schwab</div>
+        <div class="chip" onclick="toggleChip(this,'custodian2')">Fidelity</div>
+        <div class="chip" onclick="toggleChip(this,'custodian2')">Pershing</div>
+        <div class="chip" onclick="toggleChip(this,'custodian2')">TD Ameritrade</div>
+        <div class="chip" onclick="toggleChip(this,'custodian2')">Raymond James</div>
+        <div class="chip" onclick="toggleChip(this,'custodian2')">LPL</div>
+        <div class="chip" onclick="toggleChip(this,'custodian2')">Fidelity Institutional</div>
+        <div class="chip" onclick="toggleChip(this,'custodian2')">Altruist</div>
+        <div class="chip" onclick="toggleChip(this,'custodian2')">Interactive Brokers</div>
+        <div class="chip" onclick="toggleChip(this,'custodian2')">Other</div>
+      </div>
+    </div>
+    <div class="grid2">
+      <div class="field-group">
+        <label class="field-label">Number of Custodians</label>
+        <select id="custodianCount2">
+          <option value="">Select...</option>
+          <option value="1">1</option><option value="2">2</option>
+          <option value="3">3</option><option value="4+">4 or more</option>
+        </select>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Open to Changing Custodian?</label>
+        <select id="custodianOpenToChange2">
+          <option value="">Select...</option>
+          <option value="yes">Yes — open to change</option>
+          <option value="no">No — prefer to retain</option>
+          <option value="partial">Partial — could consolidate</option>
+          <option value="undecided">Undecided</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-nav">
+    <button class="btn-back" onclick="prevStep()">← Back</button>
+    <button class="btn-next" onclick="nextStep()">Continue <span style="opacity:.5">→</span></button>
+  </div>
+</div>
+
+<!-- STEP 1b: BD firm -->
+<div class="panel" id="panel-1-bd">
+  <div class="panel-eyebrow">Step 2 of 4</div>
+  <div class="panel-title">Tell us about your firm</div>
+  <div class="panel-sub">Used for map placement, peer comparison, and match scoring. Not visible to other users.</div>
+
+  <div class="fsec">
+    <div class="fsec-title">Firm Identity</div>
+    <div class="grid2">
+      <div class="field-group span2">
+        <label class="field-label" id="lbl-firmName">Firm Name <span class="req">*</span></label>
+        <input id="firmName" placeholder="e.g. Northeast Wealth Partners" oninput="clearErr('firmName')"/>
+        <div class="field-err" id="err-firmName"></div>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Legal Entity Name</label>
+        <input id="firmLegal" placeholder="If different from above"/>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Organization Type</label>
+        <select id="orgType">
+          <option value="">Select...</option>
+          <option>Sole Proprietorship</option><option>Partnership</option>
+          <option>LLC</option><option>S-Corp</option><option>C-Corp</option><option>Other</option>
+        </select>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Phone</label>
+        <input id="phone" placeholder="(603) 555-0100"/>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Website</label>
+        <input id="website" placeholder="https://"/>
+      </div>
+    </div>
+  </div>
+
+  <div class="fsec">
+    <div class="fsec-title">Address <span style="color:var(--ink4);font-weight:400;text-transform:none;letter-spacing:normal;font-size:10px">— required for map placement</span></div>
+    <div class="grid2">
+      <div class="field-group span2">
+        <label class="field-label" id="lbl-addr1">Street Address <span class="req">*</span></label>
+        <input id="addr1" placeholder="123 Main St" oninput="clearErr('addr1')"/>
+        <div class="field-err" id="err-addr1"></div>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Suite / Unit</label>
+        <input id="addr2" placeholder="Suite 400"/>
+      </div>
+      <div class="field-group">
+        <label class="field-label" id="lbl-city">City <span class="req">*</span></label>
+        <input id="city" oninput="clearErr('city')"/>
+        <div class="field-err" id="err-city"></div>
+      </div>
+      <div class="field-group">
+        <label class="field-label" id="lbl-bdState">State <span class="req">*</span></label>
+        <select id="bdState" onchange="clearErr('bdState')">
+          <option value="">Select...</option>
+          <option>NH</option><option>VT</option><option>MA</option><option>ME</option>
+          <option>CT</option><option>RI</option><option>NY</option><option>NJ</option>
+          <option>PA</option><option>FL</option><option>TX</option><option>CA</option>
+          <option>IL</option><option>WA</option><option>CO</option><option>GA</option>
+          <option>NC</option><option>VA</option><option>OH</option><option>AZ</option>
+          <option>MN</option><option>WI</option><option>MO</option><option>OR</option>
+          <option>IN</option><option>MD</option><option>TN</option><option>MI</option>
+          <option>SC</option><option>Other</option>
+        </select>
+        <div class="field-err" id="err-bdState"></div>
+      </div>
+      <div class="field-group">
+        <label class="field-label" id="lbl-zip">ZIP Code <span class="req">*</span></label>
+        <input id="zip" placeholder="03101" oninput="clearErr('zip')"/>
+        <div class="field-err" id="err-zip"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="fsec">
+    <div class="fsec-title">Assets & Clients <span style="color:var(--ink4);font-weight:400;text-transform:none;letter-spacing:normal;font-size:10px">— self-reported, optional</span></div>
+    <div class="grid2">
+      <div class="field-group">
+        <label class="field-label"><span class="tip">AUM ($M)<span class="tip-box">Enter in millions — e.g. 250 for $250M</span></span></label>
+        <input type="number" id="selfAum" placeholder="e.g. 250"/>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Total Accounts</label>
+        <input type="number" id="selfAccounts" placeholder="e.g. 180"/>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Individual Clients</label>
+        <input type="number" id="selfIndClients" placeholder="e.g. 140"/>
+      </div>
+      <div class="field-group">
+        <label class="field-label">HNW Clients</label>
+        <input type="number" id="selfHNWClients" placeholder="e.g. 60"/>
+      </div>
+    </div>
+  </div>
+
+  <div class="fsec">
+    <div class="fsec-title">Custodian <span style="color:var(--ink4);font-weight:400;text-transform:none;letter-spacing:normal;font-size:10px">— optional</span></div>
+    <div class="field-group">
+      <label class="field-label">Primary Custodian(s)</label>
+      <div class="chip-row" id="custodianChips">
+        <div class="chip" onclick="toggleChip(this,'custodian')">Schwab</div>
+        <div class="chip" onclick="toggleChip(this,'custodian')">Fidelity</div>
+        <div class="chip" onclick="toggleChip(this,'custodian')">Pershing</div>
+        <div class="chip" onclick="toggleChip(this,'custodian')">TD Ameritrade</div>
+        <div class="chip" onclick="toggleChip(this,'custodian')">Raymond James</div>
+        <div class="chip" onclick="toggleChip(this,'custodian')">LPL</div>
+        <div class="chip" onclick="toggleChip(this,'custodian')">Fidelity Institutional</div>
+        <div class="chip" onclick="toggleChip(this,'custodian')">Altruist</div>
+        <div class="chip" onclick="toggleChip(this,'custodian')">Interactive Brokers</div>
+        <div class="chip" onclick="toggleChip(this,'custodian')">Other</div>
+      </div>
+    </div>
+    <div class="grid2">
+      <div class="field-group">
+        <label class="field-label">Number of Custodians</label>
+        <select id="custodianCount">
+          <option value="">Select...</option>
+          <option value="1">1</option><option value="2">2</option>
+          <option value="3">3</option><option value="4+">4 or more</option>
+        </select>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Open to Changing Custodian?</label>
+        <select id="custodianOpenToChange">
+          <option value="">Select...</option>
+          <option value="yes">Yes — open to change</option>
+          <option value="no">No — prefer to retain</option>
+          <option value="partial">Partial — could consolidate</option>
+          <option value="undecided">Undecided</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div class="fsec" style="margin-bottom:0">
+    <div class="fsec-title">Services & Compensation <span style="color:var(--ink4);font-weight:400;text-transform:none;letter-spacing:normal;font-size:10px">— optional</span></div>
+    <div class="field-group">
+      <label class="field-label">Services Offered</label>
+      <div class="chip-row" id="servicesChips">
+        <div class="chip" onclick="toggleChip(this,'services')">Financial Planning</div>
+        <div class="chip" onclick="toggleChip(this,'services')">Portfolio Management</div>
+        <div class="chip" onclick="toggleChip(this,'services')">Tax Advisory</div>
+        <div class="chip" onclick="toggleChip(this,'services')">Estate Planning</div>
+        <div class="chip" onclick="toggleChip(this,'services')">Retirement Planning</div>
+        <div class="chip" onclick="toggleChip(this,'services')">Business Planning</div>
+        <div class="chip" onclick="toggleChip(this,'services')">Insurance</div>
+        <div class="chip" onclick="toggleChip(this,'services')">Other</div>
+      </div>
+    </div>
+    <div class="field-group" style="margin-bottom:0">
+      <label class="field-label">Compensation Model</label>
+      <div class="chip-row" id="compChips">
+        <div class="chip" onclick="toggleChip(this,'comp')">AUM-based fee</div>
+        <div class="chip" onclick="toggleChip(this,'comp')">Flat fee</div>
+        <div class="chip" onclick="toggleChip(this,'comp')">Hourly</div>
+        <div class="chip" onclick="toggleChip(this,'comp')">Commission</div>
+        <div class="chip" onclick="toggleChip(this,'comp')">Performance-based</div>
+        <div class="chip" onclick="toggleChip(this,'comp')">Other</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-nav">
+    <button class="btn-back" onclick="prevStep()">← Back</button>
+    <button class="btn-next" onclick="nextStep()">Continue <span style="opacity:.5">→</span></button>
+  </div>
+</div>
+
+<!-- STEP 2: Firm Structure -->
+<div class="panel" id="panel-2">
+  <div class="panel-eyebrow">Step 3 of 4 · Private intelligence</div>
+  <div class="panel-title">Firm structure</div>
+  <div class="panel-sub">These fields power succession scoring and match targeting. Stored only in your browser — never shared.</div>
+
+  <div class="private-note">
+    <span style="font-size:14px;flex-shrink:0">🔒</span>
+    <span><strong style="color:#7c3aed">Private.</strong> Stored only in your browser. Never transmitted or visible to other users.</span>
+  </div>
+
+  <div class="grid2">
+    <div class="field-group">
+      <label class="field-label"><span class="tip">Team Size <span class="req">*</span><span class="tip-box">Total headcount — advisors, support, partners.</span></span></label>
+      <input type="number" min="1" id="teamSize" placeholder="e.g. 4" oninput="clearErr('teamSize')"/>
+      <div class="field-err" id="err-teamSize"></div>
+    </div>
+    <div class="field-group">
+      <label class="field-label"><span class="tip">AUM Band <span class="req">*</span><span class="tip-box">Approximate total assets under management.</span></span></label>
+      <select id="aumBand" onchange="clearErr('aumBand')">
+        <option value="">Select...</option>
+        <option>0–100M</option><option>100–250M</option><option>250–500M</option>
+        <option>500M–1B</option><option>1B+</option>
+      </select>
+      <div class="field-err" id="err-aumBand"></div>
+    </div>
+    <div class="field-group">
+      <label class="field-label"><span class="tip">Ownership Structure <span class="req">*</span><span class="tip-box">How ownership is distributed. Affects succession complexity and deal structuring.</span></span></label>
+      <select id="ownershipStructure" onchange="clearErr('ownershipStructure')">
+        <option value="">Select...</option>
+        <option>Solo owner</option><option>2 partners</option>
+        <option>3+ partners</option><option>Corporate owned</option>
+      </select>
+      <div class="field-err" id="err-ownershipStructure"></div>
+    </div>
+    <div class="field-group">
+      <label class="field-label"><span class="tip">Founder Age Band <span class="req">*</span><span class="tip-box">Age range of founding principals. Key input to succession scoring.</span></span></label>
+      <select id="founderAgeBand" onchange="clearErr('founderAgeBand')">
+        <option value="">Select...</option>
+        <option>&lt;40</option><option>40–49</option><option>50–59</option>
+        <option>60–64</option><option>65+</option>
+      </select>
+      <div class="field-err" id="err-founderAgeBand"></div>
+    </div>
+  </div>
+
+  <div class="fsec-title" style="margin-top:8px">Succession</div>
+  <div class="grid2">
+    <div class="field-group">
+      <label class="field-label">Internal Successor Identified <span class="req">*</span></label>
+      <div class="yn-group">
+        <button class="yn-btn" onclick="setYN('internalSuccessor','true',this)">Yes</button>
+        <button class="yn-btn" onclick="setYN('internalSuccessor','false',this)">No</button>
+      </div>
+      <input type="hidden" id="internalSuccessor"/>
+      <div class="field-err" id="err-internalSuccessor"></div>
+    </div>
+    <div class="field-group">
+      <label class="field-label"><span class="tip">Succession Timeline <span class="req">*</span><span class="tip-box">How soon you anticipate a principal transition or ownership change.</span></span></label>
+      <select id="successionTimeline" onchange="clearErr('successionTimeline')">
+        <option value="">Select...</option>
+        <option>None / not considering</option><option>5+ years</option>
+        <option>3–5 years</option><option>1–3 years</option>
+        <option>Actively exploring</option>
+      </select>
+      <div class="field-err" id="err-successionTimeline"></div>
+    </div>
+    <div class="field-group">
+      <label class="field-label"><span class="tip">Open to Minority Capital <span class="req">*</span><span class="tip-box">Would you consider a partial equity investment (20–49%) while retaining control?</span></span></label>
+      <div class="yn-group">
+        <button class="yn-btn" onclick="setYN('openToMinority','true',this)">Yes</button>
+        <button class="yn-btn" onclick="setYN('openToMinority','false',this)">No</button>
+      </div>
+      <input type="hidden" id="openToMinority"/>
+      <div class="field-err" id="err-openToMinority"></div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Open to Full Sale <span class="req">*</span></label>
+      <div class="yn-group">
+        <button class="yn-btn" onclick="setYN('openToFullSale','true',this)">Yes</button>
+        <button class="yn-btn" onclick="setYN('openToFullSale','false',this)">No</button>
+      </div>
+      <input type="hidden" id="openToFullSale"/>
+      <div class="field-err" id="err-openToFullSale"></div>
+    </div>
+  </div>
+
+  <div class="form-nav">
+    <button class="btn-back" onclick="prevStep()">← Back</button>
+    <button class="btn-next" onclick="nextStep()">Continue <span style="opacity:.5">→</span></button>
+  </div>
+</div>
+
+<!-- STEP 3: Growth Intent -->
+<div class="panel" id="panel-3">
+  <div class="panel-eyebrow">Step 4 of 4 · Private intelligence</div>
+  <div class="panel-title">Growth intent</div>
+  <div class="panel-sub">Four final fields. These drive acquisition matching and partnership scoring.</div>
+
+  <div class="private-note">
+    <span style="font-size:14px;flex-shrink:0">🔒</span>
+    <span><strong style="color:#7c3aed">Private.</strong> Stored only in your browser. Never transmitted or visible to other users.</span>
+  </div>
+
+  <div class="grid2">
+    <div class="field-group">
+      <label class="field-label">Seeking Acquisitions <span class="req">*</span></label>
+      <div class="yn-group">
+        <button class="yn-btn" onclick="setYN('seekingAcquisitions','true',this)">Yes</button>
+        <button class="yn-btn" onclick="setYN('seekingAcquisitions','false',this)">No</button>
+      </div>
+      <input type="hidden" id="seekingAcquisitions"/>
+      <div class="field-err" id="err-seekingAcquisitions"></div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Hiring Junior Advisors <span class="req">*</span></label>
+      <div class="yn-group">
+        <button class="yn-btn" onclick="setYN('hiringJunior','true',this)">Yes</button>
+        <button class="yn-btn" onclick="setYN('hiringJunior','false',this)">No</button>
+      </div>
+      <input type="hidden" id="hiringJunior"/>
+      <div class="field-err" id="err-hiringJunior"></div>
+    </div>
+    <div class="field-group">
+      <label class="field-label"><span class="tip">Geographic Flexibility <span class="req">*</span><span class="tip-box">How far outside your market are you willing to look?</span></span></label>
+      <select id="geoFlexibility" onchange="clearErr('geoFlexibility')">
+        <option value="">Select...</option>
+        <option>None — local only</option><option>Regional</option><option>National</option>
+      </select>
+      <div class="field-err" id="err-geoFlexibility"></div>
+    </div>
+    <div class="field-group">
+      <label class="field-label"><span class="tip">Growth Intent <span class="req">*</span><span class="tip-box">Your primary growth strategy — organic, acquisitive, or partnership-driven.</span></span></label>
+      <select id="growthIntent" onchange="clearErr('growthIntent')">
+        <option value="">Select...</option>
+        <option>Organic only</option><option>Acquisitive</option>
+        <option>Strategic partnership</option><option>Undecided</option>
+      </select>
+      <div class="field-err" id="err-growthIntent"></div>
+    </div>
+  </div>
+
+  <div class="form-nav">
+    <button class="btn-back" onclick="prevStep()">← Back</button>
+    <button class="btn-complete" onclick="completeProfile()">Complete Profile ✓</button>
+  </div>
+</div>
+
+</div><!-- /wizard-inner -->
+</div><!-- /wizard -->
 
 <script src="ria-data.js"></script>
 <script>
-// ── STATE ──
-let profileType = null;   // 'bd' | 'claimed'
+let profileType = null;
 let currentStep = 0;
 let claimedCrd  = null;
 let taFocusIdx  = -1;
 let taResults   = [];
-
 const chipState = { custodian:[], custodian2:[], services:[], comp:[] };
 
-// ── REDIRECT CHECK ──
+// Init
 (function(){
   const params = new URLSearchParams(window.location.search);
-  if(params.get('from') === 'gate'){
-    document.getElementById('redirectBanner').classList.add('show');
-  }
+  if(params.get('from') === 'gate') document.getElementById('redirectBanner').classList.add('show');
 })();
 
-// ── FIRM COUNT ──
-(function(){
-  try {
-    if(typeof FR !== 'undefined'){
-      document.getElementById('firmCount').textContent = FR.length.toLocaleString();
-    }
-  } catch(e){}
-})();
-
-// ── FORMATTERS ──
+// Formatters
 function fmtM(v){ if(!v) return '—'; if(v>=1e12) return '$'+(v/1e12).toFixed(1)+'T'; if(v>=1e9) return '$'+(v/1e9).toFixed(2).replace(/\.?0+$/,'')+'B'; if(v>=1e6) return '$'+(v/1e6).toFixed(1).replace(/\.0$/,'')+'M'; if(v>=1e3) return '$'+Math.round(v/1e3)+'K'; return '$'+Math.round(v); }
 function fmtN(v){ return v!=null ? v.toLocaleString() : '—'; }
 
-// ── STEP MANAGEMENT ──
-function setStepUI(s){
-  for(let i=0;i<3;i++){
-    const dot = document.getElementById('sdot-'+i);
-    const ind = document.getElementById('step-ind-'+i);
-    dot.className = 'step-dot' + (i<s?' done':i===s?' active':'');
-    dot.textContent = i<s ? '✓' : i+1;
-    ind.className = 'step' + (i===s?' active':i<s?' done':'');
-  }
-  document.querySelectorAll('.form-panel').forEach((p,i) => {
-    p.classList.toggle('active', i===s);
+// Step management
+function getPanelId(step){
+  if(step===0) return 'panel-0';
+  if(step===1) return profileType==='bd' ? 'panel-1-bd' : 'panel-1-claimed';
+  if(step===2) return 'panel-2';
+  if(step===3) return 'panel-3';
+}
+
+function setStepUI(step){
+  ['panel-0','panel-1-claimed','panel-1-bd','panel-2','panel-3'].forEach(id => {
+    document.getElementById(id)?.classList.remove('active');
   });
-  currentStep = s;
-  document.getElementById('formCol').scrollTop = 0;
+  document.getElementById(getPanelId(step))?.classList.add('active');
+  currentStep = step;
+  const pct = Math.round(((step+1)/4)*100);
+  document.getElementById('progressFill').style.width = pct+'%';
+  document.getElementById('stepCount').textContent = `Step ${step+1} of 4`;
+  for(let i=0;i<4;i++){
+    const sl = document.getElementById('sl-'+i);
+    if(!sl) continue;
+    sl.className = 'step-label'+(i<step?' done':i===step?' active':'');
+    const num = sl.querySelector('.step-num');
+    if(num) num.textContent = i<step ? '✓' : (i+1);
+  }
+  window.scrollTo({ top:0, behavior:'smooth' });
 }
 
 function nextStep(){
-  if(currentStep === 0){
-    if(!profileType) return;
-    setStepUI(1);
-    document.getElementById('step1-bd').style.display    = profileType==='bd' ? '' : 'none';
-    document.getElementById('step1-claimed').style.display = profileType==='claimed' ? '' : 'none';
-    return;
-  }
-  if(currentStep === 1){
-    if(!validateStep1()) return;
-    setStepUI(2);
-    return;
-  }
+  if(currentStep===0){ if(!profileType) return; setStepUI(1); return; }
+  if(currentStep===1){ if(!validateStep1()) return; setStepUI(2); return; }
+  if(currentStep===2){ if(!validateStep2()) return; setStepUI(3); return; }
 }
-function prevStep(){ if(currentStep > 0) setStepUI(currentStep-1); }
+function prevStep(){ if(currentStep>0) setStepUI(currentStep-1); }
 
-// ── TYPE SELECT ──
 function selectType(t){
   profileType = t;
   document.getElementById('tc-bd').classList.toggle('selected', t==='bd');
@@ -955,43 +727,54 @@ function selectType(t){
   document.getElementById('btn-next-0').disabled = false;
 }
 
-// ── CHIP TOGGLE ──
 function toggleChip(el, group){
   el.classList.toggle('on');
   const val = el.textContent.trim();
   const arr = chipState[group];
   const idx = arr.indexOf(val);
-  if(idx > -1) arr.splice(idx,1); else arr.push(val);
+  if(idx>-1) arr.splice(idx,1); else arr.push(val);
 }
 
-// ── TYPEAHEAD ──
+function setYN(fieldId, value, btn){
+  document.getElementById(fieldId).value = value;
+  clearErr(fieldId);
+  const group = btn.closest('.yn-group');
+  if(group) group.querySelectorAll('.yn-btn').forEach(b => {
+    b.className = 'yn-btn';
+    if(b===btn) b.classList.add(value==='true' ? 'sel-yes' : 'sel-no');
+  });
+}
+
+// Typeahead — min 3 chars
 function handleTypeahead(query){
   claimedCrd = null;
   document.getElementById('taSelectedPill').style.display = 'none';
   document.getElementById('claimedPreview').classList.remove('show');
-
-  if(!query || query.trim().length < 2){
-    closeDropdown(); return;
-  }
-  const q = query.toLowerCase().trim();
-  try {
-    taResults = FR
-      .filter(f => f.n.toLowerCase().includes(q) || (f.ci_ && String(f.ci_).toLowerCase().includes(q)))
-      .slice(0, 12);
-  } catch(e){ taResults = []; }
+  document.getElementById('claimCustodianSection').style.display = 'none';
 
   const dd = document.getElementById('taDropdown');
-  if(taResults.length === 0){
+  if(!query || query.trim().length < 3){
+    dd.innerHTML = query && query.trim().length > 0
+      ? '<div class="ta-hint">Keep typing — need at least 3 characters to search</div>'
+      : '';
+    dd.classList.toggle('open', !!(query && query.trim().length > 0));
+    return;
+  }
+
+  const q = query.toLowerCase().trim();
+  try {
+    taResults = FR.filter(f => f.n.toLowerCase().includes(q) || (f.ci_ && String(f.ci_).toLowerCase().includes(q))).slice(0,12);
+  } catch(e){ taResults=[]; }
+
+  if(taResults.length===0){
     dd.innerHTML = '<div class="ta-empty">No firms found — try a different name</div>';
   } else {
-    dd.innerHTML = taResults.map((f,i) => {
-      const aum = fmtM(f.au);
-      return `<div class="ta-item" data-idx="${i}" onclick="selectFirm(${i})" onmouseover="taFocusIdx=${i};highlightTa()">
+    dd.innerHTML = taResults.map((f,i) => `
+      <div class="ta-item" data-idx="${i}" onclick="selectFirm(${i})" onmouseover="taFocusIdx=${i};highlightTa()">
         <span class="ta-item-state">${f.st}</span>
         <span class="ta-item-name">${f.n}</span>
-        <span class="ta-item-sub">${f.ci||''} · ${aum}</span>
-      </div>`;
-    }).join('');
+        <span class="ta-item-sub">${f.ci||''} · ${fmtM(f.au)}</span>
+      </div>`).join('');
   }
   dd.classList.add('open');
   taFocusIdx = -1;
@@ -1000,17 +783,12 @@ function handleTypeahead(query){
 function taKeyNav(e){
   const dd = document.getElementById('taDropdown');
   if(!dd.classList.contains('open')) return;
-  if(e.key === 'ArrowDown'){ taFocusIdx = Math.min(taFocusIdx+1, taResults.length-1); highlightTa(); e.preventDefault(); }
-  if(e.key === 'ArrowUp'){   taFocusIdx = Math.max(taFocusIdx-1, 0); highlightTa(); e.preventDefault(); }
-  if(e.key === 'Enter' && taFocusIdx >= 0){ selectFirm(taFocusIdx); e.preventDefault(); }
-  if(e.key === 'Escape'){ closeDropdown(); }
+  if(e.key==='ArrowDown'){ taFocusIdx=Math.min(taFocusIdx+1,taResults.length-1); highlightTa(); e.preventDefault(); }
+  if(e.key==='ArrowUp'){   taFocusIdx=Math.max(taFocusIdx-1,0); highlightTa(); e.preventDefault(); }
+  if(e.key==='Enter'&&taFocusIdx>=0){ selectFirm(taFocusIdx); e.preventDefault(); }
+  if(e.key==='Escape') closeDropdown();
 }
-
-function highlightTa(){
-  document.querySelectorAll('.ta-item').forEach((el,i) => {
-    el.classList.toggle('focused', i===taFocusIdx);
-  });
-}
+function highlightTa(){ document.querySelectorAll('.ta-item').forEach((el,i)=>el.classList.toggle('focused',i===taFocusIdx)); }
 
 function selectFirm(idx){
   const f = taResults[idx];
@@ -1018,155 +796,87 @@ function selectFirm(idx){
   claimedCrd = f.crd;
   closeDropdown();
   clearErr('claimSearch');
-
-  // Show pill
   document.getElementById('taPillName').textContent = f.n;
   document.getElementById('taPillSub').textContent = `${f.ci||''}, ${f.st} · ${fmtM(f.au)}`;
   document.getElementById('taSelectedPill').style.display = 'flex';
   document.getElementById('claimSearch').value = '';
-
-  // Show preview
   document.getElementById('cpName').textContent = f.n;
   document.getElementById('cpState').textContent = f.st;
   document.getElementById('cpAum').textContent = fmtM(f.au);
   document.getElementById('cpAccts').textContent = fmtN(f.ac);
   document.getElementById('cpEmp').textContent = fmtN(f.em);
   document.getElementById('claimedPreview').classList.add('show');
+  document.getElementById('claimCustodianSection').style.display = '';
 }
 
 function clearClaim(){
-  claimedCrd = null;
-  document.getElementById('taSelectedPill').style.display = 'none';
+  claimedCrd=null;
+  document.getElementById('taSelectedPill').style.display='none';
   document.getElementById('claimedPreview').classList.remove('show');
-  document.getElementById('claimSearch').value = '';
+  document.getElementById('claimSearch').value='';
   document.getElementById('claimSearch').focus();
+  document.getElementById('claimCustodianSection').style.display='none';
 }
+function closeDropdown(){ document.getElementById('taDropdown').classList.remove('open'); }
+document.addEventListener('click', e=>{ if(!e.target.closest('.typeahead-wrap')) closeDropdown(); });
 
-function closeDropdown(){
-  document.getElementById('taDropdown').classList.remove('open');
-}
-
-document.addEventListener('click', e => {
-  if(!e.target.closest('.typeahead-wrap')) closeDropdown();
-});
-
-// ── VALIDATION ──
-function showErr(id, msg){ document.getElementById('err-'+id).textContent=msg; document.getElementById(id)?.classList.add('err'); const lbl=document.getElementById('lbl-'+id); if(lbl) lbl.classList.add('err'); }
-function clearErr(id){ const el=document.getElementById('err-'+id); if(el) el.textContent=''; document.getElementById(id)?.classList.remove('err'); const lbl=document.getElementById('lbl-'+id); if(lbl) lbl.classList.remove('err'); }
+// Validation
+function showErr(id,msg){ const e=document.getElementById('err-'+id); if(e) e.textContent=msg; document.getElementById(id)?.classList.add('err'); document.getElementById('lbl-'+id)?.classList.add('err'); }
+function clearErr(id){ const e=document.getElementById('err-'+id); if(e) e.textContent=''; document.getElementById(id)?.classList.remove('err'); document.getElementById('lbl-'+id)?.classList.remove('err'); }
 
 function validateStep1(){
-  let ok = true;
-  if(profileType === 'bd'){
-    if(!document.getElementById('firmName').value.trim()){ showErr('firmName','Required'); ok=false; }
-    if(!document.getElementById('addr1').value.trim()){ showErr('addr1','Required'); ok=false; }
-    if(!document.getElementById('city').value.trim()){ showErr('city','Required'); ok=false; }
-    if(!document.getElementById('bdState').value){ showErr('bdState','Required'); ok=false; }
-    if(!document.getElementById('zip').value.trim()){ showErr('zip','Required'); ok=false; }
+  let ok=true;
+  if(profileType==='bd'){
+    ['firmName','addr1','city','zip'].forEach(id=>{ if(!document.getElementById(id)?.value.trim()){ showErr(id,'Required'); ok=false; } });
+    if(!document.getElementById('bdState')?.value){ showErr('bdState','Required'); ok=false; }
   } else {
     if(!claimedCrd){ showErr('claimSearch','Please select your firm from the list'); ok=false; }
   }
+  if(!ok){ document.querySelector('.field-err:not(:empty)')?.scrollIntoView({behavior:'smooth',block:'center'}); }
   return ok;
 }
 
 function validateStep2(){
-  const fields = [
-    'teamSize','aumBand','ownershipStructure','founderAgeBand',
-    'internalSuccessor','successionTimeline','openToMinority','openToFullSale',
-    'seekingAcquisitions','hiringJunior','geoFlexibility','growthIntent'
-  ];
-  let ok = true;
-  fields.forEach(id => {
-    const el = document.getElementById(id);
-    if(!el) return;
-    const v = el.value;
-    if(!v || v.trim() === ''){ showErr(id,'Required'); ok=false; }
-  });
-  if(!ok){
-    // Scroll to first error
-    const firstErr = document.querySelector('.field-err:not(:empty)');
-    if(firstErr) firstErr.scrollIntoView({ behavior:'smooth', block:'center' });
-  }
+  const fields=['teamSize','aumBand','ownershipStructure','founderAgeBand','internalSuccessor','successionTimeline','openToMinority','openToFullSale'];
+  let ok=true;
+  fields.forEach(id=>{ const el=document.getElementById(id); if(!el||!el.value?.trim()){ showErr(id,'Required'); ok=false; } });
+  if(!ok){ document.querySelector('#panel-2 .field-err:not(:empty)')?.scrollIntoView({behavior:'smooth',block:'center'}); }
   return ok;
 }
 
-// ── COMPLETE PROFILE ──
+function validateStep3(){
+  const fields=['seekingAcquisitions','hiringJunior','geoFlexibility','growthIntent'];
+  let ok=true;
+  fields.forEach(id=>{ const el=document.getElementById(id); if(!el||!el.value?.trim()){ showErr(id,'Required'); ok=false; } });
+  if(!ok){ document.querySelector('#panel-3 .field-err:not(:empty)')?.scrollIntoView({behavior:'smooth',block:'center'}); }
+  return ok;
+}
+
 function completeProfile(){
-  if(!validateStep2()) return;
-
-  const getBool = id => {
-    const v = document.getElementById(id)?.value;
-    return v==='' ? null : v==='true';
+  if(!validateStep3()) return;
+  const getBool=id=>{ const v=document.getElementById(id)?.value; return v===''?null:v==='true'; };
+  const getInt=id=>{ const v=parseInt(document.getElementById(id)?.value); return isNaN(v)?null:v; };
+  const getVal=id=>document.getElementById(id)?.value||null;
+  const intel={
+    teamSize:getInt('teamSize'), aumBand:getVal('aumBand'), ownershipStructure:getVal('ownershipStructure'),
+    founderAgeBand:getVal('founderAgeBand'), internalSuccessorIdentified:getBool('internalSuccessor'),
+    successionTimeline:getVal('successionTimeline'), openToMinorityCapital:getBool('openToMinority'),
+    openToFullSale:getBool('openToFullSale'), seekingAcquisitions:getBool('seekingAcquisitions'),
+    hiringJuniorAdvisors:getBool('hiringJunior'), geographicFlexibility:getVal('geoFlexibility'),
+    growthIntent:getVal('growthIntent'),
   };
-  const getInt = id => {
-    const v = parseInt(document.getElementById(id)?.value);
-    return isNaN(v) ? null : v;
-  };
-  const getVal = id => document.getElementById(id)?.value || null;
-
-  const intel = {
-    teamSize:                   getInt('teamSize'),
-    aumBand:                    getVal('aumBand'),
-    ownershipStructure:         getVal('ownershipStructure'),
-    founderAgeBand:             getVal('founderAgeBand'),
-    internalSuccessorIdentified: getBool('internalSuccessor'),
-    successionTimeline:         getVal('successionTimeline'),
-    openToMinorityCapital:      getBool('openToMinority'),
-    openToFullSale:             getBool('openToFullSale'),
-    seekingAcquisitions:        getBool('seekingAcquisitions'),
-    hiringJuniorAdvisors:       getBool('hiringJunior'),
-    geographicFlexibility:      getVal('geoFlexibility'),
-    growthIntent:               getVal('growthIntent'),
-  };
-
-  const custodianFields = profileType === 'bd'
-    ? {
-        custodians:           chipState.custodian,
-        custodianCount:       getVal('custodianCount'),
-        custodianOpenToChange: getVal('custodianOpenToChange'),
-      }
-    : {
-        custodians:           chipState.custodian2,
-        custodianCount:       getVal('custodianCount2'),
-        custodianOpenToChange: getVal('custodianOpenToChange2'),
-      };
-
+  const custodianFields = profileType==='bd'
+    ? { custodians:chipState.custodian, custodianCount:getVal('custodianCount'), custodianOpenToChange:getVal('custodianOpenToChange') }
+    : { custodians:chipState.custodian2, custodianCount:getVal('custodianCount2'), custodianOpenToChange:getVal('custodianOpenToChange2') };
   let profile;
-  if(profileType === 'bd'){
-    profile = {
-      type: 'bd', createdAt: new Date().toISOString(),
-      firmName:   document.getElementById('firmName').value.trim(),
-      firmLegal:  document.getElementById('firmLegal').value.trim(),
-      orgType:    getVal('orgType'),
-      addr1:      document.getElementById('addr1').value.trim(),
-      addr2:      document.getElementById('addr2').value.trim(),
-      city:       document.getElementById('city').value.trim(),
-      state:      getVal('bdState'),
-      zip:        document.getElementById('zip').value.trim(),
-      phone:      document.getElementById('phone').value.trim(),
-      website:    document.getElementById('website').value.trim(),
-      aum:        (parseFloat(document.getElementById('selfAum').value) * 1e6) || null,
-      accounts:   parseInt(document.getElementById('selfAccounts').value) || null,
-      clientsInd: parseInt(document.getElementById('selfIndClients').value) || null,
-      clientsHNW: parseInt(document.getElementById('selfHNWClients').value) || null,
-      services:   chipState.services,
-      compensation: chipState.comp,
-      ...custodianFields,
-      intel,
-    };
+  if(profileType==='bd'){
+    profile={ type:'bd', createdAt:new Date().toISOString(), firmName:document.getElementById('firmName').value.trim(), firmLegal:document.getElementById('firmLegal').value.trim(), orgType:getVal('orgType'), addr1:document.getElementById('addr1').value.trim(), addr2:document.getElementById('addr2').value.trim(), city:document.getElementById('city').value.trim(), state:getVal('bdState'), zip:document.getElementById('zip').value.trim(), phone:document.getElementById('phone').value.trim(), website:document.getElementById('website').value.trim(), aum:(parseFloat(document.getElementById('selfAum').value)*1e6)||null, accounts:parseInt(document.getElementById('selfAccounts').value)||null, clientsInd:parseInt(document.getElementById('selfIndClients').value)||null, clientsHNW:parseInt(document.getElementById('selfHNWClients').value)||null, services:chipState.services, compensation:chipState.comp, ...custodianFields, intel };
   } else {
-    const base = FR.find(f => f.crd === claimedCrd);
-    profile = {
-      type: 'claimed', createdAt: new Date().toISOString(),
-      crd: claimedCrd,
-      firmName: base?.n || '',
-      state: base?.st || '',
-      ...custodianFields,
-      intel,
-    };
+    const base=typeof FR!=='undefined'?FR.find(f=>f.crd===claimedCrd):null;
+    profile={ type:'claimed', createdAt:new Date().toISOString(), crd:claimedCrd, firmName:base?.n||'', state:base?.st||'', ...custodianFields, intel };
   }
-
-  try { localStorage.setItem('ria_user_profile', JSON.stringify(profile)); } catch(e){}
-  window.location.href = 'app.html';
+  try{ localStorage.setItem('ria_user_profile', JSON.stringify(profile)); }catch(e){}
+  window.location.href='app.html';
 }
 </script>
 </body>
