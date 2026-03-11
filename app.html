@@ -1,6 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<script>
+// HARD GATE — fires before React loads. No profile = redirect to register.html immediately.
+(function(){
+  try {
+    var p = localStorage.getItem('ria_user_profile');
+    if (!p || p === 'null') {
+      window.location.replace('register.html?from=gate');
+    }
+  } catch(e) {
+    window.location.replace('register.html?from=gate');
+  }
+})();
+</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>RIA Intelligence</title>
