@@ -1698,6 +1698,83 @@ function SavedTargets({ saved, setSaved, notes, setNotes, roa, onSelect, onLette
     const blob = new Blob([csv], { type: 'text/csv' }); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'ria_targets_' + new Date().toISOString().slice(0, 10) + '.csv'; a.click();
   };
 
+  // Intelligence metrics
+  const intel = useMemo(() => {
+    if (!firms.length) return null;
+    const withAum   = firms.filter(f => f.aum > 0);
+    const withAccts = firms.filter(f => f.accounts > 0 && f.aum > 0);
+    const withEmp   = firms.filter(f => f.employees > 0);
+    const withHNW   = firms.filter(f => f.clientsHNW > 0);
+    const withInd   = firms.filter(f => f.clientsInd > 0);
+
+    const avgAum     = withAum.length   ? withAum.reduce((s,f) => s + f.aum, 0) / withAum.length : null;
+    const avgRev     = withAum.length   ? withAum.reduce((s,f) => s + f.aum * roa, 0) / withAum.length : null;
+    const avgAcctSz  = withAccts.length ? withAccts.reduce((s,f) => s + f.aum / f.accounts, 0) / withAccts.length : null;
+    const avgEmp     = withEmp.length   ? withEmp.reduce((s,f) => s + f.employees, 0) / withEmp.length : null;
+    const totHNW     = withHNW.reduce((s,f) => s + f.clientsHNW, 0);
+    const totInd     = withInd.reduce((s,f) => s + f.clientsInd, 0);
+    const hnwPct     = totInd > 0 ? Math.round(totHNW / totInd * 100) : null;
+    const totAccts   = firms.reduce((s,f) => s + (f.accounts || 0), 0);
+    const totEmp     = firms.reduce((s,f) => s + (f.employees || 0), 0);
+    const totClients = firms.reduce((s,f) => s + (f.clientsInd || 0), 0);
+
+    // Revenue per employee across portfolio
+    const revPerEmp = totEmp > 0 ? totRev / totEmp : null;
+
+    // Fee-only (AUM only, no commission)
+    const feeOnly = firms.filter(f => f.compensation && f.compensation.length === 1 && f.compensation[0] === 'AUM-based fee').length;
+    const feeOnlyPct = Math.round(feeOnly / firms.length * 100);
+
+    // BD-affiliated (not pure RIA)
+    const bdCount = firms.filter(f => f.bdAffiliate).length;
+
+    // Solo/micro firms (1-2 employees) — easiest integration
+    const micro = firms.filter(f => f.employees >= 1 && f.employees <= 2).length;
+
+    // Firms with disclosures
+    const disclosures = firms.filter(f => f.disclosures).length;
+
+    // Geographic spread
+    const byState = {};
+    firms.forEach(f => { byState[f.state] = (byState[f.state] || 0) + 1; });
+    const dominantState = Object.entries(byState).sort((a,b) => b[1]-a[1])[0];
+
+    // State AUM breakdown
+    const stateAum = {};
+    firms.forEach(f => { stateAum[f.state] = (stateAum[f.state] || 0) + (f.aum || 0); });
+
+    // Top 5 by est revenue (best fit = highest revenue, cleanest structure)
+    const top5 = [...firms]
+      .map(f => ({
+        f,
+        score: (f.aum * roa) * 0.5
+          + (f.compensation && f.compensation.length === 1 && f.compensation[0] === 'AUM-based fee' ? 20 : 0)
+          + (!f.bdAffiliate ? 15 : 0)
+          + (!f.disclosures ? 10 : 0)
+          + (f.clientsHNW > 0 ? 10 : 0)
+          + (f.employees <= 5 ? 5 : 0),
+      }))
+      .sort((a,b) => b.score - a.score)
+      .slice(0, 5);
+
+    // Notes coverage — firms with notes = "contacted"
+    const contacted = Object.keys(notes).filter(crd => saved.has(crd)).length;
+
+    // AUM distribution of targets
+    const aumBuckets = {
+      'Under $100M': firms.filter(f => f.aum < 100e6).length,
+      '$100–250M':   firms.filter(f => f.aum >= 100e6 && f.aum < 250e6).length,
+      '$250–500M':   firms.filter(f => f.aum >= 250e6 && f.aum < 500e6).length,
+      '$500M–1B':    firms.filter(f => f.aum >= 500e6 && f.aum < 1e9).length,
+      'Over $1B':    firms.filter(f => f.aum >= 1e9).length,
+    };
+    const maxBucket = Math.max(...Object.values(aumBuckets), 1);
+
+    return { avgAum, avgRev, avgAcctSz, avgEmp, hnwPct, totAccts, totEmp, totClients,
+      totHNW, revPerEmp, feeOnly, feeOnlyPct, bdCount, micro, disclosures,
+      dominantState, byState, stateAum, top5, contacted, aumBuckets, maxBucket };
+  }, [firms, roa, notes, saved]);
+
   if (!hasProfile) return (
     <div className="page" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '60vh' }}>
       <GateBanner onOpenOnboarding={onOpenOnboarding} />
@@ -1712,9 +1789,18 @@ function SavedTargets({ saved, setSaved, notes, setNotes, roa, onSelect, onLette
     </div>
   );
 
+  const Stat = ({ label, value, sub, color }) => (
+    <div className="stat-card">
+      <div className="stat-label">{label}</div>
+      <div className="stat-value" style={color ? { color } : {}}>{value}</div>
+      {sub && <div className="stat-sub">{sub}</div>}
+    </div>
+  );
+
   return (
     <div className="page fade-up">
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 24 }}>
+      {/* Header */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 20 }}>
         <div>
           <div className="page-title">{firms.length} Saved Target{firms.length !== 1 ? 's' : ''}</div>
           <div className="page-sub" style={{ fontFamily: 'DM Mono,monospace', fontSize: 12 }}>RAUM {fmtM(totAum)} · Est Rev {fmtM(totRev)}</div>
@@ -1724,6 +1810,111 @@ function SavedTargets({ saved, setSaved, notes, setNotes, roa, onSelect, onLette
           <button className="btn-danger btn-sm" onClick={() => { if (confirm('Clear all saved targets?')) { setSaved(new Set()); setNotes({}); saveSaved(new Set()); saveNotes({}); } }}>Clear all</button>
         </div>
       </div>
+
+      {/* ── INTELLIGENCE DASHBOARD ── */}
+      {intel && (
+        <div style={{ marginBottom: 28 }}>
+
+          {/* Row 1 — Portfolio metrics */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5,1fr)', gap: 12, marginBottom: 12 }}>
+            <Stat label="Combined RAUM" value={fmtM(totAum)} color="var(--accent)" sub="across all targets" />
+            <Stat label="Est. Revenue Pool" value={fmtM(totRev)} color="var(--accent)" sub={'at ' + (roa*100).toFixed(2) + '% ROA'} />
+            <Stat label="Avg Firm RAUM" value={fmtM(intel.avgAum)} sub="per target" />
+            <Stat label="Avg Est. Revenue" value={fmtM(intel.avgRev)} sub="per target" />
+            <Stat label="Avg Account Size" value={fmtM(intel.avgAcctSz)} sub={intel.totAccts.toLocaleString() + ' total accounts'} />
+          </div>
+
+          {/* Row 2 — People & clients */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5,1fr)', gap: 12, marginBottom: 16 }}>
+            <Stat label="Total Clients" value={intel.totClients.toLocaleString()} sub={intel.totHNW.toLocaleString() + ' HNW (' + (intel.hnwPct ?? '—') + '%)'} />
+            <Stat label="Total Employees" value={intel.totEmp.toLocaleString()} sub={intel.avgEmp ? intel.avgEmp.toFixed(1) + ' avg per firm' : '—'} />
+            <Stat label="Rev per Employee" value={fmtM(intel.revPerEmp)} sub="portfolio average" color="var(--green)" />
+            <Stat label="Outreach Progress" value={intel.contacted + ' / ' + firms.length} sub={intel.contacted === 0 ? 'No notes yet' : Math.round(intel.contacted/firms.length*100) + '% have notes'} color={intel.contacted > 0 ? 'var(--amber)' : undefined} />
+            <Stat label="Micro Firms (1–2 emp)" value={intel.micro} sub="easiest integrations" />
+          </div>
+
+          {/* Row 3 — Portfolio quality + distribution */}
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 14, marginBottom: 0 }}>
+
+            {/* Structure quality */}
+            <div className="card" style={{ padding: '16px 18px' }}>
+              <div className="section-head">Portfolio Quality Signals</div>
+              {[
+                { label: 'Fee-only (AUM)', value: intel.feeOnly, total: firms.length, color: 'var(--green)', tip: 'Clean, predictable revenue' },
+                { label: 'BD-affiliated', value: intel.bdCount, total: firms.length, color: 'var(--amber)', tip: 'Commission exposure — affects valuation' },
+                { label: 'With disclosures', value: intel.disclosures, total: firms.length, color: 'var(--red)', tip: 'Regulatory history — requires diligence' },
+                { label: 'HNW client base', value: firms.filter(f=>f.clientsHNW>0).length, total: firms.length, color: 'var(--accent)', tip: 'Quality book signal' },
+                { label: 'Discretionary >90%', value: firms.filter(f=>f.aum>0&&f.aumDisc&&f.aumDisc/f.aum>=0.9).length, total: firms.length, color: 'var(--blue)', tip: 'Firm controls decisions, not just advising' },
+              ].map(({ label, value, total, color, tip }) => (
+                <div key={label} style={{ marginBottom: 10 }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 3 }}>
+                    <span style={{ fontSize: 11, color: 'var(--text3)' }} title={tip}>{label}</span>
+                    <span style={{ fontFamily: 'DM Mono,monospace', fontSize: 11, color }}>{value} <span style={{ color: 'var(--text3)' }}>/ {total}</span></span>
+                  </div>
+                  <div style={{ height: 4, background: 'var(--surface3)', borderRadius: 3, overflow: 'hidden' }}>
+                    <div style={{ height: '100%', width: (value/total*100) + '%', background: color, borderRadius: 3, transition: 'width .6s cubic-bezier(.22,.68,0,1.2)' }} />
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* AUM distribution */}
+            <div className="card" style={{ padding: '16px 18px' }}>
+              <div className="section-head">Target AUM Distribution</div>
+              {Object.entries(intel.aumBuckets).map(([label, count]) => (
+                <div key={label} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 9 }}>
+                  <span style={{ fontSize: 11, color: 'var(--text3)', width: 90, flexShrink: 0, textAlign: 'right' }}>{label}</span>
+                  <div style={{ flex: 1, height: 16, background: 'var(--surface2)', borderRadius: 4, overflow: 'hidden' }}>
+                    <div style={{ height: '100%', width: count > 0 ? (count/intel.maxBucket*100)+'%' : '0%', background: 'linear-gradient(90deg,rgba(200,169,110,.7),rgba(200,169,110,.3))', borderRadius: 4, transition: 'width .5s cubic-bezier(.22,.68,0,1.2)' }} />
+                  </div>
+                  <span style={{ fontFamily: 'DM Mono,monospace', fontSize: 11, color: 'var(--text3)', width: 18, textAlign: 'right' }}>{count}</span>
+                </div>
+              ))}
+              <div style={{ marginTop: 12, paddingTop: 10, borderTop: '1px solid var(--border)', display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+                {Object.entries(intel.byState).sort((a,b)=>b[1]-a[1]).map(([st, cnt]) => (
+                  <div key={st} style={{ display: 'flex', gap: 5, alignItems: 'center' }}>
+                    <span className="tag tag-state" style={{ fontSize: 10 }}>{st}</span>
+                    <span style={{ fontFamily: 'DM Mono,monospace', fontSize: 10, color: 'var(--text3)' }}>{cnt} · {fmtM(intel.stateAum[st])}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Top 5 best fit */}
+            <div className="card" style={{ padding: '16px 18px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
+                <div className="section-head" style={{ marginBottom: 0 }}>Best Fit Targets</div>
+                <span style={{ fontSize: 10, color: 'var(--text3)', fontWeight: 400, textTransform: 'none', letterSpacing: 'normal' }}>scored on revenue, structure & cleanliness</span>
+              </div>
+              {intel.top5.map(({ f, score }, i) => {
+                const rev = f.aum * roa;
+                const hasNote = !!notes[f.crd];
+                return (
+                  <div key={f.crd} onClick={() => onSelect(f)} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '8px 0', borderBottom: i < 4 ? '1px solid var(--border)' : 'none', cursor: 'pointer' }}
+                    onMouseEnter={e => e.currentTarget.style.opacity='.75'}
+                    onMouseLeave={e => e.currentTarget.style.opacity='1'}>
+                    <div className="rank-badge" style={{ background: i === 0 ? 'var(--accent)' : i < 3 ? 'var(--surface3)' : 'transparent', border: i >= 3 ? '1px solid var(--border)' : 'none', color: i === 0 ? '#0e0f11' : 'var(--text3)', flexShrink: 0 }}>{i+1}</div>
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ fontSize: 12, fontWeight: 500, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', display: 'flex', alignItems: 'center', gap: 6 }}>
+                        {f.name}
+                        {hasNote && <span style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--amber)', flexShrink: 0, display: 'inline-block' }} title="Has notes" />}
+                      </div>
+                      <div style={{ fontSize: 10, color: 'var(--text3)', marginTop: 1 }}>{f.city}, {f.state} · {fmtN(f.employees)} emp</div>
+                    </div>
+                    <div style={{ textAlign: 'right', flexShrink: 0 }}>
+                      <div style={{ fontFamily: 'DM Mono,monospace', fontSize: 11, color: 'var(--accent)' }}>{fmtM(rev)}</div>
+                      <div style={{ fontFamily: 'DM Mono,monospace', fontSize: 10, color: 'var(--text3)' }}>{fmtM(f.aum)}</div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+          </div>
+        </div>
+      )}
+
+      {/* ── TARGET LIST ── */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
         {firms.map(f => {
           const rev = (f.aum || 0) * roa, wurl = wu(f.website);
@@ -1734,6 +1925,8 @@ function SavedTargets({ saved, setSaved, notes, setNotes, roa, onSelect, onLette
                   <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6 }}>
                     <span style={{ fontFamily: 'Instrument Serif,serif', fontSize: 18, cursor: 'pointer' }} onClick={() => onSelect(f)}>{f.name}</span>
                     <span className="tag tag-state">{f.state}</span>
+                    {f.compensation && f.compensation.length === 1 && f.compensation[0] === 'AUM-based fee' && <span className="tag tag-green" style={{ fontSize: 10 }}>Fee-only</span>}
+                    {f.disclosures && <span className="tag tag-red" style={{ fontSize: 10 }}>Disclosures</span>}
                   </div>
                   <div style={{ fontSize: 11, color: 'var(--text3)', marginBottom: 10 }}>{f.city}, {f.state} {f.zip}{f.phone && <span> · {f.phone}</span>}{wurl && <span> · <a href={wurl} target="_blank" rel="noopener" style={{ color: 'var(--accent)' }}>Website ↗</a></span>}</div>
                   <div style={{ display: 'flex', gap: 20, fontFamily: 'DM Mono,monospace', fontSize: 12 }}>
@@ -1742,14 +1935,15 @@ function SavedTargets({ saved, setSaved, notes, setNotes, roa, onSelect, onLette
                     <span>Accts <b>{fmtN(f.accounts)}</b></span>
                     <span>Emp <b>{fmtN(f.employees)}</b></span>
                     <span>HNW <b>{fmtN(f.clientsHNW)}</b></span>
+                    {f.accounts > 0 && f.aum > 0 && <span style={{ color: 'var(--text3)' }}>Avg acct <b style={{ color: 'var(--text2)' }}>{fmtM(f.aum/f.accounts)}</b></span>}
                   </div>
                   {editCrd === f.crd
                     ? <div style={{ marginTop: 12, display: 'flex', gap: 8 }}><textarea value={editText} onChange={e => setEditText(e.target.value)} rows={2} style={{ flex: 1, resize: 'vertical', fontSize: 12 }} /><button className="btn-gold btn-sm" onClick={() => saveNote(f.crd)}>Save</button><button className="btn-ghost btn-sm" onClick={() => setEditCrd(null)}>Cancel</button></div>
-                    : notes[f.crd] && <div style={{ marginTop: 10, fontSize: 12, color: 'var(--text2)', background: 'var(--surface2)', padding: '8px 14px', borderRadius: 8, borderLeft: '2px solid var(--accent)', cursor: 'pointer' }} onClick={() => startEdit(f.crd)}>{notes[f.crd]}</div>
+                    : notes[f.crd] && <div style={{ marginTop: 10, fontSize: 12, color: 'var(--text2)', background: 'var(--surface2)', padding: '8px 14px', borderRadius: 8, borderLeft: '2px solid var(--amber)', cursor: 'pointer' }} onClick={() => startEdit(f.crd)}>{notes[f.crd]}</div>
                   }
                 </div>
                 <div style={{ display: 'flex', gap: 6, marginLeft: 16, flexShrink: 0 }}>
-                  <button className="btn-ghost btn-sm btn-icon" onClick={() => startEdit(f.crd)}>✎</button>
+                  <button className="btn-ghost btn-sm btn-icon" onClick={() => startEdit(f.crd)} title="Add note">✎</button>
                   <button className="btn-ghost btn-sm" onClick={() => onSelect(f)}>View</button>
                   <button className="btn-ghost btn-sm" onClick={() => onLetter(f)}>✉</button>
                   <button className="btn-danger btn-sm" onClick={() => remove(f.crd)}>✕</button>
