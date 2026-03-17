@@ -200,6 +200,9 @@ select option { background: #fff; }
   font-weight: 500;
 }
 
+.chip-row.err-chips { outline: 1.5px solid var(--red); border-radius: 8px; padding: 6px; margin: -6px; }
+.chip-err { font-size: 11px; color: var(--red); margin-top: 4px; }
+
 /* Section divider */
 .fsec { margin-bottom: 22px; }
 .fsec-title {
@@ -377,8 +380,9 @@ select option { background: #fff; }
               <input id="phone" placeholder="(603) 555-0100"/>
             </div>
             <div class="field-group">
-              <label class="field-label">Website</label>
-              <input id="website" placeholder="https://"/>
+              <label class="field-label" id="lbl-website">Website <span class="req">*</span></label>
+              <input id="website" placeholder="https://" oninput="clearErr('website')"/>
+              <div class="field-err" id="err-website"></div>
             </div>
           </div>
         </div>
@@ -427,22 +431,26 @@ select option { background: #fff; }
           <div class="fsec-title">Assets & Clients <span style="color:var(--ink4);font-weight:400;text-transform:none;letter-spacing:normal;font-size:10px">— self-reported</span></div>
           <div class="grid2">
             <div class="field-group">
-              <label class="field-label">
-                <span class="tip">AUM ($M)<span class="tip-box">Enter in millions — e.g. type 250 for $250M</span></span>
+              <label class="field-label" id="lbl-selfAum">
+                <span class="tip">AUM ($M) <span class="req">*</span><span class="tip-box">Enter in millions — e.g. type 250 for $250M</span></span>
               </label>
-              <input type="number" id="selfAum" placeholder="e.g. 250"/>
+              <input type="number" id="selfAum" placeholder="e.g. 250" oninput="clearErr('selfAum')"/>
+              <div class="field-err" id="err-selfAum"></div>
             </div>
             <div class="field-group">
-              <label class="field-label">Total Accounts</label>
-              <input type="number" id="selfAccounts" placeholder="e.g. 180"/>
+              <label class="field-label" id="lbl-selfAccounts">Total Accounts <span class="req">*</span></label>
+              <input type="number" id="selfAccounts" placeholder="e.g. 180" oninput="clearErr('selfAccounts')"/>
+              <div class="field-err" id="err-selfAccounts"></div>
             </div>
             <div class="field-group">
-              <label class="field-label">Individual Clients</label>
-              <input type="number" id="selfIndClients" placeholder="e.g. 140"/>
+              <label class="field-label" id="lbl-selfIndClients">Individual Clients <span class="req">*</span></label>
+              <input type="number" id="selfIndClients" placeholder="e.g. 140" oninput="clearErr('selfIndClients')"/>
+              <div class="field-err" id="err-selfIndClients"></div>
             </div>
             <div class="field-group">
-              <label class="field-label">HNW Clients</label>
-              <input type="number" id="selfHNWClients" placeholder="e.g. 60"/>
+              <label class="field-label" id="lbl-selfHNWClients">HNW Clients <span class="req">*</span></label>
+              <input type="number" id="selfHNWClients" placeholder="e.g. 60" oninput="clearErr('selfHNWClients')"/>
+              <div class="field-err" id="err-selfHNWClients"></div>
             </div>
           </div>
         </div>
@@ -451,7 +459,7 @@ select option { background: #fff; }
           <div class="fsec-title">Custodian</div>
           <div class="grid2">
             <div class="field-group span2">
-              <label class="field-label">Primary Custodian(s)</label>
+              <label class="field-label" id="lbl-custodianChips">Primary Custodian(s) <span class="req">*</span></label>
               <div class="chip-row" id="custodianChips">
                 <div class="chip" onclick="toggleChip(this,'custodian')">Schwab</div>
                 <div class="chip" onclick="toggleChip(this,'custodian')">Fidelity</div>
@@ -465,28 +473,31 @@ select option { background: #fff; }
                 <div class="chip" onclick="toggleChip(this,'custodian')">Self-custody</div>
                 <div class="chip" onclick="toggleChip(this,'custodian')">Other</div>
               </div>
+              <div class="chip-err" id="err-custodianChips"></div>
             </div>
             <div class="field-group">
-              <label class="field-label">
-                <span class="tip">Number of Custodians<span class="tip-box">How many custodial platforms do you currently use across all client accounts?</span></span>
+              <label class="field-label" id="lbl-custodianCount">
+                <span class="tip">Number of Custodians <span class="req">*</span><span class="tip-box">How many custodial platforms do you currently use across all client accounts?</span></span>
               </label>
-              <select id="custodianCount">
+              <select id="custodianCount" onchange="clearErr('custodianCount')">
                 <option value="">Select...</option>
                 <option value="1">1</option><option value="2">2</option>
                 <option value="3">3</option><option value="4+">4 or more</option>
               </select>
+              <div class="field-err" id="err-custodianCount"></div>
             </div>
             <div class="field-group">
-              <label class="field-label">
-                <span class="tip">Open to Changing Custodian?<span class="tip-box">Would you consider consolidating or switching custodial platforms as part of a merger or acquisition?</span></span>
+              <label class="field-label" id="lbl-custodianOpenToChange">
+                <span class="tip">Open to Changing Custodian? <span class="req">*</span><span class="tip-box">Would you consider consolidating or switching custodial platforms as part of a merger or acquisition?</span></span>
               </label>
-              <select id="custodianOpenToChange">
+              <select id="custodianOpenToChange" onchange="clearErr('custodianOpenToChange')">
                 <option value="">Select...</option>
                 <option value="yes">Yes — open to change</option>
                 <option value="no">No — prefer to retain current</option>
                 <option value="partial">Partial — could consolidate</option>
                 <option value="undecided">Undecided</option>
               </select>
+              <div class="field-err" id="err-custodianOpenToChange"></div>
             </div>
           </div>
         </div>
@@ -494,7 +505,7 @@ select option { background: #fff; }
         <div class="fsec" style="margin-bottom:0">
           <div class="fsec-title">Services & Compensation</div>
           <div class="field-group">
-            <label class="field-label">Services Offered</label>
+            <label class="field-label" id="lbl-servicesChips">Services Offered <span class="req">*</span></label>
             <div class="chip-row" id="servicesChips">
               <div class="chip" onclick="toggleChip(this,'services')">Financial Planning</div>
               <div class="chip" onclick="toggleChip(this,'services')">Portfolio Management</div>
@@ -505,9 +516,10 @@ select option { background: #fff; }
               <div class="chip" onclick="toggleChip(this,'services')">Insurance</div>
               <div class="chip" onclick="toggleChip(this,'services')">Other</div>
             </div>
+            <div class="chip-err" id="err-servicesChips"></div>
           </div>
           <div class="field-group" style="margin-bottom:0">
-            <label class="field-label">Compensation Model</label>
+            <label class="field-label" id="lbl-compChips">Compensation Model <span class="req">*</span></label>
             <div class="chip-row" id="compChips">
               <div class="chip" onclick="toggleChip(this,'comp')">AUM-based fee</div>
               <div class="chip" onclick="toggleChip(this,'comp')">Flat fee</div>
@@ -516,6 +528,7 @@ select option { background: #fff; }
               <div class="chip" onclick="toggleChip(this,'comp')">Performance-based</div>
               <div class="chip" onclick="toggleChip(this,'comp')">Other</div>
             </div>
+            <div class="chip-err" id="err-compChips"></div>
           </div>
         </div>
       </div>
@@ -562,7 +575,7 @@ select option { background: #fff; }
           <div class="fsec-title">Custodian</div>
           <div class="grid2">
             <div class="field-group span2">
-              <label class="field-label">Primary Custodian(s)</label>
+              <label class="field-label" id="lbl-custodianChips2">Primary Custodian(s) <span class="req">*</span></label>
               <div class="chip-row" id="custodianChips2">
                 <div class="chip" onclick="toggleChip(this,'custodian2')">Schwab</div>
                 <div class="chip" onclick="toggleChip(this,'custodian2')">Fidelity</div>
@@ -576,24 +589,27 @@ select option { background: #fff; }
                 <div class="chip" onclick="toggleChip(this,'custodian2')">Self-custody</div>
                 <div class="chip" onclick="toggleChip(this,'custodian2')">Other</div>
               </div>
+              <div class="chip-err" id="err-custodianChips2"></div>
             </div>
             <div class="field-group">
-              <label class="field-label">Number of Custodians</label>
-              <select id="custodianCount2">
+              <label class="field-label" id="lbl-custodianCount2">Number of Custodians <span class="req">*</span></label>
+              <select id="custodianCount2" onchange="clearErr('custodianCount2')">
                 <option value="">Select...</option>
                 <option value="1">1</option><option value="2">2</option>
                 <option value="3">3</option><option value="4+">4 or more</option>
               </select>
+              <div class="field-err" id="err-custodianCount2"></div>
             </div>
             <div class="field-group">
-              <label class="field-label">Open to Changing Custodian?</label>
-              <select id="custodianOpenToChange2">
+              <label class="field-label" id="lbl-custodianOpenToChange2">Open to Changing Custodian? <span class="req">*</span></label>
+              <select id="custodianOpenToChange2" onchange="clearErr('custodianOpenToChange2')">
                 <option value="">Select...</option>
                 <option value="yes">Yes — open to change</option>
                 <option value="no">No — prefer to retain current</option>
                 <option value="partial">Partial — could consolidate</option>
                 <option value="undecided">Undecided</option>
               </select>
+              <div class="field-err" id="err-custodianOpenToChange2"></div>
             </div>
           </div>
         </div>
@@ -843,6 +859,12 @@ function toggleChip(el, group){
   const arr = chipState[group];
   const idx = arr.indexOf(val);
   if(idx > -1) arr.splice(idx,1); else arr.push(val);
+
+  // Clear the relevant chip error when at least one is selected
+  if(group === 'custodian' && chipState.custodian.length > 0) clearChipErr('custodianChips','err-custodianChips');
+  if(group === 'custodian2' && chipState.custodian2.length > 0) clearChipErr('custodianChips2','err-custodianChips2');
+  if(group === 'services' && chipState.services.length > 0) clearChipErr('servicesChips','err-servicesChips');
+  if(group === 'comp' && chipState.comp.length > 0) clearChipErr('compChips','err-compChips');
 }
 
 // ── TYPEAHEAD ──
@@ -932,19 +954,65 @@ document.addEventListener('click', e => {
 });
 
 // ── VALIDATION ──
-function showErr(id, msg){ document.getElementById('err-'+id).textContent=msg; document.getElementById(id)?.classList.add('err'); const lbl=document.getElementById('lbl-'+id); if(lbl) lbl.classList.add('err'); }
+function showErr(id, msg){ const e=document.getElementById('err-'+id); if(e) e.textContent=msg; document.getElementById(id)?.classList.add('err'); const lbl=document.getElementById('lbl-'+id); if(lbl) lbl.classList.add('err'); }
 function clearErr(id){ const el=document.getElementById('err-'+id); if(el) el.textContent=''; document.getElementById(id)?.classList.remove('err'); const lbl=document.getElementById('lbl-'+id); if(lbl) lbl.classList.remove('err'); }
+
+function showChipErr(rowId, errId, msg){
+  const row = document.getElementById(rowId);
+  const err = document.getElementById(errId);
+  if(row) row.classList.add('err-chips');
+  if(err) err.textContent = msg;
+}
+function clearChipErr(rowId, errId){
+  const row = document.getElementById(rowId);
+  const err = document.getElementById(errId);
+  if(row) row.classList.remove('err-chips');
+  if(err) err.textContent = '';
+}
 
 function validateStep1(){
   let ok = true;
   if(profileType === 'bd'){
+    // Required text/select fields
     if(!document.getElementById('firmName').value.trim()){ showErr('firmName','Required'); ok=false; }
+    if(!document.getElementById('website').value.trim()){ showErr('website','Required'); ok=false; }
     if(!document.getElementById('addr1').value.trim()){ showErr('addr1','Required'); ok=false; }
     if(!document.getElementById('city').value.trim()){ showErr('city','Required'); ok=false; }
     if(!document.getElementById('bdState').value){ showErr('bdState','Required'); ok=false; }
     if(!document.getElementById('zip').value.trim()){ showErr('zip','Required'); ok=false; }
+
+    // Assets & Clients
+    if(!document.getElementById('selfAum').value){ showErr('selfAum','Required'); ok=false; }
+    if(!document.getElementById('selfAccounts').value){ showErr('selfAccounts','Required'); ok=false; }
+    if(!document.getElementById('selfIndClients').value){ showErr('selfIndClients','Required'); ok=false; }
+    if(!document.getElementById('selfHNWClients').value){ showErr('selfHNWClients','Required'); ok=false; }
+
+    // Custodian chips + selects
+    if(chipState.custodian.length === 0){ showChipErr('custodianChips','err-custodianChips','Select at least one custodian'); ok=false; }
+    else clearChipErr('custodianChips','err-custodianChips');
+    if(!document.getElementById('custodianCount').value){ showErr('custodianCount','Required'); ok=false; }
+    if(!document.getElementById('custodianOpenToChange').value){ showErr('custodianOpenToChange','Required'); ok=false; }
+
+    // Services & Comp
+    if(chipState.services.length === 0){ showChipErr('servicesChips','err-servicesChips','Select at least one service'); ok=false; }
+    else clearChipErr('servicesChips','err-servicesChips');
+    if(chipState.comp.length === 0){ showChipErr('compChips','err-compChips','Select at least one compensation model'); ok=false; }
+    else clearChipErr('compChips','err-compChips');
+
   } else {
+    // Claimed RIA
     if(!claimedCrd){ showErr('claimSearch','Please select your firm from the list'); ok=false; }
+
+    // Custodian chips + selects (claimed version)
+    if(chipState.custodian2.length === 0){ showChipErr('custodianChips2','err-custodianChips2','Select at least one custodian'); ok=false; }
+    else clearChipErr('custodianChips2','err-custodianChips2');
+    if(!document.getElementById('custodianCount2').value){ showErr('custodianCount2','Required'); ok=false; }
+    if(!document.getElementById('custodianOpenToChange2').value){ showErr('custodianOpenToChange2','Required'); ok=false; }
+  }
+
+  if(!ok){
+    const firstErr = document.querySelector('.field-err:not(:empty), .chip-err:not(:empty)');
+    if(firstErr) firstErr.scrollIntoView({ behavior:'smooth', block:'center' });
   }
   return ok;
 }
