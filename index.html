@@ -180,28 +180,6 @@ nav { position: fixed; top:0; left:0; right:0; z-index:200; height:60px; padding
 .bd-tag { font-size:11px; padding:5px 12px; border-radius:20px; border:1px solid rgba(255,255,255,.08); color:rgba(240,240,234,.35); background:rgba(255,255,255,.02); transition:all .2s; }
 .bd-tag:hover { border-color:rgba(168,116,42,.3); color:rgba(240,240,234,.6); }
 
-/* PROFILE SECTION */
-.profile-section { padding:120px 48px; background:var(--paper); }
-.profile-inner { max-width:1100px; margin:0 auto; }
-.profile-grid { display:grid; grid-template-columns:1fr 1fr; gap:80px; align-items:start; }
-.profile-points { margin-top:36px; border-top:1px solid var(--paper3); }
-.profile-point { display:flex; gap:18px; padding:20px 0; border-bottom:1px solid var(--paper3); }
-.pnum { font-family:var(--mono); font-size:11px; color:var(--ink4); flex-shrink:0; padding-top:2px; width:22px; }
-.ptitle { font-size:14px; font-weight:500; color:var(--ink); margin-bottom:4px; }
-.pbody { font-size:13px; color:var(--ink3); line-height:1.7; font-weight:300; }
-.profile-card { background:#fff; border:1px solid var(--paper3); border-radius:16px; overflow:hidden; box-shadow:0 2px 16px rgba(0,0,0,.05); }
-.profile-card-header { padding:16px 20px; border-bottom:1px solid var(--paper3); }
-.profile-card-eyebrow { font-size:9px; text-transform:uppercase; letter-spacing:.1em; color:var(--gold); font-weight:600; }
-.profile-field-row { display:flex; align-items:center; gap:12px; padding:12px 20px; border-bottom:1px solid var(--paper3); }
-.profile-field-row:last-child { border-bottom:none; }
-.pf-icon { width:30px; height:30px; border-radius:7px; background:var(--paper2); display:flex; align-items:center; justify-content:center; font-size:13px; flex-shrink:0; }
-.pf-label { font-size:12px; font-weight:500; color:var(--ink2); flex:1; }
-.pf-badge { font-size:9px; font-weight:700; letter-spacing:.04em; padding:3px 9px; border-radius:20px; white-space:nowrap; }
-.badge-pub  { background:rgba(42,82,56,.1);   color:var(--green); }
-.badge-priv { background:rgba(124,58,237,.1); color:#7c3aed; }
-.badge-opt  { background:rgba(168,116,42,.12); color:var(--gold); }
-.profile-card-footer { padding:14px 20px; background:var(--paper2); font-size:11px; color:var(--ink3); line-height:1.65; }
-
 /* FEATURES */
 .features { padding:120px 48px; background:var(--paper2); border-top:1px solid var(--paper3); border-bottom:1px solid var(--paper3); }
 .features-inner { max-width:1100px; margin:0 auto; }
@@ -216,6 +194,41 @@ nav { position: fixed; top:0; left:0; right:0; z-index:200; height:60px; padding
 .feat-icon { font-size:20px; margin-bottom:16px; }
 .feat-title { font-size:14px; font-weight:600; color:var(--ink); margin-bottom:7px; letter-spacing:-.01em; }
 .feat-body { font-size:13px; color:var(--ink3); line-height:1.7; }
+
+/* PROFILE INTELLIGENCE */
+.profile-intel { padding: 120px 48px; background: var(--paper); border-top: 1px solid var(--paper3); }
+.profile-intel-inner { max-width: 1100px; margin: 0 auto; }
+.profile-intel-hd { text-align: center; margin-bottom: 72px; }
+.profile-intel-title { font-family: var(--serif); font-size: clamp(30px,3.5vw,48px); line-height: 1.08; letter-spacing: -.03em; color: var(--ink); margin-bottom: 16px; }
+.profile-intel-title em { font-style: italic; color: var(--gold-bright); }
+.profile-intel-sub { font-size: 15px; color: var(--ink3); max-width: 520px; margin: 0 auto; line-height: 1.75; font-weight: 300; }
+.profile-intel-sub em { font-style: italic; color: var(--ink2); }
+
+.profile-intel-grid { display: grid; grid-template-columns: 1fr 380px; gap: 64px; align-items: start; }
+
+.pi-points { display: flex; flex-direction: column; gap: 32px; }
+.pi-point { display: flex; gap: 18px; align-items: flex-start; }
+.pi-point-icon { font-size: 20px; flex-shrink: 0; width: 44px; height: 44px; background: var(--paper2); border: 1px solid var(--paper3); border-radius: 10px; display: flex; align-items: center; justify-content: center; }
+.pi-point-title { font-size: 14px; font-weight: 600; color: var(--ink); margin-bottom: 5px; letter-spacing: -.01em; }
+.pi-point-body { font-size: 13px; color: var(--ink3); line-height: 1.7; font-weight: 300; }
+
+.pi-coverage { background: var(--paper2); border: 1px solid var(--paper3); border-radius: 16px; padding: 32px; position: sticky; top: 80px; }
+.pi-cov-label { font-size: 9px; text-transform: uppercase; letter-spacing: .12em; color: var(--gold); font-weight: 600; margin-bottom: 10px; }
+.pi-cov-title { font-family: var(--serif); font-size: 26px; line-height: 1.1; letter-spacing: -.02em; color: var(--ink); margin-bottom: 14px; }
+.pi-cov-title em { font-style: italic; color: var(--gold-bright); }
+.pi-cov-body { font-size: 13px; color: var(--ink3); line-height: 1.7; font-weight: 300; margin-bottom: 24px; }
+
+.pi-cov-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
+.pi-stat { background: #fff; border: 1px solid var(--paper3); border-radius: 10px; padding: 14px 16px; }
+.pi-stat-label { font-size: 9px; text-transform: uppercase; letter-spacing: .08em; color: var(--ink4); margin-bottom: 4px; }
+.pi-stat-val { font-family: var(--mono); font-size: 20px; color: var(--ink); font-weight: 500; margin-bottom: 2px; }
+.pi-stat-sub { font-size: 11px; color: var(--ink4); }
+
+.pi-state-pills { display: flex; gap: 6px; margin-bottom: 20px; }
+.pi-state-pill { font-size: 11px; font-weight: 600; padding: 5px 12px; border-radius: 20px; background: rgba(96,165,250,.1); color: #2563eb; border: 1px solid rgba(96,165,250,.2); }
+
+.pi-bd-note { background: var(--gold-pale); border: 1px solid rgba(168,116,42,.18); border-radius: 10px; padding: 14px 16px; font-size: 12px; color: var(--ink2); line-height: 1.65; }
+.pi-bd-note-label { font-size: 10px; text-transform: uppercase; letter-spacing: .08em; color: var(--gold); font-weight: 600; margin-bottom: 6px; }
 
 /* CTA */
 .cta { padding:140px 48px; text-align:center; position:relative; overflow:hidden; }
@@ -242,9 +255,10 @@ footer { padding:32px 48px; border-top:1px solid var(--paper3); display:flex; al
 @media(max-width:768px){
   nav{padding:0 20px} .nav-links{display:none}
   .hero{padding:88px 24px 56px}
-  .value-split,.features,.cta,.profile-section{padding:80px 24px}
+  .value-split,.features,.cta,.profile-intel{padding:80px 24px}
   .bd-section,.demo-section{padding:72px 24px}
-  .value-grid,.bd-grid,.features-grid,.profile-grid{grid-template-columns:1fr;gap:40px}
+  .value-grid,.bd-grid,.features-grid,.profile-intel-grid{grid-template-columns:1fr;gap:40px}
+  .pi-coverage{position:static}
   .gap-visual{grid-template-columns:1fr}
   .app-shell{grid-template-columns:1fr;height:auto}
   .app-sidebar{display:none}
@@ -273,8 +287,8 @@ footer { padding:32px 48px; border-top:1px solid var(--paper3); display:flex; al
   <div class="nav-links">
     <a href="#why">Why It Exists</a>
     <a href="#bd">BD Advisors</a>
-    <a href="#how-it-works">How It Works</a>
     <a href="#platform">Platform</a>
+    <a href="#profile">Your Profile</a>
     <a href="register.html" class="nav-pill">Enter Platform →</a>
   </div>
 </nav>
@@ -472,90 +486,6 @@ footer { padding:32px 48px; border-top:1px solid var(--paper3); display:flex; al
   </div>
 </section>
 
-<!-- PROFILE INTELLIGENCE -->
-<section class="profile-section" id="how-it-works">
-  <div class="profile-inner">
-    <div class="profile-grid">
-      <div>
-        <div class="section-kicker reveal">How it works</div>
-        <h2 class="section-title reveal rd1">Your profile is the<br><em>intelligence layer.</em></h2>
-        <div class="section-body reveal rd2">
-          <p>The SEC database tells you what firms look like on paper. Your profile tells the platform what <em>you</em> look like — so it can score every firm in the database against your geography, size, services, and intent.</p>
-          <p>Private match scoring, succession targeting, and acquisition pipeline all derive from this. <strong>Nothing you enter here is visible to other users.</strong></p>
-        </div>
-        <div class="profile-points reveal rd3">
-          <div class="profile-point">
-            <div class="pnum">01</div>
-            <div>
-              <div class="ptitle">Takes about 2 minutes</div>
-              <div class="pbody">Three steps. No payment required. Profile data persists across monthly dataset refreshes — the SEC data updates, your intelligence layer doesn't move.</div>
-            </div>
-          </div>
-          <div class="profile-point">
-            <div class="pnum">02</div>
-            <div>
-              <div class="ptitle">Survives dataset updates</div>
-              <div class="pbody">Monthly SEC Form ADV refreshes never touch your profile. The base data is fully replaceable. Your private fields sit in a separate layer and are never overwritten.</div>
-            </div>
-          </div>
-          <div class="profile-point">
-            <div class="pnum">03</div>
-            <div>
-              <div class="ptitle">You control what signals you send</div>
-              <div class="pbody">Firm structure is public. Succession details are private — used only to calculate your readiness score. Intent fields are opt-in, disclosable to matched firms only.</div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="reveal rd2">
-        <div class="profile-card">
-          <div class="profile-card-header">
-            <div class="profile-card-eyebrow">Profile data — visibility by field</div>
-          </div>
-          <div class="profile-field-row">
-            <div class="pf-icon">🏢</div>
-            <div class="pf-label">Firm name, location, AUM band</div>
-            <span class="pf-badge badge-pub">Public</span>
-          </div>
-          <div class="profile-field-row">
-            <div class="pf-icon">👥</div>
-            <div class="pf-label">Team size, services, custodian</div>
-            <span class="pf-badge badge-pub">Public</span>
-          </div>
-          <div class="profile-field-row">
-            <div class="pf-icon">🏗</div>
-            <div class="pf-label">Ownership structure, founder age</div>
-            <span class="pf-badge badge-pub">Public</span>
-          </div>
-          <div class="profile-field-row">
-            <div class="pf-icon">🔄</div>
-            <div class="pf-label">Succession timeline, successor status</div>
-            <span class="pf-badge badge-priv">Private</span>
-          </div>
-          <div class="profile-field-row">
-            <div class="pf-icon">💼</div>
-            <div class="pf-label">Open to sale, minority capital</div>
-            <span class="pf-badge badge-priv">Private</span>
-          </div>
-          <div class="profile-field-row">
-            <div class="pf-icon">🎯</div>
-            <div class="pf-label">Seeking acquisitions, growth intent</div>
-            <span class="pf-badge badge-opt">Opt-in</span>
-          </div>
-          <div class="profile-field-row">
-            <div class="pf-icon">📍</div>
-            <div class="pf-label">Geographic flexibility, hiring intent</div>
-            <span class="pf-badge badge-opt">Opt-in</span>
-          </div>
-          <div class="profile-card-footer">
-            Private fields are never displayed to other users — they exist solely to calculate match scores and succession readiness. Opt-in fields can be selectively disclosed to matched firms only.
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
 <!-- FEATURES -->
 <section class="features" id="platform">
   <div class="features-inner">
@@ -571,6 +501,81 @@ footer { padding:32px 48px; border-top:1px solid var(--paper3); display:flex; al
       <div class="feat reveal rd3"><div class="feat-icon">💰</div><div class="feat-title">Revenue Intelligence</div><div class="feat-body">Estimated annual revenue at configurable ROA assumptions. HNW concentration, average account size, and revenue per employee — instantly, for any firm.</div></div>
       <div class="feat reveal rd4"><div class="feat-icon">✉</div><div class="feat-title">Tailored Outreach Generation</div><div class="feat-body">Generate outreach letters calibrated to each firm's ADV profile, ownership structure, and inferred succession position. Physical mail still gets read.</div></div>
       <div class="feat reveal rd5"><div class="feat-icon">📋</div><div class="feat-title">Acquisition Pipeline</div><div class="feat-body">Save targets, attach private notes, track outreach. Portfolio-level intelligence: combined AUM, revenue pool, quality signals, and best-fit rankings across your whole list.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- PROFILE INTELLIGENCE SECTION -->
+<section class="profile-intel" id="profile">
+  <div class="profile-intel-inner">
+    <div class="profile-intel-hd">
+      <div class="section-kicker reveal" style="display:inline-block">How it personalizes</div>
+      <h2 class="profile-intel-title reveal rd1">Your profile is the<br><em>intelligence layer.</em></h2>
+      <p class="profile-intel-sub reveal rd2">The SEC database tells you what firms look like on paper. Your profile tells the platform what <em>you</em> look like — so it can score every firm against your geography, size, services, and intent.</p>
+    </div>
+
+    <div class="profile-intel-grid">
+      <div class="pi-points reveal rd1">
+        <div class="pi-point">
+          <div class="pi-point-icon">🎯</div>
+          <div>
+            <div class="pi-point-title">Private match scoring</div>
+            <div class="pi-point-body">Every firm in the database is scored against your profile. Acquisition compatibility, geographic alignment, service overlap, and succession timing — ranked automatically.</div>
+          </div>
+        </div>
+        <div class="pi-point">
+          <div class="pi-point-icon">🔒</div>
+          <div>
+            <div class="pi-point-title">Completely private</div>
+            <div class="pi-point-body">Your intelligence fields are stored in your browser and never transmitted. Other users see nothing. The matching runs locally against the public dataset.</div>
+          </div>
+        </div>
+        <div class="pi-point">
+          <div class="pi-point-icon">🔄</div>
+          <div>
+            <div class="pi-point-title">Survives dataset updates</div>
+            <div class="pi-point-body">Monthly SEC data refreshes replace the firm database. Your profile is never touched. Intelligence fields, saved targets, and match scores persist across every update.</div>
+          </div>
+        </div>
+        <div class="pi-point">
+          <div class="pi-point-icon">⏱</div>
+          <div>
+            <div class="pi-point-title">Two-minute setup</div>
+            <div class="pi-point-body">Three steps. Claim your SEC filing or add your firm manually. Add private intelligence fields. Unlock the full platform. No payment, no subscription.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="pi-coverage reveal rd2">
+        <div class="pi-cov-label">Current Coverage</div>
+        <div class="pi-cov-title">Four states.<br><em>Hundreds of firms.</em></div>
+        <div class="pi-cov-body">The RIA database covers SEC-registered advisory firms across New Hampshire, Vermont, Massachusetts, and Maine — updated monthly from Form ADV filings.</div>
+
+        <div class="pi-cov-stats">
+          <div class="pi-stat">
+            <div class="pi-stat-label">NH · VT · MA · ME</div>
+            <div class="pi-stat-val">500+</div>
+            <div class="pi-stat-sub">SEC-registered RIAs</div>
+          </div>
+          <div class="pi-stat">
+            <div class="pi-stat-label">Updated</div>
+            <div class="pi-stat-val">Monthly</div>
+            <div class="pi-stat-sub">Form ADV filings</div>
+          </div>
+        </div>
+
+        <div class="pi-state-pills">
+          <div class="pi-state-pill">NH</div>
+          <div class="pi-state-pill">VT</div>
+          <div class="pi-state-pill">MA</div>
+          <div class="pi-state-pill">ME</div>
+        </div>
+
+        <div class="pi-bd-note">
+          <div class="pi-bd-note-label">BD &amp; Wirehouse Advisors</div>
+          Outside the SEC database? Create a manual profile. You'll appear in the private match layer — discoverable by RIA acquirers expanding into your market.
+        </div>
+      </div>
     </div>
   </div>
 </section>
