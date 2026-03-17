@@ -42,15 +42,13 @@ body {
 
 /* ── LAYOUT ── */
 .page {
-  flex: 1; display: grid;
-  grid-template-columns: 1fr 420px 1fr;
-  grid-template-rows: auto 1fr auto;
+  flex: 1; display: flex; flex-direction: column;
   min-height: 100vh;
 }
 
 /* ── TOP BAR ── */
 .topbar {
-  grid-column: 1 / -1; padding: 24px 48px;
+  padding: 24px 48px;
   display: flex; align-items: center; justify-content: space-between;
   border-bottom: 1px solid var(--paper3);
 }
@@ -59,62 +57,10 @@ body {
 .topbar-back { font-size: 12px; color: var(--ink4); text-decoration: none; transition: color .15s; }
 .topbar-back:hover { color: var(--ink2); }
 
-/* ── SIDE PANELS ── */
-.side-left {
-  grid-column: 1; grid-row: 2;
-  padding: 60px 48px; display: flex; flex-direction: column; justify-content: center;
-  border-right: 1px solid var(--paper3);
-}
-.side-right {
-  grid-column: 3; grid-row: 2;
-  padding: 60px 48px; display: flex; flex-direction: column; justify-content: center;
-  border-left: 1px solid var(--paper3);
-}
-
-.side-label {
-  font-size: 9px; text-transform: uppercase; letter-spacing: .12em;
-  color: var(--ink4); font-weight: 500; margin-bottom: 20px;
-}
-.side-title {
-  font-family: var(--serif); font-size: 28px; line-height: 1.1;
-  letter-spacing: -.02em; color: var(--ink); margin-bottom: 16px;
-}
-.side-title em { font-style: italic; color: var(--gold-bright); }
-.side-body { font-size: 13px; color: var(--ink3); line-height: 1.8; font-weight: 300; }
-.side-body p+p { margin-top: 12px; }
-.side-body strong { color: var(--ink2); font-weight: 500; }
-
-.side-points { display: flex; flex-direction: column; gap: 14px; margin-top: 28px; }
-.side-point {
-  display: flex; gap: 10px; align-items: flex-start;
-  font-size: 12px; color: var(--ink3); line-height: 1.6;
-}
-.side-point-dot {
-  width: 5px; height: 5px; border-radius: 50%; background: var(--gold);
-  flex-shrink: 0; margin-top: 6px;
-}
-.side-point strong { color: var(--ink2); font-weight: 500; display: block; margin-bottom: 1px; font-size: 12px; }
-
-/* State coverage notice */
-.coverage-notice {
-  margin-top: 32px; padding: 14px 16px;
-  background: var(--paper2); border: 1px solid var(--paper3); border-radius: 10px;
-  font-size: 12px; color: var(--ink3); line-height: 1.6;
-}
-.coverage-notice-title {
-  font-size: 10px; text-transform: uppercase; letter-spacing: .08em;
-  color: var(--gold); font-weight: 600; margin-bottom: 6px;
-}
-.coverage-states { display: flex; gap: 6px; margin-top: 8px; }
-.cov-state {
-  font-size: 10px; font-weight: 600; padding: 3px 9px; border-radius: 10px;
-  background: rgba(96,165,250,.1); color: #2563eb;
-}
-
 /* ── FORM CENTER ── */
 .form-col {
-  grid-column: 2; grid-row: 2;
-  padding: 48px 0; overflow-y: auto;
+  flex: 1; max-width: 520px; width: 100%;
+  margin: 0 auto; padding: 48px 24px;
   display: flex; flex-direction: column;
 }
 
@@ -313,17 +259,15 @@ select option { background: #fff; }
 
 /* FOOTER */
 .page-footer {
-  grid-column: 1 / -1; padding: 18px 48px;
+  padding: 18px 48px;
   border-top: 1px solid var(--paper3);
   display: flex; align-items: center; justify-content: space-between;
   font-size: 11px; color: var(--ink4);
 }
 
 @media(max-width:900px){
-  .page { grid-template-columns: 1fr; grid-template-rows: auto auto 1fr auto; }
-  .topbar { grid-column: 1; padding: 16px 20px; }
-  .side-left, .side-right { display: none; }
-  .form-col { grid-column: 1; padding: 32px 20px; }
+  .topbar { padding: 16px 20px; }
+  .form-col { padding: 32px 20px; }
   .page-footer { padding: 16px 20px; flex-direction: column; gap: 6px; }
 }
 </style>
@@ -351,41 +295,6 @@ select option { background: #fff; }
       <span class="topbar-name">Meridian</span>
     </a>
     <a class="topbar-back" href="index.html">← Back to home</a>
-  </div>
-
-  <!-- LEFT PANEL -->
-  <div class="side-left">
-    <div class="side-label">Why this matters</div>
-    <div class="side-title">Your profile is the<br><em>intelligence layer.</em></div>
-    <div class="side-body">
-      <p>The SEC database tells you what firms look like on paper. Your profile tells the platform what <em>you</em> look like — so it can score every firm in the database against your geography, size, services, and intent.</p>
-      <p>Private match scoring, succession targeting, and acquisition pipeline all derive from this. <strong>Nothing you enter here is visible to other users.</strong></p>
-    </div>
-    <div class="side-points">
-      <div class="side-point">
-        <div class="side-point-dot"></div>
-        <div><strong>Takes about 2 minutes</strong>Three steps. No payment required.</div>
-      </div>
-      <div class="side-point">
-        <div class="side-point-dot"></div>
-        <div><strong>Completely private</strong>Your intelligence fields are never exposed or shared.</div>
-      </div>
-      <div class="side-point">
-        <div class="side-point-dot"></div>
-        <div><strong>Survives dataset updates</strong>Monthly SEC data refreshes never touch your profile.</div>
-      </div>
-    </div>
-
-    <div class="coverage-notice">
-      <div class="coverage-notice-title">⚠ Current Coverage</div>
-      The RIA database currently covers SEC-registered firms in four states. Firms outside these states will not appear in Explorer or match results.
-      <div class="coverage-states">
-        <span class="cov-state">NH</span>
-        <span class="cov-state">VT</span>
-        <span class="cov-state">MA</span>
-        <span class="cov-state">ME</span>
-      </div>
-    </div>
   </div>
 
   <!-- FORM CENTER -->
@@ -468,9 +377,8 @@ select option { background: #fff; }
               <input id="phone" placeholder="(603) 555-0100"/>
             </div>
             <div class="field-group">
-              <label class="field-label" id="lbl-website">Website <span class="req">*</span></label>
-              <input id="website" placeholder="https://yourfirm.com" oninput="clearErr('website')"/>
-              <div class="field-err" id="err-website"></div>
+              <label class="field-label">Website</label>
+              <input id="website" placeholder="https://"/>
             </div>
           </div>
         </div>
@@ -516,36 +424,25 @@ select option { background: #fff; }
         </div>
 
         <div class="fsec">
-          <div class="fsec-title">Assets, Clients & Team</div>
+          <div class="fsec-title">Assets & Clients <span style="color:var(--ink4);font-weight:400;text-transform:none;letter-spacing:normal;font-size:10px">— self-reported</span></div>
           <div class="grid2">
             <div class="field-group">
-              <label class="field-label" id="lbl-selfAum">
-                <span class="tip">AUM ($M) <span class="req">*</span><span class="tip-box">Enter in millions — e.g. 250 for $250M. AUM band is calculated automatically.</span></span>
+              <label class="field-label">
+                <span class="tip">AUM ($M)<span class="tip-box">Enter in millions — e.g. type 250 for $250M</span></span>
               </label>
-              <input type="number" id="selfAum" placeholder="e.g. 250" oninput="clearErr('selfAum');autoAumBand(this.value)"/>
-              <div class="field-err" id="err-selfAum"></div>
+              <input type="number" id="selfAum" placeholder="e.g. 250"/>
             </div>
             <div class="field-group">
-              <label class="field-label" id="lbl-teamSize">
-                <span class="tip">Team Size <span class="req">*</span><span class="tip-box">Total headcount — advisors, support, partners.</span></span>
-              </label>
-              <input type="number" min="1" id="teamSize" placeholder="e.g. 4" oninput="clearErr('teamSize')"/>
-              <div class="field-err" id="err-teamSize"></div>
+              <label class="field-label">Total Accounts</label>
+              <input type="number" id="selfAccounts" placeholder="e.g. 180"/>
             </div>
             <div class="field-group">
-              <label class="field-label" id="lbl-selfAccounts">Total Accounts <span class="req">*</span></label>
-              <input type="number" id="selfAccounts" placeholder="e.g. 180" oninput="clearErr('selfAccounts')"/>
-              <div class="field-err" id="err-selfAccounts"></div>
+              <label class="field-label">Individual Clients</label>
+              <input type="number" id="selfIndClients" placeholder="e.g. 140"/>
             </div>
             <div class="field-group">
-              <label class="field-label" id="lbl-selfIndClients">Individual Clients <span class="req">*</span></label>
-              <input type="number" id="selfIndClients" placeholder="e.g. 140" oninput="clearErr('selfIndClients')"/>
-              <div class="field-err" id="err-selfIndClients"></div>
-            </div>
-            <div class="field-group span2">
-              <label class="field-label" id="lbl-selfHNWClients">HNW Clients <span class="req">*</span></label>
-              <input type="number" id="selfHNWClients" placeholder="e.g. 60" oninput="clearErr('selfHNWClients')"/>
-              <div class="field-err" id="err-selfHNWClients"></div>
+              <label class="field-label">HNW Clients</label>
+              <input type="number" id="selfHNWClients" placeholder="e.g. 60"/>
             </div>
           </div>
         </div>
@@ -554,7 +451,7 @@ select option { background: #fff; }
           <div class="fsec-title">Custodian</div>
           <div class="grid2">
             <div class="field-group span2">
-              <label class="field-label" id="lbl-custodianChips">Primary Custodian(s) <span class="req">*</span></label>
+              <label class="field-label">Primary Custodian(s)</label>
               <div class="chip-row" id="custodianChips">
                 <div class="chip" onclick="toggleChip(this,'custodian')">Schwab</div>
                 <div class="chip" onclick="toggleChip(this,'custodian')">Fidelity</div>
@@ -568,7 +465,6 @@ select option { background: #fff; }
                 <div class="chip" onclick="toggleChip(this,'custodian')">Self-custody</div>
                 <div class="chip" onclick="toggleChip(this,'custodian')">Other</div>
               </div>
-              <div class="field-err" id="err-custodianChips"></div>
             </div>
             <div class="field-group">
               <label class="field-label">
@@ -598,7 +494,7 @@ select option { background: #fff; }
         <div class="fsec" style="margin-bottom:0">
           <div class="fsec-title">Services & Compensation</div>
           <div class="field-group">
-            <label class="field-label" id="lbl-servicesChips">Services Offered <span class="req">*</span></label>
+            <label class="field-label">Services Offered</label>
             <div class="chip-row" id="servicesChips">
               <div class="chip" onclick="toggleChip(this,'services')">Financial Planning</div>
               <div class="chip" onclick="toggleChip(this,'services')">Portfolio Management</div>
@@ -609,10 +505,9 @@ select option { background: #fff; }
               <div class="chip" onclick="toggleChip(this,'services')">Insurance</div>
               <div class="chip" onclick="toggleChip(this,'services')">Other</div>
             </div>
-            <div class="field-err" id="err-servicesChips"></div>
           </div>
           <div class="field-group" style="margin-bottom:0">
-            <label class="field-label" id="lbl-compChips">Compensation Model <span class="req">*</span></label>
+            <label class="field-label">Compensation Model</label>
             <div class="chip-row" id="compChips">
               <div class="chip" onclick="toggleChip(this,'comp')">AUM-based fee</div>
               <div class="chip" onclick="toggleChip(this,'comp')">Flat fee</div>
@@ -621,7 +516,6 @@ select option { background: #fff; }
               <div class="chip" onclick="toggleChip(this,'comp')">Performance-based</div>
               <div class="chip" onclick="toggleChip(this,'comp')">Other</div>
             </div>
-            <div class="field-err" id="err-compChips"></div>
           </div>
         </div>
       </div>
@@ -634,7 +528,7 @@ select option { background: #fff; }
         <div class="field-group">
           <label class="field-label" id="lbl-claimSearch">Firm Name <span class="req">*</span></label>
           <div class="typeahead-wrap">
-            <input id="claimSearch" placeholder="Start typing your firm name..." autocomplete="off"
+            <input id="claimSearch" placeholder="Type at least 4 characters to search..." autocomplete="off"
               oninput="handleTypeahead(this.value)" onkeydown="taKeyNav(event)"/>
             <div class="typeahead-dropdown" id="taDropdown"></div>
           </div>
@@ -668,7 +562,7 @@ select option { background: #fff; }
           <div class="fsec-title">Custodian</div>
           <div class="grid2">
             <div class="field-group span2">
-              <label class="field-label" id="lbl-custodianChips2">Primary Custodian(s) <span class="req">*</span></label>
+              <label class="field-label">Primary Custodian(s)</label>
               <div class="chip-row" id="custodianChips2">
                 <div class="chip" onclick="toggleChip(this,'custodian2')">Schwab</div>
                 <div class="chip" onclick="toggleChip(this,'custodian2')">Fidelity</div>
@@ -682,7 +576,6 @@ select option { background: #fff; }
                 <div class="chip" onclick="toggleChip(this,'custodian2')">Self-custody</div>
                 <div class="chip" onclick="toggleChip(this,'custodian2')">Other</div>
               </div>
-              <div class="field-err" id="err-custodianChips2"></div>
             </div>
             <div class="field-group">
               <label class="field-label">Number of Custodians</label>
@@ -725,10 +618,22 @@ select option { background: #fff; }
       <div class="fsec">
         <div class="fsec-title">Firm Structure</div>
         <div class="grid2">
-          <div class="field-group span2">
-            <label class="field-label">AUM Band <span style="font-weight:400;text-transform:none;letter-spacing:normal;font-size:10px;color:var(--ink4)">— calculated from AUM entered in firm details</span></label>
-            <div id="aumBandDisplay" style="padding:10px 14px;background:var(--paper2);border:1.5px solid var(--border);border-radius:10px;font-size:13px;color:var(--ink3);font-family:var(--mono)">—</div>
-            <input type="hidden" id="aumBand"/>
+          <div class="field-group">
+            <label class="field-label">
+              <span class="tip">Team Size <span class="req">*</span><span class="tip-box">Total headcount — advisors, support, partners.</span></span>
+            </label>
+            <input type="number" min="1" id="teamSize" placeholder="e.g. 4" oninput="clearErr('teamSize')"/>
+            <div class="field-err" id="err-teamSize"></div>
+          </div>
+          <div class="field-group">
+            <label class="field-label">
+              <span class="tip">AUM Band <span class="req">*</span><span class="tip-box">Approximate range of total assets under management.</span></span>
+            </label>
+            <select id="aumBand" onchange="clearErr('aumBand')">
+              <option value="">Select...</option>
+              <option>0–100M</option><option>100–250M</option><option>250–500M</option>
+              <option>500M–1B</option><option>1B+</option>
+            </select>
             <div class="field-err" id="err-aumBand"></div>
           </div>
           <div class="field-group">
@@ -851,34 +756,6 @@ select option { background: #fff; }
 
   </div><!-- /form-col -->
 
-  <!-- RIGHT PANEL -->
-  <div class="side-right">
-    <div class="side-label">Current Coverage</div>
-    <div class="side-title">Four states.<br><em>Hundreds of firms.</em></div>
-    <div class="side-body">
-      <p>The platform currently covers SEC-registered RIAs across New Hampshire, Vermont, Massachusetts, and Maine — updated monthly from Form ADV filings.</p>
-      <p><strong>If you're outside this region</strong>, you can still create a BD profile and use the platform's intelligence tools. Acquisition match scoring will surface firms within the covered states.</p>
-    </div>
-
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:28px">
-      <div style="background:var(--paper2);border:1px solid var(--paper3);border-radius:10px;padding:16px">
-        <div style="font-size:9px;text-transform:uppercase;letter-spacing:.08em;color:var(--ink4);margin-bottom:6px">NH · VT · MA · ME</div>
-        <div style="font-family:var(--mono);font-size:22px;color:var(--ink);font-weight:500" id="firmCount">500+</div>
-        <div style="font-size:11px;color:var(--ink4);margin-top:2px">SEC-registered RIAs</div>
-      </div>
-      <div style="background:var(--paper2);border:1px solid var(--paper3);border-radius:10px;padding:16px">
-        <div style="font-size:9px;text-transform:uppercase;letter-spacing:.08em;color:var(--ink4);margin-bottom:6px">Updated</div>
-        <div style="font-family:var(--mono);font-size:18px;color:var(--ink);font-weight:500">Monthly</div>
-        <div style="font-size:11px;color:var(--ink4);margin-top:2px">SEC Form ADV</div>
-      </div>
-    </div>
-
-    <div style="margin-top:24px;padding:14px 16px;background:var(--gold-pale);border:1px solid rgba(168,116,42,.18);border-radius:10px;font-size:12px;color:var(--ink2);line-height:1.65">
-      <div style="font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--gold);font-weight:600;margin-bottom:6px">BD Advisors</div>
-      If your firm doesn't appear in the SEC database — wirehouse teams, BD-affiliated practices, independent contractors — create a manual profile. You'll appear in the private match layer and can be discovered by RIA acquirers looking to expand.
-    </div>
-  </div>
-
   <!-- PAGE FOOTER -->
   <div class="page-footer">
     <span>Meridian · Private M&A Intelligence</span>
@@ -910,7 +787,7 @@ const chipState = { custodian:[], custodian2:[], services:[], comp:[] };
 (function(){
   try {
     if(typeof FR !== 'undefined'){
-      document.getElementById('firmCount').textContent = FR.length.toLocaleString();
+      document.getElementById('firmCount')?.textContent && (document.getElementById('firmCount').textContent = FR.length.toLocaleString());
     }
   } catch(e){}
 })();
@@ -974,7 +851,7 @@ function handleTypeahead(query){
   document.getElementById('taSelectedPill').style.display = 'none';
   document.getElementById('claimedPreview').classList.remove('show');
 
-  if(!query || query.trim().length < 2){
+  if(!query || query.trim().length < 4){
     closeDropdown(); return;
   }
   const q = query.toLowerCase().trim();
@@ -1036,9 +913,6 @@ function selectFirm(idx){
   document.getElementById('cpAccts').textContent = fmtN(f.ac);
   document.getElementById('cpEmp').textContent = fmtN(f.em);
   document.getElementById('claimedPreview').classList.add('show');
-
-  // Auto-set AUM band from ADV data (au is in raw dollars)
-  if(f.au) autoAumBand(f.au / 1e6);
 }
 
 function clearClaim(){
@@ -1057,73 +931,40 @@ document.addEventListener('click', e => {
   if(!e.target.closest('.typeahead-wrap')) closeDropdown();
 });
 
-// ── AUM BAND AUTO-CALC ──
-function autoAumBand(val){
-  const aum = parseFloat(val);
-  let band = '';
-  if(!isNaN(aum) && aum > 0){
-    if(aum < 100)       band = '0–100M';
-    else if(aum < 250)  band = '100–250M';
-    else if(aum < 500)  band = '250–500M';
-    else if(aum < 1000) band = '500M–1B';
-    else                band = '1B+';
-  }
-  const hidden  = document.getElementById('aumBand');
-  const display = document.getElementById('aumBandDisplay');
-  if(hidden)  hidden.value = band;
-  if(display){ display.textContent = band || '—'; display.style.color = band ? 'var(--ink2)' : 'var(--ink3)'; }
-}
-
 // ── VALIDATION ──
-function showErr(id, msg){ const el=document.getElementById('err-'+id); if(el) el.textContent=msg; document.getElementById(id)?.classList.add('err'); const lbl=document.getElementById('lbl-'+id); if(lbl) lbl.classList.add('err'); }
+function showErr(id, msg){ document.getElementById('err-'+id).textContent=msg; document.getElementById(id)?.classList.add('err'); const lbl=document.getElementById('lbl-'+id); if(lbl) lbl.classList.add('err'); }
 function clearErr(id){ const el=document.getElementById('err-'+id); if(el) el.textContent=''; document.getElementById(id)?.classList.remove('err'); const lbl=document.getElementById('lbl-'+id); if(lbl) lbl.classList.remove('err'); }
 
 function validateStep1(){
   let ok = true;
   if(profileType === 'bd'){
-    // Text/select fields
-    ['firmName','addr1','city','zip'].forEach(id => {
-      if(!document.getElementById(id)?.value.trim()){ showErr(id,'Required'); ok=false; }
-    });
-    if(!document.getElementById('bdState')?.value){ showErr('bdState','Required'); ok=false; }
-    if(!document.getElementById('website')?.value.trim()){ showErr('website','Required'); ok=false; }
-    // Numeric fields
-    ['selfAum','selfAccounts','selfIndClients','selfHNWClients','teamSize'].forEach(id => {
-      const v = parseFloat(document.getElementById(id)?.value);
-      if(isNaN(v) || v <= 0){ showErr(id,'Required'); ok=false; }
-    });
-    // Chip groups
-    if(chipState.custodian.length === 0){ showErr('custodianChips','Select at least one custodian'); ok=false; }
-    if(chipState.services.length === 0){ showErr('servicesChips','Select at least one service'); ok=false; }
-    if(chipState.comp.length === 0){ showErr('compChips','Select at least one compensation model'); ok=false; }
+    if(!document.getElementById('firmName').value.trim()){ showErr('firmName','Required'); ok=false; }
+    if(!document.getElementById('addr1').value.trim()){ showErr('addr1','Required'); ok=false; }
+    if(!document.getElementById('city').value.trim()){ showErr('city','Required'); ok=false; }
+    if(!document.getElementById('bdState').value){ showErr('bdState','Required'); ok=false; }
+    if(!document.getElementById('zip').value.trim()){ showErr('zip','Required'); ok=false; }
   } else {
     if(!claimedCrd){ showErr('claimSearch','Please select your firm from the list'); ok=false; }
-    if(chipState.custodian2.length === 0){ showErr('custodianChips2','Select at least one custodian'); ok=false; }
-  }
-  if(!ok){
-    const firstErr = document.querySelector('#panel-1 .field-err:not(:empty)');
-    if(firstErr) firstErr.scrollIntoView({ behavior:'smooth', block:'center' });
   }
   return ok;
 }
 
 function validateStep2(){
-  // teamSize and aumBand are now captured in step 1 — only intel fields here
   const fields = [
-    'aumBand','ownershipStructure','founderAgeBand',
+    'teamSize','aumBand','ownershipStructure','founderAgeBand',
     'internalSuccessor','successionTimeline','openToMinority','openToFullSale',
     'seekingAcquisitions','hiringJunior','geoFlexibility','growthIntent'
   ];
   let ok = true;
-  // aumBand: must have been set via autoAumBand
-  if(!document.getElementById('aumBand')?.value){ showErr('aumBand','Enter AUM in firm details to auto-calculate this field'); ok=false; }
-  fields.filter(f => f !== 'aumBand').forEach(id => {
+  fields.forEach(id => {
     const el = document.getElementById(id);
     if(!el) return;
-    if(!el.value || el.value.trim() === ''){ showErr(id,'Required'); ok=false; }
+    const v = el.value;
+    if(!v || v.trim() === ''){ showErr(id,'Required'); ok=false; }
   });
   if(!ok){
-    const firstErr = document.querySelector('#panel-2 .field-err:not(:empty)');
+    // Scroll to first error
+    const firstErr = document.querySelector('.field-err:not(:empty)');
     if(firstErr) firstErr.scrollIntoView({ behavior:'smooth', block:'center' });
   }
   return ok;
@@ -1144,6 +985,7 @@ function completeProfile(){
   const getVal = id => document.getElementById(id)?.value || null;
 
   const intel = {
+    teamSize:                   getInt('teamSize'),
     aumBand:                    getVal('aumBand'),
     ownershipStructure:         getVal('ownershipStructure'),
     founderAgeBand:             getVal('founderAgeBand'),
@@ -1183,7 +1025,6 @@ function completeProfile(){
       zip:        document.getElementById('zip').value.trim(),
       phone:      document.getElementById('phone').value.trim(),
       website:    document.getElementById('website').value.trim(),
-      teamSize:   getInt('teamSize'),
       aum:        (parseFloat(document.getElementById('selfAum').value) * 1e6) || null,
       accounts:   parseInt(document.getElementById('selfAccounts').value) || null,
       clientsInd: parseInt(document.getElementById('selfIndClients').value) || null,
