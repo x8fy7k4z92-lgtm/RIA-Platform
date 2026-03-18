@@ -26,11 +26,11 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{
-  --bg:#0e0f11;--surface:#16181c;--surface2:#1e2128;--surface3:#252830;
-  --border:#2c3038;--border2:#363b44;--text:#f0f1f3;--text2:#9aa0ad;--text3:#5c6270;
-  --accent:#c8a96e;--accent2:#b8955a;--green:#4ade80;--green-dim:#1a3326;
-  --red:#f87171;--red-dim:#2d1515;--blue:#60a5fa;--blue-dim:#1a2540;
-  --purple:#a78bfa;--purple-dim:#1e1a35;--amber:#fbbf24;--amber-dim:#2a1f06;
+  --bg:#f8f7f4;--surface:#ffffff;--surface2:#f3f1ed;--surface3:#ece9e3;
+  --border:#e5e2db;--border2:#d8d4cb;--text:#1a1916;--text2:#5c5852;--text3:#9e9a93;
+  --accent:#b8893a;--accent2:#a37830;--green:#16a34a;--green-dim:#dcfce7;
+  --red:#dc2626;--red-dim:#fee2e2;--blue:#2563eb;--blue-dim:#dbeafe;
+  --purple:#7c3aed;--purple-dim:#ede9fe;--amber:#d97706;--amber-dim:#fef3c7;
 }
 html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased;overflow-y:auto}
 ::-webkit-scrollbar{width:5px;height:5px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--border2);border-radius:10px}
@@ -39,7 +39,7 @@ input,select,textarea{font-family:'DM Sans',sans-serif;font-size:13px;background
 input:focus,select:focus,textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(200,169,110,.12)}
 select option{background:var(--surface2)}
 button{font-family:'DM Sans',sans-serif;cursor:pointer;border:none;border-radius:8px;padding:9px 18px;font-size:13px;font-weight:500;transition:all .18s}
-.btn-gold{background:var(--accent);color:#0e0f11;font-weight:600}.btn-gold:hover{background:var(--accent2);transform:translateY(-1px);box-shadow:0 4px 16px rgba(200,169,110,.3)}
+.btn-gold{background:var(--accent);color:#fff;font-weight:600}.btn-gold:hover{background:var(--accent2);transform:translateY(-1px);box-shadow:0 4px 16px rgba(184,137,58,.25)}
 .btn-ghost{background:transparent;color:var(--text2);border:1px solid var(--border)}.btn-ghost:hover{background:var(--surface2);color:var(--text);border-color:var(--border2)}
 .btn-sm{padding:6px 12px;font-size:12px;border-radius:6px}.btn-icon{padding:7px 10px;font-size:14px}
 .btn-danger{background:transparent;color:var(--red);border:1px solid rgba(248,113,113,.3)}.btn-danger:hover{background:var(--red-dim)}
@@ -63,10 +63,10 @@ tr:hover td{background:var(--surface2)}tr:last-child td{border-bottom:none}
 .detail-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid rgba(44,48,56,.6)}
 .detail-row:last-child{border-bottom:none}.detail-label{font-size:12px;color:var(--text3)}.detail-value{font-family:'DM Mono',monospace;font-size:12px;color:var(--text)}
 .section-head{font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--accent);font-weight:600;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border)}
-.highlight-row{background:rgba(74,222,128,.05)}
+.highlight-row{background:rgba(22,163,74,.07)}
 .rank-badge{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0}
 .pulse{width:7px;height:7px;border-radius:50%;background:var(--green);animation:pulse-anim 2s infinite}
-@keyframes pulse-anim{0%,100%{box-shadow:0 0 0 0 rgba(74,222,128,.4)}50%{box-shadow:0 0 0 5px rgba(74,222,128,0)}}
+@keyframes pulse-anim{0%,100%{box-shadow:0 0 0 0 rgba(22,163,74,.4)}50%{box-shadow:0 0 0 5px rgba(22,163,74,0)}}
 .filter-group label{display:block;font-size:10px;text-transform:uppercase;letter-spacing:.07em;color:var(--text3);margin-bottom:5px;font-weight:500}
 .filter-bar{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end}
 .bar-fill{height:100%;border-radius:4px;transition:width .5s cubic-bezier(.22,.68,0,1.2)}
@@ -75,15 +75,15 @@ tr:hover td{background:var(--surface2)}tr:last-child td{border-bottom:none}
 .metric-accent{color:var(--accent)}.metric-green{color:var(--green)}.metric-red{color:var(--red)}.metric-amber{color:var(--amber)}.metric-purple{color:var(--purple)}
 .star-btn{background:none;border:none;cursor:pointer;font-size:17px;padding:3px 5px;transition:transform .15s,color .15s;border-radius:5px}
 .star-btn:hover{transform:scale(1.2)}.star-btn.starred{color:#f59e0b}.star-btn:not(.starred){color:var(--text3)}.star-btn:not(.starred):hover{color:var(--accent)}
-@keyframes copyFlash{0%{background:var(--green);color:#0e0f11}100%{background:var(--accent);color:#0e0f11}}
+@keyframes copyFlash{0%{background:var(--green);color:#fff}100%{background:var(--accent);color:#fff}}
 .copy-flash{animation:copyFlash .8s ease forwards}
-.leaflet-container{background:#1a1c20!important;border-radius:10px}
-.mp .leaflet-popup-content-wrapper{background:var(--surface);color:var(--text);border:1px solid var(--border2);border-radius:10px;box-shadow:0 12px 40px rgba(0,0,0,.6)}
+.leaflet-container{background:#e8e4dc!important;border-radius:10px}
+.mp .leaflet-popup-content-wrapper{background:var(--surface);color:var(--text);border:1px solid var(--border2);border-radius:10px;box-shadow:0 12px 40px rgba(0,0,0,.15)}
 .mp .leaflet-popup-tip{background:var(--surface)}
 .mp .leaflet-popup-content{margin:14px;font-family:'DM Sans',sans-serif;font-size:12px;line-height:1.6}
-.pvb{display:inline-block;margin-top:10px;padding:6px 14px;background:var(--accent);color:#0e0f11;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer}.pvb:hover{background:var(--accent2)}
-.logo-mark{width:34px;height:34px;background:linear-gradient(135deg,var(--accent),#7c5c2e);border-radius:9px;display:flex;align-items:center;justify-content:center;font-family:'Instrument Serif',serif;font-size:16px;color:#0e0f11;flex-shrink:0}
-.top-nav{background:rgba(14,15,17,.94);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);padding:0 28px;display:flex;align-items:center;gap:28px;height:58px;flex-shrink:0;position:sticky;top:0;z-index:100}
+.pvb{display:inline-block;margin-top:10px;padding:6px 14px;background:var(--accent);color:#fff;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer}.pvb:hover{background:var(--accent2)}
+.logo-mark{width:34px;height:34px;background:linear-gradient(135deg,var(--accent),#7c5c2e);border-radius:9px;display:flex;align-items:center;justify-content:center;font-family:'Instrument Serif',serif;font-size:16px;color:#fff;flex-shrink:0}
+.top-nav{background:rgba(255,255,255,.94);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);padding:0 28px;display:flex;align-items:center;gap:28px;height:58px;flex-shrink:0;position:sticky;top:0;z-index:100}
 .nav-brand{display:flex;align-items:center;gap:11px;margin-right:8px}
 .nav-brand-name{font-family:'Instrument Serif',serif;font-size:19px;letter-spacing:-.02em}
 .nav-link{font-size:13px;color:var(--text3);cursor:pointer;padding:4px 0;transition:color .15s;white-space:nowrap;position:relative}
@@ -107,7 +107,7 @@ pre.prompt-box{white-space:pre-wrap;font-family:'DM Mono',monospace;font-size:12
 /* Blur gate */
 .blur-cell{filter:blur(5px);user-select:none;pointer-events:none}
 .lock-overlay{position:relative}
-.lock-overlay::after{content:'';position:absolute;inset:0;background:linear-gradient(to bottom,transparent 30%,rgba(14,15,17,.95) 100%);pointer-events:none;border-radius:14px}
+.lock-overlay::after{content:'';position:absolute;inset:0;background:linear-gradient(to bottom,transparent 30%,rgba(248,247,244,.97) 100%);pointer-events:none;border-radius:14px}
 
 /* Gate banner */
 .gate-banner{background:linear-gradient(135deg,rgba(200,169,110,.12),rgba(200,169,110,.06));border:1px solid rgba(200,169,110,.3);border-radius:14px;padding:20px 24px;display:flex;align-items:center;gap:20px;margin-bottom:20px}
@@ -116,8 +116,8 @@ pre.prompt-box{white-space:pre-wrap;font-family:'DM Mono',monospace;font-size:12
 .gate-banner-sub{font-size:12px;color:var(--text3);line-height:1.6}
 
 /* Onboarding modal */
-.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(8px);z-index:200;display:flex;align-items:center;justify-content:center;padding:20px}
-.modal{background:var(--surface);border:1px solid var(--border2);border-radius:18px;width:100%;max-width:640px;max-height:90vh;overflow-y:auto;box-shadow:0 24px 80px rgba(0,0,0,.7)}
+.modal-overlay{position:fixed;inset:0;background:rgba(26,25,22,.45);backdrop-filter:blur(8px);z-index:200;display:flex;align-items:center;justify-content:center;padding:20px}
+.modal{background:var(--surface);border:1px solid var(--border2);border-radius:18px;width:100%;max-width:640px;max-height:90vh;overflow-y:auto;box-shadow:0 24px 80px rgba(0,0,0,.18)}
 .modal-header{padding:28px 28px 0}
 .modal-body{padding:24px 28px 28px}
 .modal-title{font-family:'Instrument Serif',serif;font-size:26px;letter-spacing:-.02em;margin-bottom:6px}
@@ -141,14 +141,14 @@ pre.prompt-box{white-space:pre-wrap;font-family:'DM Mono',monospace;font-size:12
 /* My Profile page */
 .profile-page-header{background:linear-gradient(135deg,var(--surface),var(--surface2));border:1px solid var(--border);border-radius:16px;padding:28px;margin-bottom:20px;position:relative;overflow:hidden}
 .profile-page-header::before{content:'';position:absolute;top:-40px;right:-40px;width:160px;height:160px;background:radial-gradient(circle,rgba(200,169,110,.12),transparent 70%);pointer-events:none}
-.profile-avatar{width:52px;height:52px;border-radius:14px;background:linear-gradient(135deg,var(--accent),#7c5c2e);display:flex;align-items:center;justify-content:center;font-family:'Instrument Serif',serif;font-size:22px;color:#0e0f11;flex-shrink:0}
+.profile-avatar{width:52px;height:52px;border-radius:14px;background:linear-gradient(135deg,var(--accent),#7c5c2e);display:flex;align-items:center;justify-content:center;font-family:'Instrument Serif',serif;font-size:22px;color:#fff;flex-shrink:0}
 
 /* Steps indicator */
 .steps{display:flex;gap:0;margin-bottom:24px}
 .step{flex:1;display:flex;flex-direction:column;align-items:center;position:relative}
 .step:not(:last-child)::after{content:'';position:absolute;top:14px;left:50%;width:100%;height:1px;background:var(--border);z-index:0}
 .step-dot{width:28px;height:28px;border-radius:50%;border:2px solid var(--border);background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;z-index:1;transition:all .2s;color:var(--text3)}
-.step-dot.active{border-color:var(--accent);background:var(--accent);color:#0e0f11}
+.step-dot.active{border-color:var(--accent);background:var(--accent);color:#fff}
 .step-dot.done{border-color:var(--green);background:var(--green-dim);color:var(--green)}
 .step-label{font-size:10px;margin-top:6px;color:var(--text3);text-align:center}
 .step.active .step-label{color:var(--accent)}
@@ -166,9 +166,9 @@ pre.prompt-box{white-space:pre-wrap;font-family:'DM Mono',monospace;font-size:12
 
 /* Tooltip */
 .tt{position:relative;display:inline-block;cursor:help;border-bottom:1px dotted var(--text3)}
-.tt-box{visibility:hidden;opacity:0;position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);background:#1e2128;border:1px solid var(--border2);border-radius:9px;padding:9px 13px;font-size:11px;line-height:1.6;color:var(--text2);width:230px;z-index:200;pointer-events:none;transition:opacity .15s,visibility .15s;box-shadow:0 8px 28px rgba(0,0,0,.5);font-style:normal;font-weight:400;text-transform:none;letter-spacing:normal}
+.tt-box{visibility:hidden;opacity:0;position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);background:var(--surface);border:1px solid var(--border2);border-radius:9px;padding:9px 13px;font-size:11px;line-height:1.6;color:var(--text2);width:230px;z-index:200;pointer-events:none;transition:opacity .15s,visibility .15s;box-shadow:0 8px 28px rgba(0,0,0,.12);font-style:normal;font-weight:400;text-transform:none;letter-spacing:normal}
 .tt:hover .tt-box{visibility:visible;opacity:1}
-.tt-box::after{content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);border:5px solid transparent;border-top-color:#1e2128}
+.tt-box::after{content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);border:5px solid transparent;border-top-color:var(--surface)}
 
 /* Rank badge */
 .rank-tile{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:12px 14px;display:flex;flex-direction:column;gap:4px}
@@ -1061,8 +1061,8 @@ function FirmMap({ firms, roa, rMin, rMax, onSelect, onBounds, userFirm }) {
       const co = COORDS[f.crd]; if (!co) return;
       const rev = (f.aum || 0) * roa, hit = rev >= rMin && rev <= rMax;
       const br = Math.max(4, Math.min(11, Math.sqrt((f.aum || 0) / 1e8) * 2.5)), r = hit ? br + 5 : br;
-      const c = L.circleMarker([co.lat, co.lng], { radius: r, fillColor: hit ? '#4ade80' : '#60a5fa', color: hit ? '#166534' : '#1d4ed8', weight: hit ? 2 : 1, opacity: hit ? .9 : .5, fillOpacity: hit ? .6 : .3 });
-      c.bindPopup('<div style="min-width:200px"><div style="font-family:Instrument Serif,serif;font-size:14px;margin-bottom:2px">' + f.name + '</div><div style="color:#9aa0ad;font-size:11px;margin-bottom:8px">' + f.city + ', ' + f.state + '</div><div style="font-family:DM Mono,monospace;font-size:11px">RAUM&nbsp;<b>' + fmtM(f.aum) + '</b><br/>Rev&nbsp;&nbsp;<b style="color:' + (hit ? '#4ade80' : '#f0f1f3') + '">' + fmtM(rev) + '</b></div>' + (hit ? '<div style="margin-top:6px;font-size:10px;color:#4ade80;font-weight:600;text-transform:uppercase">In target range</div>' : '') + '<div onclick="window.__rvf(\'' + f.crd + '\')" class="pvb">View details →</div></div>', { className: 'mp' });
+      const c = L.circleMarker([co.lat, co.lng], { radius: r, fillColor: hit ? '#16a34a' : '#2563eb', color: hit ? '#14532d' : '#1e40af', weight: hit ? 2 : 1, opacity: hit ? .9 : .5, fillOpacity: hit ? .6 : .3 });
+      c.bindPopup('<div style="min-width:200px"><div style="font-family:Instrument Serif,serif;font-size:14px;margin-bottom:2px">' + f.name + '</div><div style="color:#9e9a93;font-size:11px;margin-bottom:8px">' + f.city + ', ' + f.state + '</div><div style="font-family:DM Mono,monospace;font-size:11px">RAUM&nbsp;<b>' + fmtM(f.aum) + '</b><br/>Rev&nbsp;&nbsp;<b style="color:' + (hit ? '#16a34a' : '#1a1916') + '">' + fmtM(rev) + '</b></div>' + (hit ? '<div style="margin-top:6px;font-size:10px;color:#16a34a;font-weight:600;text-transform:uppercase">In target range</div>' : '') + '<div onclick="window.__rvf(\'' + f.crd + '\')" class="pvb">View details →</div></div>', { className: 'mp' });
       lRef.current.addLayer(c);
     });
 
@@ -1076,7 +1076,7 @@ function FirmMap({ firms, roa, rMin, rMax, onSelect, onBounds, userFirm }) {
       });
       const userMarker = L.marker([userFirm.lat, userFirm.lng], { icon: starIcon, zIndexOffset: 1000 });
       const userAum = userFirm.aum || null;
-      userMarker.bindPopup('<div style="min-width:180px"><div style="display:flex;align-items:center;gap:6px;margin-bottom:4px"><span style="font-size:11px;background:rgba(200,169,110,.15);color:#c8a96e;border:1px solid rgba(200,169,110,.3);border-radius:10px;padding:2px 8px;font-weight:600">Your Firm</span></div><div style="font-family:Instrument Serif,serif;font-size:14px;margin-bottom:6px">' + userFirm.firmName + '</div><div style="color:#9aa0ad;font-size:11px;margin-bottom:8px">' + (userFirm.city || '') + (userFirm.state ? ', ' + userFirm.state : '') + '</div>' + (userAum ? '<div style="font-family:DM Mono,monospace;font-size:11px">RAUM&nbsp;<b style="color:#c8a96e">' + fmtM(userAum) + '</b></div>' : '') + '</div>', { className: 'mp' });
+      userMarker.bindPopup('<div style="min-width:180px"><div style="display:flex;align-items:center;gap:6px;margin-bottom:4px"><span style="font-size:11px;background:rgba(200,169,110,.15);color:#b8893a;border:1px solid rgba(184,137,58,.3);border-radius:10px;padding:2px 8px;font-weight:600">Your Firm</span></div><div style="font-family:Instrument Serif,serif;font-size:14px;margin-bottom:6px">' + userFirm.firmName + '</div><div style="color:#9e9a93;font-size:11px;margin-bottom:8px">' + (userFirm.city || '') + (userFirm.state ? ', ' + userFirm.state : '') + '</div>' + (userAum ? '<div style="font-family:DM Mono,monospace;font-size:11px">RAUM&nbsp;<b style="color:#b8893a">' + fmtM(userAum) + '</b></div>' : '') + '</div>', { className: 'mp' });
       lRef.current.addLayer(userMarker);
     }
   }, [firms, roa, rMin, rMax, userFirm]);
@@ -1141,7 +1141,7 @@ function Dashboard({ roa, onSelect, saved, toggleSave, profile, onOpenOnboarding
           onClick={() => hasProfile && onSelect(f)}
           onMouseEnter={e => hasProfile && (e.currentTarget.style.opacity = '.75')}
           onMouseLeave={e => (e.currentTarget.style.opacity = '1')}>
-          <div className="rank-badge" style={{ background: i === 0 ? 'var(--accent)' : i < 3 ? 'var(--surface3)' : 'transparent', border: i >= 3 ? '1px solid var(--border)' : 'none', color: i === 0 ? '#0e0f11' : 'var(--text3)' }}>{i + 1}</div>
+          <div className="rank-badge" style={{ background: i === 0 ? 'var(--accent)' : i < 3 ? 'var(--surface3)' : 'transparent', border: i >= 3 ? '1px solid var(--border)' : 'none', color: i === 0 ? '#fff' : 'var(--text3)' }}>{i + 1}</div>
           <div style={{ flex: 1, minWidth: 0 }}>
             <div style={{ fontSize: 12, fontWeight: 500, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{f.name}</div>
             <div style={{ fontSize: 10, color: 'var(--text3)', marginTop: 1 }}>{f.city}, {f.state}{sub ? ' · ' + sub(f) : ''}</div>
@@ -1369,8 +1369,8 @@ function Explorer({ roa, setRoa, onSelect, saved, toggleSave, profile, onOpenOnb
           <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 8 }}>
             <button onClick={() => setFByMap(!fByMap)} className={fByMap ? 'btn-gold btn-sm' : 'btn-ghost btn-sm'}>{fByMap ? '✓ Filtering by map' : 'Filter by map view'}</button>
             <span style={{ fontSize: 11, color: 'var(--text3)', display: 'flex', gap: 12, marginLeft: 'auto' }}>
-              <span><span style={{ display: 'inline-block', width: 9, height: 9, borderRadius: '50%', background: '#4ade80', marginRight: 5, verticalAlign: 'middle' }} />Target range</span>
-              <span><span style={{ display: 'inline-block', width: 7, height: 7, borderRadius: '50%', background: '#60a5fa', marginRight: 5, verticalAlign: 'middle' }} />Other</span>
+              <span><span style={{ display: 'inline-block', width: 9, height: 9, borderRadius: '50%', background: '#16a34a', marginRight: 5, verticalAlign: 'middle' }} />Target range</span>
+              <span><span style={{ display: 'inline-block', width: 7, height: 7, borderRadius: '50%', background: '#2563eb', marginRight: 5, verticalAlign: 'middle' }} />Other</span>
               {userFirm && <span><span style={{ marginRight: 5 }}>★</span><span style={{ color: 'var(--accent)' }}>Your firm</span></span>}
             </span>
           </div>
@@ -1906,7 +1906,7 @@ function SavedTargets({ saved, setSaved, notes, setNotes, roa, onSelect, onLette
                   <div key={f.crd} onClick={() => onSelect(f)} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '8px 0', borderBottom: i < 4 ? '1px solid var(--border)' : 'none', cursor: 'pointer' }}
                     onMouseEnter={e => e.currentTarget.style.opacity='.75'}
                     onMouseLeave={e => e.currentTarget.style.opacity='1'}>
-                    <div className="rank-badge" style={{ background: i === 0 ? 'var(--accent)' : i < 3 ? 'var(--surface3)' : 'transparent', border: i >= 3 ? '1px solid var(--border)' : 'none', color: i === 0 ? '#0e0f11' : 'var(--text3)', flexShrink: 0 }}>{i+1}</div>
+                    <div className="rank-badge" style={{ background: i === 0 ? 'var(--accent)' : i < 3 ? 'var(--surface3)' : 'transparent', border: i >= 3 ? '1px solid var(--border)' : 'none', color: i === 0 ? '#fff' : 'var(--text3)', flexShrink: 0 }}>{i+1}</div>
                     <div style={{ flex: 1, minWidth: 0 }}>
                       <div style={{ fontSize: 12, fontWeight: 500, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', display: 'flex', alignItems: 'center', gap: 6 }}>
                         {f.name}
